@@ -28,12 +28,10 @@ class SyncAccountsWebhookSubscription extends Command
      */
     public function handle(Avito $avito)
     {
-        NewMessage::dispatch(22222, ['some' => 'data']);
+        $accounts = Account::all();
 
-//        $accounts = Account::all();
-//
-//        $accounts->each(function ($account) use ($avito){
-//            $avito->setAccount($account)->subscribeToWebhook();
-//        });
+        $accounts->each(function ($account) use ($avito){
+            $avito->setAccount($account)->subscribeToWebhook();
+        });
     }
 }
