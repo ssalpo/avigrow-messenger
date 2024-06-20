@@ -1,0 +1,115 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Account;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Facades\Http;
+
+class Avito
+{
+    protected Account $account;
+
+    public const BASE_API_URL = 'https://api.avito.ru';
+
+    protected function client(): PendingRequest
+    {
+        return Http::baseUrl(self::BASE_API_URL);
+    }
+
+    protected function clientWithToken(): PendingRequest
+    {
+        return Http::baseUrl(self::BASE_API_URL)
+            ->withToken($this->account->external_access_token);
+    }
+
+    public function setAccount(Account $account): static
+    {
+        $this->account = $account;
+
+        return $this;
+    }
+
+    public function getToken(): array
+    {
+        $credentials = [
+            'grant_type' => 'client_credentials',
+            'client_id' => $this->account->external_client_id,
+            'client_secret' => $this->account->external_client_secret
+        ];
+
+        return $this->clientWithToken()->post("/token?" . http_build_query($credentials))->json();
+    }
+
+    public function subscribeToWebhook(): void
+    {
+        $this->clientWithToken()->post('/messenger/v3/webhook', [
+            'url' => $this->webhookUrl()
+        ]);
+    }
+
+    public function unsubscribeFromWebhook(Account $account): void
+    {
+        $this->setAccount($account);
+
+        $this->clientWithToken()->post('/messenger/v1/webhook/unsubscribe', [
+            'url' => $this->webhookUrl()
+        ]);
+    }
+
+    public function listOfWebhookSubscriptions(): array
+    {
+        return $this->clientWithToken()
+            ->post('/messenger/v1/subscriptions')
+            ->json('subscriptions') ?? [];
+    }
+
+    public function webhookUrl(): string
+    {
+        return config('app.url') . "/api/webhook/{$this->account->id}";
+    }
+
+    public function getChats(int $limit = 50, int $page = 1): array
+    {
+        $offset = ceil(($page - 1) * $limit);
+
+        return $this->clientWithToken()
+            ->get("/messenger/v2/accounts/{$this->account->external_id}/chats?limit=$limit&offset=$offset")
+            ->json() ?? [];
+    }
+
+    public function getChatInfoById(string $chatId)
+    {
+        return $this->clientWithToken()
+            ->get("/messenger/v2/accounts/{$this->account->external_id}/chats/$chatId")
+            ->json() ?? [];
+    }
+
+    public function markChatAsRead(string $chatId): void
+    {
+        $this->clientWithToken()->post(
+            "/messenger/v1/accounts/{$this->account->external_id}/chats/{$chatId}/read"
+        );
+    }
+
+    public function getChatMessages(string $chatId, int $limit = 30, int $page = 1): array
+    {
+        $offset = ceil(($page - 1) * $limit);
+
+        return $this->clientWithToken()
+            ->get("/messenger/v3/accounts/{$this->account->external_id}/chats/$chatId/messages?limit=$limit&offset=$offset")
+            ->json() ?? [];
+    }
+
+    public function sendMessage(string $chatId, array $message): void
+    {
+
+        $this->clientWithToken()->post(
+            "/messenger/v1/accounts/{$this->account->external_id}/chats/{$chatId}/messages",
+            [
+                'message' => $message,
+                'type' => 'text'
+            ]
+        );
+    }
+}
