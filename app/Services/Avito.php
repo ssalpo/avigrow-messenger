@@ -112,4 +112,9 @@ class Avito
             ]
         );
     }
+
+    public function me(): array
+    {
+        return $this->clientWithToken()->get("/core/v1/accounts/self")->json() ?? [];
+    }
 }
