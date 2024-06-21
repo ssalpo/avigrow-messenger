@@ -1,5 +1,4 @@
 @import "reset.css";
-
 body {
     font-family: Arial, sans-serif;
 }
@@ -61,6 +60,10 @@ body {
     border-bottom: 1px solid #2196F3;
     padding: 3px 0;
     font-size: 12px;
+}
+
+.chats-item.unread {
+    color: #f90303 !important;
 }
 
 .chats-item {
@@ -170,4 +173,3 @@ body {
 .clear {
     clear: both;
 }
-

@@ -22,7 +22,7 @@ class HomeController extends Controller
 
         $activeAccount = $accounts->first();
 
-        $response = $this->avito->setAccount($activeAccount)->getChats(50, request('page', 1));
+        $response = $this->avito->setAccount($activeAccount)->getChats(10, request('page', 1));
 
         return Inertia::render('Home', [
             'activeAccountId' => (int) ($account ?? $activeAccount->id),
@@ -30,7 +30,7 @@ class HomeController extends Controller
                 'id' => $a->id,
                 'name' => $a->name
             ]),
-            'chats' => collect($response['chats'])->map(
+            'conversations' => collect($response['chats'])->map(
                 fn($chat) => $this->chatResponse($chat, $activeAccount)
             ),
             'has_more' => $response['meta']['has_more'],

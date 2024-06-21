@@ -11,7 +11,7 @@ defineProps({
     accounts: {
         type: Array,
     },
-    chats: {
+    conversations: {
         type: Array,
     },
     hasMore: {
@@ -34,7 +34,7 @@ defineProps({
 
     <conversations
         :active-account-id="activeAccountId"
-        :chats="chats"
+        :conversations="conversations"
         :has-more="hasMore"
     />
 </template>

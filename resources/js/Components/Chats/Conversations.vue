@@ -1,28 +1,68 @@
 <script setup>
-import { router } from '@inertiajs/vue3'
+import {router} from '@inertiajs/vue3'
+import {computed, onMounted, ref} from "vue";
+import {filter, map, omit, orderBy, sortBy} from "lodash";
 
 const props = defineProps({
     activeAccountId: {
         type: Number,
         default: 0
     },
-    chats: {
-        type: Array
+    conversations: {
+        type: Array,
+        default: []
     },
     hasMore: {
         type: Boolean
     }
 });
 
+const chats = ref(props.conversations)
+const unreadChats = ref([]);
+const chatIds = ref([]);
+
 const openItem = (id) => {
     router.visit(route('account.chat.messages', {account: props.activeAccountId, chat: id}))
 }
+
+onMounted(() => {
+    chatIds.value = map(chats.value, 'id');
+    unreadChats.value = map(filter(chats.value, {last_message: {is_read: false}}), 'id')
+
+    Echo.channel(`avito.new.message`)
+        .listen('NewMessage', (e) => {
+            const data = e.data.value;
+
+            if (chatIds.value.includes(data.chat_id)) {
+                let index = chatIds.value.indexOf(data.chat_id);
+
+                chats.value[index]['last_message']['content'] = data.content;
+                chats.value[index]['last_message']['is_read'] = data.read !== undefined;
+                chats.value[index]['last_message']['created'] = data.created;
+
+                chats.value = orderBy(chats.value, 'last_message.created', 'desc')
+            } else {
+                axios.get(`/api/chats/${e.account}/${data.chat_id}/info`)
+                    .then((response) => {
+                        chats.value.unshift(response.data)
+
+                        chatIds.value = map(chats.value, 'id');
+                    })
+            }
+
+            unreadChats.value = map(filter(chats.value, {last_message: {is_read: false}}), 'id')
+        });
+
+})
+
 </script>
 
 <template>
     <div class="chats-wrap">
         <div class="chats">
-            <div class="chats-item" @click="openItem(chat.id)" v-for="chat in chats">
+            <div class="chats-item"
+                 :class="{unread: unreadChats.includes(chat.id)}"
+                 @click="openItem(chat.id)" v-for="chat in chats">
                 <div>
                     <div class="chats-item__avatar">
                         <img :src="chat.image">
