@@ -34,7 +34,6 @@ const openItem = (id) => {
 
 onMounted(() => {
     chatIds.value = map(chats.value, 'id');
-    unreadChats.value = map(filter(chats.value, {last_message: {is_read: false}}), 'id')
 
     Echo.channel(`avito.new.message`)
         .listen('NewMessage', (e) => {
@@ -73,6 +72,7 @@ onMounted(() => {
         <div class="chats">
             <div class="chats-item"
                  :class="{unread: unreadChats.includes(chat.id)}"
+                 :data-some="[unreadChats, chat.id]"
                  @click="openItem(chat.id)" v-for="chat in chats">
                 <div>
                     <div class="chats-item__avatar">
