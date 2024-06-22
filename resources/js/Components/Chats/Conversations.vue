@@ -41,7 +41,7 @@ onMounted(() => {
                 return
             }
 
-            const data = e.data.value;
+            const data = e.data.chat.value;
 
             if (chatIds.value.includes(data.chat_id)) {
                 let index = chatIds.value.indexOf(data.chat_id);
@@ -54,13 +54,13 @@ onMounted(() => {
             } else {
                 axios.get(`/api/chats/${e.account}/${data.chat_id}/info`)
                     .then((response) => {
-                        chats.value.unshift(response.data)
+                        unreadChats.value.concat(response.data.unreadChatIds);
+
+                        chats.value.unshift(response.data.chat)
 
                         chatIds.value = map(chats.value, 'id');
                     })
             }
-
-            unreadChats.value = map(filter(chats.value, {last_message: {is_read: false}}), 'id')
         });
 
 })

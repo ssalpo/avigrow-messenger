@@ -83,16 +83,10 @@ class AvitoController extends Controller
 
     public function handleWebhook(Request $request, Account $account): void
     {
-//        $this->avito->setAccount($account)->subscribeToWebhook();
-//
-//        echo "<pre>";
-//        var_dump($this->avito->setAccount($account)->listOfWebhookSubscriptions());
-//        echo "</pre>";
-//        die;
-
-        NewMessage::dispatch($account->id, $request->post('payload', []));
-
-        logger()->info($request->all());
+        NewMessage::dispatch($account->id, [
+            'unreadChatIds' => $this->avito->setAccount($account)->getUnreadChatIds(),
+            'chat' => $request->post('payload', [])
+        ]);
     }
 
     protected function chatResponse(array $chat, Account $account): array
