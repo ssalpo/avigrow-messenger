@@ -10,7 +10,7 @@ const props = defineProps({
         type: Object
     },
     has_more: {
-        type: Object
+        type: Boolean
     },
     messages: {
         type: Array
@@ -45,7 +45,23 @@ onMounted(() => {
     setTimeout(() => {
         window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "auto" });
     }, 500)
+
+    let menu = document.querySelector('.message-page-head');
+
+    let offset = menu.offsetHeight;
+
+    window.onscroll = function() {
+
+        if (window.scrollY > offset) {
+            menu.classList.add("sticky");
+        } else if(window.scrollY + 50 < offset) {
+            console.log('remove')
+            menu.classList.remove("sticky");
+        }
+    }
 })
+
+
 </script>
 
 <template>
