@@ -54,9 +54,9 @@ onMounted(() => {
             } else {
                 axios.get(`/api/chats/${e.account}/${data.chat_id}/info`)
                     .then((response) => {
-                        unreadChats.value.concat(response.data.unreadChatIds);
+                        unreadChats.value.push(response.data.id);
 
-                        chats.value.unshift(response.data.chat)
+                        chats.value.unshift(response.data)
 
                         chatIds.value = map(chats.value, 'id');
                     })

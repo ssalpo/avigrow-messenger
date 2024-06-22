@@ -74,7 +74,7 @@ class Avito
         $offset = ceil(($page - 1) * $limit);
 
         return $this->clientWithToken()
-            ->get("/messenger/v2/accounts/{$this->account->external_id}/chats?limit=$limit&offset=$offset")
+            ->get("/messenger/v2/accounts/{$this->account->external_id}/chats?limit=$limit&offset=$offset&chat_types=u2i,u2u")
             ->json() ?? [];
     }
 

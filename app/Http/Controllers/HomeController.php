@@ -22,7 +22,7 @@ class HomeController extends Controller
 
         $activeAccount = $accounts->first();
 
-        $response = $this->avito->setAccount($activeAccount)->getChats(10, request('page', 1));
+        $response = $this->avito->setAccount($activeAccount)->getChats(30, request('page', 1));
 
         $me = $this->avito->me();
 
