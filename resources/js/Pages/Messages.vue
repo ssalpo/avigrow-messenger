@@ -1,6 +1,6 @@
 <script setup>
 import {Head, Link, router} from '@inertiajs/vue3';
-import {computed, onMounted, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 import {map, orderBy} from "lodash";
 
 const props = defineProps({
@@ -53,9 +53,12 @@ onMounted(() => {
     setTimeout(scrollToEnd, 100)
 })
 
+let newMessageChannel = null;
+
 onMounted(() => {
-    Echo.channel(`avito.new.message`)
-        .listen('NewMessage', (e) => {
+    newMessageChannel = Echo.channel(`avito.new.message`)
+
+    newMessageChannel.listen('NewMessage', (e) => {
             const data = e.data.chat.value;
 
             if (data.chat_id !== props.chat.id || messageAllIds.value.includes(data.id)) {
@@ -76,6 +79,10 @@ onMounted(() => {
 
             axios.post(route('chats.mark-as-read', {account: props.activeAccountId, chatId: props.chat.id}))
         });
+})
+
+onBeforeUnmount(() => {
+    newMessageChannel.stopListening('NewMessage')
 })
 
 

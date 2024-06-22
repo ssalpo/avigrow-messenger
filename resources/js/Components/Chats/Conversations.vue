@@ -1,7 +1,7 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import {Link} from '@inertiajs/vue3';
 import {router} from '@inertiajs/vue3'
-import {computed, onMounted, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 import {filter, map, omit, orderBy, sortBy} from "lodash";
 
 const props = defineProps({
@@ -36,41 +36,48 @@ const openItem = (id) => {
     router.visit(route('account.chat.messages', {account: props.activeAccountId, chat: id}))
 }
 
+let newMessageChannel = null;
+
 onMounted(() => {
     chatIds.value = map(chats.value, 'id');
 
-    Echo.channel(`avito.new.message`)
-        .listen('NewMessage', (e) => {
-            if(e.account !== props.activeAccountId) {
-                return
-            }
+    newMessageChannel = Echo.channel(`avito.new.message`);
 
-            const data = e.data.chat.value;
+    newMessageChannel.listen('NewMessage', (e) => {
+        if (e.account !== props.activeAccountId) {
+            return
+        }
 
-            if (chatIds.value.includes(data.chat_id)) {
-                let index = chatIds.value.indexOf(data.chat_id);
+        const data = e.data.chat.value;
 
-                chats.value[index]['last_message']['content'] = data.content;
-                chats.value[index]['last_message']['is_read'] = data.read !== undefined;
-                chats.value[index]['last_message']['created'] = data.created;
+        if (chatIds.value.includes(data.chat_id)) {
+            let index = chatIds.value.indexOf(data.chat_id);
 
-                chats.value = orderBy(chats.value, 'last_message.created', 'desc')
-            } else {
-                axios.get(`/api/chats/${e.account}/${data.chat_id}/info`)
-                    .then((response) => {
-                        unreadChats.value.push(response.data.id);
+            chats.value[index]['last_message']['content'] = data.content;
+            chats.value[index]['last_message']['is_read'] = data.read !== undefined;
+            chats.value[index]['last_message']['created'] = data.created;
 
-                        chats.value.unshift(response.data)
+            chats.value = orderBy(chats.value, 'last_message.created', 'desc')
+        } else {
+            axios.get(`/api/chats/${e.account}/${data.chat_id}/info`)
+                .then((response) => {
+                    unreadChats.value.push(response.data.id);
 
-                        chatIds.value = map(chats.value, 'id');
-                    })
-            }
-        });
+                    chats.value.unshift(response.data)
+
+                    chatIds.value = map(chats.value, 'id');
+                })
+        }
+    });
+
+    onBeforeUnmount(() => {
+        newMessageChannel.stopListening('NewMessage')
+    })
 
 })
 
 const showMorePage = () => {
-    if(isBusy.value === true) {
+    if (isBusy.value === true) {
         return;
     }
 
@@ -109,7 +116,8 @@ const showMorePage = () => {
             </div>
 
             <div style="text-align: center">
-                <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreChats" @click.prevent="showMorePage">Показать еще</a>
+                <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreChats" @click.prevent="showMorePage">Показать
+                    еще</a>
             </div>
         </div>
     </div>
