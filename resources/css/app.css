@@ -1,12 +1,11 @@
 @import "reset.css";
+
 body {
     font-family: Arial, sans-serif;
 }
 
 .head-list, .message-page-head {
     font-size: 20px;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
     width: 100%;
     -webkit-box-shadow: 0px 1px 16px -5px rgba(204, 204, 204, 1);
     -moz-box-shadow: 0px 1px 16px -5px rgba(204, 204, 204, 1);
@@ -14,12 +13,14 @@ body {
 }
 
 .message-page-head {
+    display: flex;
     background: #fff;
-    max-height: 118px;
+    align-items: center;
+    justify-content: center;
 }
 
 .message-page-head > div {
-    padding: 18px 35px;
+    padding: 10px;
 }
 
 .message-page-head.sticky {
@@ -51,8 +52,6 @@ body {
     -webkit-box-shadow: inset 0px -52px 50px -80px rgba(204, 204, 204, 1);
     -moz-box-shadow: inset 0px -52px 50px -80px rgba(204, 204, 204, 1);
     box-shadow: inset 0px -52px 50px -80px rgba(204, 204, 204, 1);
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
 }
 
 .head-tab-menu {
@@ -175,23 +174,19 @@ body {
     color: #828282;
 }
 
-.message__item.left .message__time{
+.message__item.left .message__time {
     text-align: left;
 }
 
-.message__item.right .message__time{
+.message__item.right .message__time {
     text-align: right;
 }
 
 .message-page-head__back {
     color: #3e63e2;
     text-decoration: none;
-    font-size: 12px;
-    margin-bottom: 10px;
+    font-size: 25px;
     display: inline-block;
-    padding: 6px 10px;
-    border-radius: 6px;
-    border: 1px solid #3e63e2;
 }
 
 .messages-wrap {

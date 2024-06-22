@@ -82,8 +82,11 @@ const sendMessage = () => {
     <div style="display: flex; flex-direction: column; height: 100vh;">
         <div class="message-page-head">
             <div>
-                <Link :href="route('account.chats', {account: activeAccountId})" class="message-page-head__back">Назад</Link>
-
+                <Link :href="route('account.chats', {account: activeAccountId})" class="message-page-head__back">
+                    🔙
+                </Link>
+            </div>
+            <div>
                 <div class="message-page-head__title">{{chat.user.name}}</div>
                 <div class="message-page-head__ads">{{ chat.context }} - {{ chat.price }}</div>
             </div>
