@@ -4,9 +4,16 @@ import {computed, onMounted, ref} from "vue";
 import {filter, map, omit, orderBy, sortBy} from "lodash";
 
 const props = defineProps({
+    currentUserId: {
+        type: Number
+    },
     activeAccountId: {
         type: Number,
         default: 0
+    },
+    unreadChatIds: {
+        type: Array,
+        default: []
     },
     conversations: {
         type: Array,
@@ -18,7 +25,7 @@ const props = defineProps({
 });
 
 const chats = ref(props.conversations)
-const unreadChats = ref([]);
+const unreadChats = ref(props.unreadChatIds);
 const chatIds = ref([]);
 
 const openItem = (id) => {
@@ -31,6 +38,10 @@ onMounted(() => {
 
     Echo.channel(`avito.new.message`)
         .listen('NewMessage', (e) => {
+            if(e.account !== props.activeAccountId) {
+                return
+            }
+
             const data = e.data.value;
 
             if (chatIds.value.includes(data.chat_id)) {

@@ -11,6 +11,9 @@ defineProps({
     accounts: {
         type: Array,
     },
+    unreadChatIds: {
+        type: Array,
+    },
     conversations: {
         type: Array,
     },
@@ -33,6 +36,7 @@ defineProps({
               :active-account-id="activeAccountId" />
 
     <conversations
+        :unreadChatIds="unreadChatIds"
         :active-account-id="activeAccountId"
         :conversations="conversations"
         :has-more="hasMore"

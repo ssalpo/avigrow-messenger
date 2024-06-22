@@ -24,7 +24,13 @@ class HomeController extends Controller
 
         $response = $this->avito->setAccount($activeAccount)->getChats(10, request('page', 1));
 
+        $me = $this->avito->me();
+
+        $unreadChatIds = $this->avito->getUnreadChatIds();
+
         return Inertia::render('Home', [
+            'unreadChatIds' => $unreadChatIds,
+            'currentUserId' => $me['id'],
             'activeAccountId' => (int) ($account ?? $activeAccount->id),
             'accounts' => $accounts->map(fn($a) => [
                 'id' => $a->id,
@@ -73,8 +79,6 @@ class HomeController extends Controller
                 ->values()
         ]);
     }
-
-
 
     protected function chatResponse(array $chat, Account $account): array
     {
