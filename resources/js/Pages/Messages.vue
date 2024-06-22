@@ -1,6 +1,6 @@
 <script setup>
 import {Head, Link} from '@inertiajs/vue3';
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 
 const props = defineProps({
     activeAccountId: {
@@ -9,10 +9,37 @@ const props = defineProps({
     chat: {
         type: Object
     },
+    has_more: {
+        type: Object
+    },
     messages: {
         type: Array
     }
 });
+
+const messagesAll = ref(props.messages);
+const hasMoreMessages = ref(props.has_more);
+const currentPage = ref(1);
+const isBusy = ref(false);
+
+const showMorePage = () => {
+    if(isBusy.value === true) {
+        return;
+    }
+
+    isBusy.value = true;
+
+    currentPage.value++;
+
+    axios.get(`/api/messages/${props.activeAccountId}/${props.chat.id}?page=${currentPage.value}`)
+        .then((response) => {
+            messagesAll.value = response.data.messages.concat(messagesAll.value)
+
+            hasMoreMessages.value = response.data.messages.length > 0
+
+            isBusy.value = false;
+        })
+}
 
 onMounted(() => {
     setTimeout(() => {
@@ -35,7 +62,12 @@ onMounted(() => {
 
     <div class="messages-wrap">
         <div class="messages">
-            <div v-for="message in messages">
+
+            <div style="text-align: center">
+                <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreMessages" @click.prevent="showMorePage">Показать еще</a>
+            </div>
+
+            <div v-for="message in messagesAll">
                 <div class="message__item" :class="[message.is_me ? 'right' : 'left']">
                     <div class="message__text">{{message.content.text}}</div>
                     <div class="clear"></div>

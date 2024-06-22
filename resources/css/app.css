@@ -173,3 +173,25 @@ body {
 .clear {
     clear: both;
 }
+
+.pagination {
+    display: inline-block;
+    text-decoration: none;
+    color: #2196f3;
+    border: 1px solid #2196f3;
+    border-radius: 5px;
+    padding: 6px 16px;
+    font-size: 13px;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+.pagination:hover {
+    cursor: pointer;
+    opacity: .7;
+}
+
+.pagination.isBusy {
+    color: rgb(33 150 243 / 41%);
+    border: 1px solid rgb(33 150 243 / 41%);
+}

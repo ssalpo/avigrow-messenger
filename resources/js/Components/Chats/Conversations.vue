@@ -114,25 +114,3 @@ const showMorePage = () => {
         </div>
     </div>
 </template>
-
-<style scoped>
-.pagination {
-    display: inline-block;
-    text-decoration: none;
-    color: #2196f3;
-    border: 1px solid #2196f3;
-    border-radius: 5px;
-    padding: 10px 40px;
-    margin-top: 14px;
-}
-
-.pagination:hover {
-    cursor: pointer;
-    opacity: .7;
-}
-
-.pagination.isBusy {
-    color: rgb(33 150 243 / 41%);
-    border: 1px solid rgb(33 150 243 / 41%);
-}
-</style>

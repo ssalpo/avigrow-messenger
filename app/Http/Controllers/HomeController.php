@@ -54,7 +54,7 @@ class HomeController extends Controller
 
         $chat = $this->avito->getChatInfoById($chatId);
 
-        $response = $this->avito->setAccount($account)->getChatMessages($chatId, 50, request('page', 1));
+        $response = $this->avito->setAccount($account)->getChatMessages($chatId, 30, request('page', 1));
 
         $me = $this->avito->me();
 

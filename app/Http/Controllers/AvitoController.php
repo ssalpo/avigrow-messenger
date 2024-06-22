@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\NewMessage;
 use App\Models\Account;
 use App\Services\Avito;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -51,21 +52,28 @@ class AvitoController extends Controller
     {
         $this->avito->setAccount($account)->markChatAsRead($chatId);
 
-        $response = $this->avito->setAccount($account)->getChatMessages($chatId, 50, request('page', 1));
+        $response = $this->avito->setAccount($account)->getChatMessages($chatId, 30, request('page', 1));
+
+        $me = $this->avito->me();
 
         return response()->json([
             'has_more' => $response['meta']['has_more'],
             'messages' => collect($response['messages'])
-                ->reverse()
-                ->map(function ($message) {
+                ->map(function ($message) use ($me) {
                     return [
                         'id' => $message['id'],
+                        'is_me' => $message['author_id'] === $me['id'],
                         'content_type' => $message['type'],
                         'content' => $message['content'],
                         'is_read' => $message['isRead'],
-                        'created_at' => $message['created']
+                        'created_at' => Carbon::createFromTimestamp($message['created'])->format('Y.m.d, H:i'),
+                        'created_at_timestamp' => $message['created']
                     ];
                 })
+                ->sortBy([
+                    fn (array $a, array $b) => $a['created_at_timestamp'] <=> $b['created_at_timestamp'],
+                ])
+                ->values()
         ]);
     }
 
