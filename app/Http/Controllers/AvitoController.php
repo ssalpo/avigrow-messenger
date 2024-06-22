@@ -28,7 +28,7 @@ class AvitoController extends Controller
 
     public function chats(Account $account): JsonResponse
     {
-        $response = $this->avito->setAccount($account)->getChats(50, request('page', 1));
+        $response = $this->avito->setAccount($account)->getChats(30, request('page', 1));
 
         return response()->json([
             'chats' => collect($response['chats'])->map(

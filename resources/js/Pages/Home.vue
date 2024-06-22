@@ -19,7 +19,7 @@ defineProps({
     },
     hasMore: {
         type: Boolean,
-    },
+    }
 });
 
 </script>

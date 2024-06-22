@@ -22,7 +22,7 @@ class HomeController extends Controller
 
         $activeAccount = $accounts->first();
 
-        $response = $this->avito->setAccount($activeAccount)->getChats(30, request('page', 1));
+        $response = $this->avito->setAccount($activeAccount)->getChats(30);
 
         $me = $this->avito->me();
 
@@ -39,7 +39,8 @@ class HomeController extends Controller
             'conversations' => collect($response['chats'])->map(
                 fn($chat) => $this->chatResponse($chat, $activeAccount)
             ),
-            'has_more' => $response['meta']['has_more'],
+            'hasMore' => $response['meta']['has_more'],
+            'currentPage' => \request('page', 1)
         ]);
     }
 

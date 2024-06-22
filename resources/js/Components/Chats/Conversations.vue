@@ -1,4 +1,5 @@
 <script setup>
+import { Link } from '@inertiajs/vue3';
 import {router} from '@inertiajs/vue3'
 import {computed, onMounted, ref} from "vue";
 import {filter, map, omit, orderBy, sortBy} from "lodash";
@@ -27,6 +28,9 @@ const props = defineProps({
 const chats = ref(props.conversations)
 const unreadChats = ref(props.unreadChatIds);
 const chatIds = ref([]);
+const hasMoreChats = ref(props.hasMore);
+const currentPage = ref(1);
+const isBusy = ref(false);
 
 const openItem = (id) => {
     router.visit(route('account.chat.messages', {account: props.activeAccountId, chat: id}))
@@ -65,6 +69,25 @@ onMounted(() => {
 
 })
 
+const showMorePage = () => {
+    if(isBusy.value === true) {
+        return;
+    }
+
+    isBusy.value = true;
+
+    currentPage.value++;
+
+    axios.get(`/api/chats/${props.activeAccountId}?page=${currentPage.value}`)
+        .then((response) => {
+            chats.value = chats.value.concat(response.data.chats)
+
+            hasMoreChats.value = response.data.has_more
+
+            isBusy.value = false;
+        })
+}
+
 </script>
 
 <template>
@@ -72,7 +95,6 @@ onMounted(() => {
         <div class="chats">
             <div class="chats-item"
                  :class="{unread: unreadChats.includes(chat.id)}"
-                 :data-some="[unreadChats, chat.id]"
                  @click="openItem(chat.id)" v-for="chat in chats">
                 <div>
                     <div class="chats-item__avatar">
@@ -85,6 +107,32 @@ onMounted(() => {
                     <div class="chats-item__last-message">{{ chat.last_message.content.text ?? '-' }}</div>
                 </div>
             </div>
+
+            <div style="text-align: center">
+                <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreChats" @click.prevent="showMorePage">Показать еще</a>
+            </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+.pagination {
+    display: inline-block;
+    text-decoration: none;
+    color: #2196f3;
+    border: 1px solid #2196f3;
+    border-radius: 5px;
+    padding: 10px 40px;
+    margin-top: 14px;
+}
+
+.pagination:hover {
+    cursor: pointer;
+    opacity: .7;
+}
+
+.pagination.isBusy {
+    color: rgb(33 150 243 / 41%);
+    border: 1px solid rgb(33 150 243 / 41%);
+}
+</style>
