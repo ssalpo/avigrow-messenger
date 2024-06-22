@@ -23,7 +23,7 @@ body {
 
 .message-page-head.sticky {
     position: fixed;
-    background-color: #ebebeb;
+    background-color: #d3e3fd;
 }
 
 .message-page-head.sticky .message-page-head__back {
