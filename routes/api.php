@@ -14,7 +14,10 @@ Route::get('/chats/{account}', [AvitoController::class, 'chats']);
 
 Route::get('/chats/{account}/{chatId}/info', [AvitoController::class, 'chatInfo']);
 
+Route::post('/chats/{account}/{chatId}/mark-as-read', [AvitoController::class, 'markAsRead'])->name('chats.mark-as-read');
+
 Route::get('/messages/{account}/{chatId}', [AvitoController::class, 'getMessages']);
+
 
 Route::post('/messages/{account}/{chatId}/send', [AvitoController::class, 'sendMessage']);
 

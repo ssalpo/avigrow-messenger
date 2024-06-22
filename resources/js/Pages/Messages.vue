@@ -1,6 +1,7 @@
 <script setup>
-import {Head, Link} from '@inertiajs/vue3';
-import {onMounted, ref} from "vue";
+import {Head, Link, router} from '@inertiajs/vue3';
+import {computed, onMounted, ref} from "vue";
+import {map, orderBy} from "lodash";
 
 const props = defineProps({
     activeAccountId: {
@@ -21,9 +22,10 @@ const messagesAll = ref(props.messages);
 const hasMoreMessages = ref(props.has_more);
 const currentPage = ref(1);
 const isBusy = ref(false);
+let messageAllIds = computed(() => messagesAll.value.map(m => m.id))
 
 const showMorePage = () => {
-    if(isBusy.value === true) {
+    if (isBusy.value === true) {
         return;
     }
 
@@ -51,11 +53,36 @@ onMounted(() => {
     setTimeout(scrollToEnd, 100)
 })
 
+onMounted(() => {
+    Echo.channel(`avito.new.message`)
+        .listen('NewMessage', (e) => {
+            const data = e.data.chat.value;
+
+            if (data.chat_id !== props.chat.id || messageAllIds.value.includes(data.id)) {
+                return
+            }
+
+            messagesAll.value.push({
+                id: data.id,
+                is_me: data.is_me,
+                content_type: data.type,
+                content: data.content,
+                is_read: false,
+                created_at: data.created_at,
+                created_at_timestamp: data.created,
+            })
+
+            setTimeout(scrollToEnd, 100)
+
+            axios.post(route('chats.mark-as-read', {account: props.activeAccountId, chatId: props.chat.id}))
+        });
+})
+
 
 let message = ref('');
 
 const sendMessage = () => {
-    if(isBusy.value === true) {
+    if (isBusy.value === true) {
         return;
     }
 
@@ -74,10 +101,11 @@ const sendMessage = () => {
         .finally(() => isBusy.value = false)
 }
 
+
 </script>
 
 <template>
-    <Head title="Сообщение" />
+    <Head title="Сообщение"/>
 
     <div style="display: flex; flex-direction: column; height: 100vh;">
         <div class="message-page-head">
@@ -87,7 +115,7 @@ const sendMessage = () => {
                 </Link>
             </div>
             <div>
-                <div class="message-page-head__title">{{chat.user.name}}</div>
+                <div class="message-page-head__title">{{ chat.user.name }}</div>
                 <div class="message-page-head__ads">{{ chat.context }} - {{ chat.price }}</div>
             </div>
         </div>
@@ -96,14 +124,15 @@ const sendMessage = () => {
             <div class="messages">
 
                 <div style="text-align: center">
-                    <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreMessages" @click.prevent="showMorePage">Показать еще</a>
+                    <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreMessages"
+                       @click.prevent="showMorePage">Показать еще</a>
                 </div>
 
                 <div v-for="message in messagesAll">
                     <div class="message__item" :class="[message.is_me ? 'right' : 'left']">
-                        <div class="message__text">{{message.content.text}}</div>
+                        <div class="message__text">{{ message.content.text }}</div>
                         <div class="clear"></div>
-                        <div class="message__time">{{message.created_at}}</div>
+                        <div class="message__time">{{ message.created_at }}</div>
                     </div>
 
                     <div class="clear"></div>
@@ -117,7 +146,7 @@ const sendMessage = () => {
 
                 <input :disabled="isBusy" type="text" v-model="message" placeholder="Введите сообщение...">
 
-                <button :disabled="isBusy" type="button" @click="sendMessage"> ➤ </button>
+                <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
             </div>
         </div>
     </div>

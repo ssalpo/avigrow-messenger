@@ -103,9 +103,16 @@ class AvitoController extends Controller
 
     public function handleWebhook(Request $request, Account $account): void
     {
+        $payload = (array) $request->post('payload', []);
+
+        $me = $this->avito->setAccount($account)->me();
+
+        $payload['value']['created_at'] = Carbon::createFromTimestamp($payload['value']['created'])->format('Y.m.d, H:i');
+        $payload['is_me'] = $payload['value']['author_id'] === $me['id'];
+
         NewMessage::dispatch($account->id, [
             'unreadChatIds' => $this->avito->setAccount($account)->getUnreadChatIds(),
-            'chat' => $request->post('payload', [])
+            'chat' => $payload
         ]);
     }
 
@@ -133,5 +140,10 @@ class AvitoController extends Controller
                 'is_read' => isset($chat['last_message']['read'])
             ]
         ];
+    }
+
+    public function markAsRead(Account $account, string $chatId): void
+    {
+        $this->avito->setAccount($account)->markChatAsRead($chatId);
     }
 }
