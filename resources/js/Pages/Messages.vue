@@ -56,7 +56,7 @@ onMounted(() => {
             <Link :href="route('account.chats', {account: activeAccountId})" class="message-page-head__back">Назад</Link>
 
             <div class="message-page-head__title">{{chat.user.name}}</div>
-            <div class="message-page-head__ads">{{ chat.context }}</div>
+            <div class="message-page-head__ads">{{ chat.context }} - {{ chat.price }}</div>
         </div>
     </div>
 
