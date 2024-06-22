@@ -108,7 +108,7 @@ class AvitoController extends Controller
         $me = $this->avito->setAccount($account)->me();
 
         $payload['value']['created_at'] = Carbon::createFromTimestamp($payload['value']['created'])->format('Y.m.d, H:i');
-        $payload['is_me'] = $payload['value']['author_id'] === $me['id'];
+        $payload['value']['is_me'] = $payload['value']['author_id'] === $me['id'];
 
         NewMessage::dispatch($account->id, [
             'unreadChatIds' => $this->avito->setAccount($account)->getUnreadChatIds(),
