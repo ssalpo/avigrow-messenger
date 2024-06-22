@@ -23,6 +23,24 @@ body {
 
 .message-page-head.sticky {
     position: fixed;
+    background-color: #ebebeb;
+}
+
+.message-page-head.sticky .message-page-head__back {
+    font-size: 10px;
+    padding: 2px 4px;
+}
+
+.message-page-head.sticky > div {
+    padding: 15px 35px;
+}
+
+.message-page-head.sticky .message-page-head__ads {
+    font-size: 12px;
+}
+
+.message-page-head.sticky .message-page-head__title {
+    font-size: 15px;
 }
 
 
