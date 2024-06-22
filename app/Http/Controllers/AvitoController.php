@@ -77,16 +77,28 @@ class AvitoController extends Controller
         ]);
     }
 
-    public function sendMessage(Request $request, Account $account, string $chatId): void
+    public function sendMessage(Request $request, Account $account, string $chatId): JsonResponse
     {
         $request->validate([
             'message' => 'required|array',
             'message.text' => 'required'
         ]);
 
-        $this->avito
+        $message = $this->avito
             ->setAccount($account)
             ->sendMessage($chatId, $request->post('message'));
+
+        return response()->json(
+            [
+                'id' => $message['id'],
+                'is_me' => true,
+                'content_type' => $message['type'],
+                'content' => $message['content'],
+                'is_read' => false,
+                'created_at' => Carbon::createFromTimestamp($message['created'])->format('Y.m.d, H:i'),
+                'created_at_timestamp' => $message['created']
+            ]
+        );
     }
 
     public function handleWebhook(Request $request, Account $account): void

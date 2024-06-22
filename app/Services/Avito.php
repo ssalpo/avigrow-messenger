@@ -115,16 +115,17 @@ class Avito
             ->json() ?? [];
     }
 
-    public function sendMessage(string $chatId, array $message): void
+    public function sendMessage(string $chatId, array $message): array
     {
 
-        $this->clientWithToken()->post(
+
+        return $this->clientWithToken()->post(
             "/messenger/v1/accounts/{$this->account->external_id}/chats/{$chatId}/messages",
             [
                 'message' => $message,
                 'type' => 'text'
             ]
-        );
+        )->json() ?? [];
     }
 
     public function me(): array

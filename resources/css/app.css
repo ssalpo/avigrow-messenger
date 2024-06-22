@@ -15,6 +15,7 @@ body {
 
 .message-page-head {
     background: #fff;
+    max-height: 118px;
 }
 
 .message-page-head > div {
@@ -163,6 +164,8 @@ body {
     background-color: #F5F5F5;
     padding: 15px 20px;
     border-radius: 10px;
+    font-size: 14px;
+    line-height: 18px;
 }
 
 .message__time {
@@ -189,6 +192,11 @@ body {
     padding: 6px 10px;
     border-radius: 6px;
     border: 1px solid #3e63e2;
+}
+
+.messages-wrap {
+    flex-direction: column;
+    overflow-y: auto;
 }
 
 .messages {
@@ -220,4 +228,31 @@ body {
 .pagination.isBusy {
     color: rgb(33 150 243 / 41%);
     border: 1px solid rgb(33 150 243 / 41%);
+}
+
+
+.message-send-input {
+    border-top: 1px solid #f2f2f2;
+    max-height: 40px;
+    width: 100%;
+}
+
+.message-send-input > div {
+    padding: 15px 10px;
+    display: flex;
+}
+
+.message-send-input input {
+    border: 1px solid #f2f2f2;
+    padding: 13px 10px;
+    border-radius: 5px;
+    width: 80%;
+}
+
+.message-send-input button {
+    background: #fff;
+    border: 1px solid #fff;
+    padding: 0 15px;
+    border-radius: 5px;
+    font-size: 20px;
 }

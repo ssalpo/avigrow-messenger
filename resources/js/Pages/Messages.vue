@@ -41,56 +41,80 @@ const showMorePage = () => {
         })
 }
 
+const scrollToEnd = () => {
+    let messageContainer = document.querySelector('.messages-wrap');
+
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+}
+
 onMounted(() => {
-    setTimeout(() => {
-        window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "auto" });
-    }, 500)
-
-    let menu = document.querySelector('.message-page-head');
-
-    let offset = menu.offsetHeight;
-
-    window.onscroll = function() {
-
-        if (window.scrollY > offset) {
-            menu.classList.add("sticky");
-        } else if(window.scrollY + 50 < offset) {
-            console.log('remove')
-            menu.classList.remove("sticky");
-        }
-    }
+    setTimeout(scrollToEnd, 100)
 })
 
+
+let message = ref('');
+
+const sendMessage = () => {
+    if(isBusy.value === true) {
+        return;
+    }
+
+    isBusy.value = true;
+
+    axios
+        .post(`/api/messages/${props.activeAccountId}/${props.chat.id}/send`, {message: {text: message.value}})
+        .then((response) => {
+            messagesAll.value.push(response.data);
+
+            message.value = '';
+
+            setTimeout(scrollToEnd, 50);
+
+        })
+        .finally(() => isBusy.value = false)
+}
 
 </script>
 
 <template>
     <Head title="Сообщение" />
 
-    <div class="message-page-head">
-        <div>
-            <Link :href="route('account.chats', {account: activeAccountId})" class="message-page-head__back">Назад</Link>
+    <div style="display: flex; flex-direction: column; height: 100vh;">
+        <div class="message-page-head">
+            <div>
+                <Link :href="route('account.chats', {account: activeAccountId})" class="message-page-head__back">Назад</Link>
 
-            <div class="message-page-head__title">{{chat.user.name}}</div>
-            <div class="message-page-head__ads">{{ chat.context }} - {{ chat.price }}</div>
-        </div>
-    </div>
-
-    <div class="messages-wrap">
-        <div class="messages">
-
-            <div style="text-align: center">
-                <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreMessages" @click.prevent="showMorePage">Показать еще</a>
+                <div class="message-page-head__title">{{chat.user.name}}</div>
+                <div class="message-page-head__ads">{{ chat.context }} - {{ chat.price }}</div>
             </div>
+        </div>
 
-            <div v-for="message in messagesAll">
-                <div class="message__item" :class="[message.is_me ? 'right' : 'left']">
-                    <div class="message__text">{{message.content.text}}</div>
-                    <div class="clear"></div>
-                    <div class="message__time">{{message.created_at}}</div>
+        <div class="messages-wrap">
+            <div class="messages">
+
+                <div style="text-align: center">
+                    <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreMessages" @click.prevent="showMorePage">Показать еще</a>
                 </div>
 
-                <div class="clear"></div>
+                <div v-for="message in messagesAll">
+                    <div class="message__item" :class="[message.is_me ? 'right' : 'left']">
+                        <div class="message__text">{{message.content.text}}</div>
+                        <div class="clear"></div>
+                        <div class="message__time">{{message.created_at}}</div>
+                    </div>
+
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="message-send-input">
+            <div>
+                <button :disabled="isBusy" type="button">📎</button>
+
+                <input :disabled="isBusy" type="text" v-model="message" placeholder="Введите сообщение...">
+
+                <button :disabled="isBusy" type="button" @click="sendMessage"> ➤ </button>
             </div>
         </div>
     </div>
