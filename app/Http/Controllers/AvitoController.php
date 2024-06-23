@@ -72,7 +72,7 @@ class AvitoController extends Controller
                     ];
                 })
                 ->sortBy([
-                    fn (array $a, array $b) => $a['created_at_timestamp'] <=> $b['created_at_timestamp'],
+                    fn(array $a, array $b) => $a['created_at_timestamp'] <=> $b['created_at_timestamp'],
                 ])
                 ->values()
         ]);
@@ -104,7 +104,7 @@ class AvitoController extends Controller
 
     public function handleWebhook(Request $request, Account $account): void
     {
-        $payload = (array) $request->post('payload', []);
+        $payload = (array)$request->post('payload', []);
 
         $me = $this->avito->setAccount($account)->me();
 
@@ -116,13 +116,15 @@ class AvitoController extends Controller
             'chat' => $payload
         ]);
 
-        SendMessageToTelegram::dispatch(
-            $account->id,
-            config('services.telegram.ids'),
-            $payload['value']['chat_id'],
-            $payload['value']['chat_type'],
-            $payload['value']
-        );
+        if (!$payload['value']['is_me']) {
+            SendMessageToTelegram::dispatch(
+                $account->id,
+                config('services.telegram.ids'),
+                $payload['value']['chat_id'],
+                $payload['value']['chat_type'],
+                $payload['value']
+            );
+        }
     }
 
     protected function chatResponse(array $chat, Account $account): array
