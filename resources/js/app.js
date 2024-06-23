@@ -14,13 +14,14 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => {
-        // resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue'))
+        const page = resolvePageComponent(
+            `./Pages/${name}.vue`,
+            import.meta.glob('./Pages/**/*.vue')
+        );
 
-        const pages = import.meta.glob('./Pages/**/*.vue', { eager: true });
-
-        let page = pages[`./Pages/${name}.vue`];
-
-        page.default.layout = page.default.layout || BaseLayout;
+        page.then((module) => {
+            module.default.layout ??= BaseLayout;
+        });
 
         return page;
     },
