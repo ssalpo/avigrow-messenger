@@ -81,7 +81,7 @@ class Avito
     public function getUnreadChats(): array
     {
         return $this->clientWithToken()
-            ->get("/messenger/v2/accounts/{$this->account->external_id}/chats?unread_only=true")
+            ->get("/messenger/v2/accounts/{$this->account->external_id}/chats?unread_only=true&chat_types=u2i,u2u")
             ->json() ?? [];
     }
 
