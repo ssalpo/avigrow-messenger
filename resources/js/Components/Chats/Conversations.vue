@@ -99,6 +99,19 @@ const showMorePage = () => {
         })
 }
 
+function truncate(text, limit) {
+    if (text.length > limit) {
+        for (let i = limit; i > 0; i--){
+            if(text.charAt(i) === ' ' && (text.charAt(i-1) != ','||text.charAt(i-1) != '.'||text.charAt(i-1) != ';')) {
+                return text.substring(0, i) + '...';
+            }
+        }
+        return text.substring(0, limit) + '...';
+    } else {
+        return text;
+    }
+}
+
 </script>
 
 <template>
@@ -135,7 +148,7 @@ const showMorePage = () => {
                             Объявление
                         </div>
                         <div v-else>
-                            {{ chat.last_message.content.text }}
+                            {{ truncate(chat.last_message.content.text ?? '', 90) }}
                         </div>
                     </div>
                 </div>
