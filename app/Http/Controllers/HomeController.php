@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Services\Avito;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -70,7 +69,7 @@ class HomeController extends Controller
                         'content_type' => $message['type'],
                         'content' => $message['content'],
                         'is_read' => $message['isRead'],
-                        'created_at' => Carbon::createFromTimestamp($message['created'])->format('Y.m.d, H:i'),
+                        'created_at' => Carbon::createFromTimestamp($message['created'], 'Asia/Dushanbe')->format('Y.m.d, H:i'),
                         'created_at_timestamp' => $message['created']
                     ];
                 })
