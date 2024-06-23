@@ -124,7 +124,7 @@ class AvitoController extends Controller
             'id' => $chat['id'],
             'context_id' => $chat['context']['value']['id'],
             'context' => $chat['context']['value']['title'],
-            'image' => $chat['context']['value']['images']['main']['140x105'] ?? null,
+            'image' => $chat['context']['value']['images']['main']['140x105'] ?? $user['public_user_profile']['avatar']['default'] ?? null,
             'price' => $chat['context']['value']['price_string'] ?? '',
             'url' => $chat['context']['value']['url'],
             'user' => [
