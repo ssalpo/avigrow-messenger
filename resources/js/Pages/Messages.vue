@@ -2,6 +2,7 @@
 import {Head, Link, router} from '@inertiajs/vue3';
 import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 import {map, orderBy} from "lodash";
+import MessageItem from "@/Components/Chats/MessageItem.vue";
 
 const props = defineProps({
     activeAccountId: {
@@ -136,11 +137,10 @@ const sendMessage = () => {
                 </div>
 
                 <div v-for="message in messagesAll">
-                    <div class="message__item" :class="[message.is_me ? 'right' : 'left']">
-                        <div class="message__text">{{ message.content.text }}</div>
-                        <div class="clear"></div>
-                        <div class="message__time">{{ message.created_at }}</div>
-                    </div>
+                    <message-item
+                        :message="message"
+                        :key="message.id"
+                    />
 
                     <div class="clear"></div>
                 </div>
