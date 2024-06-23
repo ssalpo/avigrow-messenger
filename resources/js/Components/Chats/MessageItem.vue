@@ -32,7 +32,7 @@ const props = defineProps({
             </div>
 
             <div v-else-if="message.content_type === 'location'">
-                <b>Пользователь отправил локацию (не поддерживается)</b>
+                <b>Локация: </b> {{message.content.location.text}}
             </div>
 
             <div v-else-if="message.content_type === 'video'">

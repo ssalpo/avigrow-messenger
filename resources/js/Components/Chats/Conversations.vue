@@ -111,7 +111,29 @@ const showMorePage = () => {
                 <div>
                     <div class="chats-item__title">{{ chat.user.name }}</div>
                     <div class="chats-item__ads">{{ chat.context }}</div>
-                    <div class="chats-item__last-message">{{ chat.last_message.content.text ?? '-' }}</div>
+                    <div class="chats-item__last-message">
+                        <div v-if="chat.last_message.content_type === 'image'">
+                            Фото
+                        </div>
+                        <div v-if="chat.last_message.content_type === 'video'">
+                            Видео
+                        </div>
+                        <div v-if="chat.last_message.content_type === 'location'">
+                            Локация: {{chat.last_message.content.location.text}}
+                        </div>
+                        <div v-if="chat.last_message.content_type === 'voice'">
+                            Голосовое сообщение
+                        </div>
+                        <div v-if="chat.last_message.content_type === 'deleted'">
+                            Сообщение удалено
+                        </div>
+                        <div v-if="chat.last_message.content_type === 'item'">
+                            Объявление
+                        </div>
+                        <div v-else>
+                            {{ chat.last_message.content.text }}
+                        </div>
+                    </div>
                 </div>
             </div>
 
