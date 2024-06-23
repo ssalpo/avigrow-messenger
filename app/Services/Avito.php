@@ -117,8 +117,6 @@ class Avito
 
     public function sendMessage(string $chatId, array $message): array
     {
-
-
         return $this->clientWithToken()->post(
             "/messenger/v1/accounts/{$this->account->external_id}/chats/{$chatId}/messages",
             [
@@ -131,5 +129,18 @@ class Avito
     public function me(): array
     {
         return $this->clientWithToken()->get("/core/v1/accounts/self")->json() ?? [];
+    }
+
+    public static function getMessageBasedOnType(array $data)
+    {
+        return match ($data['type']) {
+            'text' => $data['content']['text'],
+            'call' => 'Звонок',
+            'image' => 'Фото',
+            'item' => 'Объявление',
+            'link' => 'Ссылка',
+            'location' => 'Локация',
+            'video' => 'Видео',
+        };
     }
 }

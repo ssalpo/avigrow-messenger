@@ -47,6 +47,10 @@ const props = defineProps({
                 <b>Сообщение удалено</b>
             </div>
 
+            <div v-else-if="message.content_type === 'link'">
+                <a :href="message.content.link.url" target="_blank">{{message.content.link.text}}</a>
+            </div>
+
             <div v-else>
                 {{ message.content.text }}
             </div>

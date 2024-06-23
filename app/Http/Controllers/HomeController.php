@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendMessageToTelegram;
 use App\Models\Account;
 use App\Services\Avito;
 use Illuminate\Support\Carbon;

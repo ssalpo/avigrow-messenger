@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'telegram' => [
+        'ids' => explode(',', env('TELEGRAM_IDS'))
+    ]
+
 ];

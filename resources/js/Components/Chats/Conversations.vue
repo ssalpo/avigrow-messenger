@@ -147,6 +147,9 @@ function truncate(text, limit) {
                         <div v-if="chat.last_message.content_type === 'item'">
                             Объявление
                         </div>
+                        <div v-if="chat.last_message.content_type === 'link'">
+                            Ссылка
+                        </div>
                         <div v-else>
                             {{ truncate(chat.last_message.content.text ?? '', 90) }}
                         </div>
