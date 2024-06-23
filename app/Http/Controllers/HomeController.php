@@ -20,7 +20,7 @@ class HomeController extends Controller
     {
         $accounts = Account::all();
 
-        $activeAccount = $accounts->first();
+        $activeAccount = $account ? Account::findOrFail($account) : $accounts->first();
 
         $response = $this->avito->setAccount($activeAccount)->getChats(30);
 
@@ -31,7 +31,7 @@ class HomeController extends Controller
         return Inertia::render('Home', [
             'unreadChatIds' => $unreadChatIds,
             'currentUserId' => $me['id'],
-            'activeAccountId' => (int) ($account ?? $activeAccount->id),
+            'activeAccountId' => (int)($account ?? $activeAccount->id),
             'accounts' => $accounts->map(fn($a) => [
                 'id' => $a->id,
                 'name' => $a->name
@@ -75,7 +75,7 @@ class HomeController extends Controller
                     ];
                 })
                 ->sortBy([
-                    fn (array $a, array $b) => $a['created_at_timestamp'] <=> $b['created_at_timestamp'],
+                    fn(array $a, array $b) => $a['created_at_timestamp'] <=> $b['created_at_timestamp'],
                 ])
                 ->values()
         ]);

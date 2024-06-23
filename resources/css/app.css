@@ -262,6 +262,10 @@ body {
     font-size: 20px;
 }
 
+.message__item.right .message-ads > a {
+    color: #fff;
+}
+
 .message-ads > a {
     display: flex;
     align-items: center;
