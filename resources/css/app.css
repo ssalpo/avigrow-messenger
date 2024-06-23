@@ -1,5 +1,9 @@
 @import "reset.css";
 
+:root {
+    color-scheme: only light;
+}
+
 body {
     font-family: Arial, sans-serif;
 }
