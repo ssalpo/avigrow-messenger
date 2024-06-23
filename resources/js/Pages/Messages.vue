@@ -141,8 +141,6 @@ const sendMessage = () => {
                         :message="message"
                         :key="message.id"
                     />
-
-                    <div class="clear"></div>
                 </div>
             </div>
         </div>

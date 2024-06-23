@@ -54,6 +54,7 @@ const props = defineProps({
         <div class="clear"></div>
         <div class="message__time">{{ message.created_at }}</div>
     </div>
+    <div class="clear"></div>
 </template>
 
 <style scoped>
