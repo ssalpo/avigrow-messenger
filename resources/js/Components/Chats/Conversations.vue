@@ -51,6 +51,10 @@ onMounted(() => {
         const data = e.data.chat.value;
 
         if (chatIds.value.includes(data.chat_id)) {
+            e.data.unreadChatIds.forEach((e) => {
+                unreadChats.value.push(e)
+            })
+
             let index = chatIds.value.indexOf(data.chat_id);
 
             chats.value[index]['last_message']['content'] = data.content;
