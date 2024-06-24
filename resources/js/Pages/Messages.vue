@@ -1,7 +1,6 @@
 <script setup>
-import {Head, Link, router} from '@inertiajs/vue3';
+import {Head, Link} from '@inertiajs/vue3';
 import {computed, onBeforeUnmount, onMounted, ref} from "vue";
-import {map, orderBy} from "lodash";
 import MessageItem from "@/Components/Chats/MessageItem.vue";
 
 const props = defineProps({
@@ -45,7 +44,7 @@ const showMorePage = () => {
 }
 
 const scrollToEnd = () => {
-    let messageContainer = document.querySelector('.messages-wrap');
+    let messageContainer = document.body;
 
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }

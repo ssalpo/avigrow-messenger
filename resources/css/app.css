@@ -5,6 +5,7 @@
 }
 
 body {
+    height: 100%;
     font-family: Arial, sans-serif;
 }
 
@@ -258,7 +259,7 @@ body {
     border: 1px solid #f2f2f2;
     padding: 13px 10px;
     border-radius: 5px;
-    width: 80%;
+    flex-grow: 1;
 }
 
 .message-send-input button {

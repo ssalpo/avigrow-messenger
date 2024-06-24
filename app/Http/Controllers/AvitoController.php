@@ -116,7 +116,7 @@ class AvitoController extends Controller
             'chat' => $payload
         ]);
 
-        if (!$payload['value']['is_me']) {
+        if (!$payload['value']['is_me'] && !isset($payload['value']['read'])) {
             SendMessageToTelegram::dispatch(
                 $account->id,
                 config('services.telegram.ids'),
