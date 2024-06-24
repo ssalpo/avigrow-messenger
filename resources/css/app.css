@@ -201,7 +201,7 @@ body {
 
 .messages-wrap {
     flex-direction: column;
-    max-height: calc(100vh - 139px);
+    flex: 1 0 0;
     overflow-y: auto;
 }
 
