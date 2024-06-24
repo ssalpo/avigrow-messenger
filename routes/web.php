@@ -9,3 +9,7 @@ Route::middleware(['check.auth'])->group(function () {
     Route::get('/accounts/{account}/chats/{chat}', [HomeController::class, 'messages'])->name('account.chat.messages');
     Route::get('/accounts/{account}/chats', [HomeController::class, 'index'])->name('account.chats');
 });
+
+Route::get('redirect', function() {
+    logger()?->info(request()?->all());
+});
