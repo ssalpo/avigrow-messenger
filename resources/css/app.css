@@ -21,6 +21,8 @@ body {
     background: #fff;
     align-items: center;
     justify-content: center;
+    position: sticky;
+    top: 0;
 }
 
 .message-page-head > div {
@@ -206,7 +208,8 @@ body {
 }
 
 .messages {
-    padding: 20px 35px;
+    padding: 20px 35px 70px 20px;
+    overflow-y: auto;
 }
 
 
@@ -240,6 +243,10 @@ body {
 .message-send-input {
     border-top: 1px solid #f2f2f2;
     width: 100%;
+    min-height: 76px;
+    position: fixed;
+    background: #fff;
+    bottom: 0;
 }
 
 .message-send-input > div {

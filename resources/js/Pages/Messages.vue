@@ -115,7 +115,7 @@ const sendMessage = () => {
 <template>
     <Head title="Сообщение"/>
 
-    <div style="display: flex; flex-direction: column; height: 100vh;">
+    <div style="display: flex; flex-direction: column; position: relative">
         <div class="message-page-head">
             <div>
                 <Link :href="route('account.chats', {account: activeAccountId})" class="message-page-head__back">
@@ -128,20 +128,18 @@ const sendMessage = () => {
             </div>
         </div>
 
-        <div class="messages-wrap">
-            <div class="messages">
+        <div class="messages">
 
-                <div style="text-align: center">
-                    <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreMessages"
-                       @click.prevent="showMorePage">Показать еще</a>
-                </div>
+            <div style="text-align: center">
+                <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreMessages"
+                   @click.prevent="showMorePage">Показать еще</a>
+            </div>
 
-                <div v-for="message in messagesAll">
-                    <message-item
-                        :message="message"
-                        :key="message.id"
-                    />
-                </div>
+            <div v-for="message in messagesAll">
+                <message-item
+                    :message="message"
+                    :key="message.id"
+                />
             </div>
         </div>
 
