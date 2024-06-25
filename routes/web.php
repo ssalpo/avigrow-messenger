@@ -11,5 +11,30 @@ Route::middleware(['check.auth'])->group(function () {
 });
 
 Route::get('redirect', function() {
-    logger()?->info(request()?->all());
+    $code = request('code');
+    $account = request('state');
+
+    if(!$code) {
+        echo 'Code not found!';
+
+        return '';
+    }
+
+    if(!$account) {
+        echo 'Account not found!';
+
+        return '';
+    }
+
+    $account = \App\Models\Account::findOrFail($account);
+
+    $response = (new \App\Services\Avito)->getTokenByCode($code);
+
+    $account->update([
+        'external_access_token' => $response['access_token'],
+        'external_refresh_token' => $response['refresh_token'],
+        'external_access_token_expire_in' => $response['expires_in'],
+    ]);
+
+    return redirect('/');
 });

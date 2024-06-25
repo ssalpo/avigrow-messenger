@@ -21,7 +21,7 @@ class HomeController extends Controller
         $accounts = Account::all();
 
         $activeAccount = $account ? Account::findOrFail($account) : $accounts->first();
-
+        $this->avito->setAccount($activeAccount);
         $response = $this->avito->setAccount($activeAccount)->getChats(30);
 
         $me = $this->avito->me();

@@ -41,6 +41,30 @@ class Avito
         return $this->clientWithToken()->post("/token?" . http_build_query($credentials))->json();
     }
 
+    public function getTokenByCode(string $code): array
+    {
+        $credentials = [
+            'grant_type' => 'authorization_code',
+            'client_id' => config('services.avito.oauth.clientId'),
+            'client_secret' => config('services.avito.oauth.clientSecret'),
+            'code' => $code
+        ];
+
+        return $this->client()->asForm()->post("/token", $credentials)->json();
+    }
+
+    public function refreshExistToken(string $refreshToken): array
+    {
+        $credentials = [
+            'grant_type' => 'refresh_token',
+            'client_id' => config('services.avito.oauth.clientId'),
+            'client_secret' => config('services.avito.oauth.clientSecret'),
+            'refresh_token' => $refreshToken
+        ];
+
+        return $this->client()->asForm()->post("/token", $credentials)->json();
+    }
+
     public function subscribeToWebhook(): void
     {
         $this->clientWithToken()->post('/messenger/v3/webhook', [

@@ -37,6 +37,13 @@ return [
 
     'telegram' => [
         'ids' => explode(',', env('TELEGRAM_IDS'))
+    ],
+
+    'avito' => [
+        'oauth' => [
+            'clientId' => env('AVITO_OAUTH_CLIENT_ID'),
+            'clientSecret' => env('AVITO_OAUTH_CLIENT_SECRET'),
+        ]
     ]
 
 ];
