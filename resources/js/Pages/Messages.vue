@@ -44,9 +44,7 @@ const showMorePage = () => {
 }
 
 const scrollToEnd = () => {
-    let messageContainer = document.body;
-
-    messageContainer.scrollTop = messageContainer.scrollHeight;
+    window.scrollTo(0, document.body.scrollHeight);
 }
 
 onMounted(() => {
