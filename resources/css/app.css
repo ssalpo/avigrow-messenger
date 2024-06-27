@@ -341,6 +341,9 @@ body {
 
 /* HTML: <div class="loader"></div> */
 .loader {
+    z-index: 1;
+}
+.loader {
     width: 50px;
     aspect-ratio: 1;
     display: grid;
