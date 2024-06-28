@@ -52,7 +52,7 @@ const props = defineProps({
             </div>
 
             <div v-else>
-                <div style="border-left: 1px solid #787171; padding: 5px 16px; margin-bottom: 10px; color: #787171;" v-if="message.quote !== null">
+                <div class="message__quote" v-if="message.quote !== null">
                     {{message.quote.content.text}}
                 </div>
 

@@ -200,6 +200,18 @@ body {
     text-align: right;
 }
 
+.message__quote {
+    border-left: 1px solid #787171;
+    padding: 5px 16px;
+    margin-bottom: 10px;
+    color: #787171;
+}
+
+.message__item.right .message__quote {
+    border-left: 1px solid #fff;
+    color: #fff;
+}
+
 .message-page-head__back {
     color: #3e63e2;
     text-decoration: none;
