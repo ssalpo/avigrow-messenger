@@ -88,8 +88,6 @@ onBeforeUnmount(() => {
 let message = ref('');
 
 const sendMessage = () => {
-    console.log(123);
-
     if (isBusy.value === true) {
         return;
     }
@@ -129,7 +127,10 @@ function onFastTemplateSelect(e) {
             </div>
             <div>
                 <div class="message-page-head__title">{{ chat.user.name }}</div>
-                <div class="message-page-head__ads">{{ chat.context }} - {{ chat.price }}</div>
+                <div class="message-page-head__ads">
+                    <a v-if="chat?.url" :href="chat.url" target="_blank">{{ chat.context }} - {{ chat.price }}</a>
+                    <span v-else>{{ chat.context }} - {{ chat.price }}</span>
+                </div>
             </div>
         </div>
 

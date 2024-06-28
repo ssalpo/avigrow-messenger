@@ -144,6 +144,11 @@ body {
     font-size: 20px;
 }
 
+.message-page-head__ads a {
+    text-decoration: none;
+    color: #2196f3;
+}
+
 .message-page-head__ads {
     font-size: 14px;
     padding: 6px 0;
