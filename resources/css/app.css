@@ -447,10 +447,11 @@ body {
     display: flex;
 }
 
-.fast-messages-new input {
+.fast-messages-new textarea {
     border: 1px solid #eee;
     padding: 10px;
     border-radius: 5px;
+    height: 16px;
     width: 80%;
 }
 

@@ -55,8 +55,7 @@ const deleteFastTemplate = (index, id) => {
                 <fast-template-new :fast-template="editFastTemplate" @saved="onSaved"/>
 
                 <div class="fast-messages-template" v-if="!editFastTemplate?.id" v-for="(fastTemplate, index) in fastTemplates">
-                    <div class="fast-messages-template__content" @click="onSelect(fastTemplate)">
-                        {{ fastTemplate.content }}
+                    <div class="fast-messages-template__content" @click="onSelect(fastTemplate)" v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')">
                     </div>
                     <div>
                         <div class="fast-messages-template__edit" @click="editFastTemplate = fastTemplate">🖊</div>

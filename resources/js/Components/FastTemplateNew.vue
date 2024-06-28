@@ -54,7 +54,7 @@ watch(() => props.fastTemplate, () => {
     <a class="fast-messages-new-btn" v-if="!isEdit" @click.prevent="isEdit = true">+ добавить</a>
 
     <div class="fast-messages-new" v-else>
-        <input type="text" placeholder="Введите шаблон" @keyup.enter="save" v-model="template">
+        <textarea placeholder="Введите шаблон" @keyup.meta.enter="save" v-model="template" />
         <button @click="save">🖊️</button>
     </div>
 </template>
