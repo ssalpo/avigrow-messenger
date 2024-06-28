@@ -255,11 +255,15 @@ body {
     display: flex;
 }
 
-.message-send-input input {
+.message-send-input textarea {
     border: 1px solid #f2f2f2;
     padding: 13px 10px;
     border-radius: 5px;
     flex-grow: 1;
+    height: 17px;
+    resize: none;
+    line-height: 18px;
+    overflow: hidden;
 }
 
 .message-send-input button {

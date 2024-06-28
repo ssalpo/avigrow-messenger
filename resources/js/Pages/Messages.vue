@@ -144,7 +144,7 @@ const sendMessage = () => {
             <div>
                 <button :disabled="isBusy" type="button">📎</button>
 
-                <input :disabled="isBusy" type="text" v-model="message" placeholder="Введите сообщение...">
+                <textarea :disabled="isBusy" v-model="message" placeholder="Введите сообщение..."></textarea>
 
                 <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
             </div>
