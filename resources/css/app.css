@@ -260,10 +260,10 @@ body {
     padding: 13px 10px;
     border-radius: 5px;
     flex-grow: 1;
-    height: 17px;
+    height: 18px;
     resize: none;
     line-height: 18px;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .message-send-input button {
@@ -347,12 +347,14 @@ body {
 .loader {
     z-index: 1;
 }
+
 .loader {
     width: 50px;
     aspect-ratio: 1;
     display: grid;
     animation: l14 4s infinite;
 }
+
 .loader::before,
 .loader::after {
     content: "";
@@ -363,10 +365,89 @@ body {
     mix-blend-mode: darken;
     animation: l14 1s infinite linear;
 }
+
 .loader::after {
     border-color: #0000 #0000 blue blue;
     animation-direction: reverse;
 }
-@keyframes l14{
-    100%{transform: rotate(1turn)}
+
+@keyframes l14 {
+    100% {
+        transform: rotate(1turn)
+    }
+}
+
+.fast-messages {
+    width: 100%;
+    height: 300px;
+    background: #fff;
+    position: absolute;
+    bottom: 0;
+    border-top: 1px solid #eee;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.fast-messages__left {
+    padding: 30px 15px;
+}
+
+.fast-messages__templates {
+    padding: 20px 10px;
+    width: 75%;
+    overflow-y: auto;
+}
+
+.fast-messages-template {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.fast-messages-template__edit {
+    height: 28px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.fast-messages-template__content {
+    white-space: pre-wrap;
+    max-height: 100px;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 18px;
+    background: #4c8ef9;
+    padding: 10px 20px;
+    color: #fff;
+    border-radius: 7px;
+    margin-bottom: 10px;
+    flex-grow: 1;
+}
+
+.fast-messages-new {
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.fast-messages-new input {
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 5px;
+    width: 80%;
+}
+
+.fast-messages-new button {
+    border: 1px solid #eee;
+    padding: 5px 15px;
+    border-radius: 4px;
+    font-size: 15px;
+    margin-left: 10px;
+}
+
+.fast-messages-new-btn {
+    text-decoration: none;
+    color: #ae3e3e;
+    display: block;
+    margin-bottom: 15px;
 }

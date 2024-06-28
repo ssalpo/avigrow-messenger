@@ -2,6 +2,7 @@
 import {Head, Link} from '@inertiajs/vue3';
 import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 import MessageItem from "@/Components/Chats/MessageItem.vue";
+import FastMessages from "@/Components/FastMessages.vue";
 
 const props = defineProps({
     activeAccountId: {
@@ -106,6 +107,11 @@ const sendMessage = () => {
         .finally(() => isBusy.value = false)
 }
 
+function onFastTemplateSelect(e) {
+    console.log(e);
+
+    message.value = e.content;
+}
 
 </script>
 
@@ -142,7 +148,9 @@ const sendMessage = () => {
 
         <div class="message-send-input">
             <div>
-                <button :disabled="isBusy" type="button">📎</button>
+                <button :disabled="isBusy" class="left-btn" type="button">📎</button>
+
+                <fast-messages @selected="onFastTemplateSelect" />
 
                 <textarea :disabled="isBusy" v-model="message" placeholder="Введите сообщение..."></textarea>
 
