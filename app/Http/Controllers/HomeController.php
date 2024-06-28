@@ -69,9 +69,10 @@ class HomeController extends Controller
                         'is_me' => $message['author_id'] === $me['id'],
                         'content_type' => $message['type'],
                         'content' => $message['content'],
-                        'is_read' => $message['isRead'],
+                        'is_read' => isset($message['read']),
                         'created_at' => Carbon::createFromTimestamp($message['created'], 'Asia/Dushanbe')->format('Y.m.d, H:i'),
-                        'created_at_timestamp' => $message['created']
+                        'created_at_timestamp' => $message['created'],
+                        'quote' => $message['quote'] ?? null
                     ];
                 })
                 ->sortBy([

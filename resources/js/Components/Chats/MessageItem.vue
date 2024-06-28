@@ -52,11 +52,18 @@ const props = defineProps({
             </div>
 
             <div v-else>
+                <div style="border-left: 1px solid #787171; padding: 5px 16px; margin-bottom: 10px; color: #787171;" v-if="message.quote !== null">
+                    {{message.quote.content.text}}
+                </div>
+
                 {{ message.content.text }}
             </div>
         </div>
         <div class="clear"></div>
-        <div class="message__time">{{ message.created_at }}</div>
+        <div style="display: flex">
+            <div class="message__read-status" :class="{read: message.is_read}">{{message.is_read ? 'прочтен' : 'доставлено'}},</div>
+            <div class="message__time">{{ message.created_at }}</div>
+        </div>
     </div>
     <div class="clear"></div>
 </template>
