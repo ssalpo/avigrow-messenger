@@ -160,6 +160,7 @@ body {
 .message__item.right .message__text {
     background-color: #2196F3;
     color: #fff;
+    max-width: 230px;
 }
 
 .message__item {

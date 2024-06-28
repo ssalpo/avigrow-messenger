@@ -88,6 +88,8 @@ onBeforeUnmount(() => {
 let message = ref('');
 
 const sendMessage = () => {
+    console.log(123);
+
     if (isBusy.value === true) {
         return;
     }
@@ -152,7 +154,7 @@ function onFastTemplateSelect(e) {
 
                 <fast-messages @selected="onFastTemplateSelect" />
 
-                <textarea :disabled="isBusy" v-model="message" placeholder="Введите сообщение..."></textarea>
+                <textarea :disabled="isBusy" @keydown.meta.enter="sendMessage" v-model="message" placeholder="Введите сообщение..."></textarea>
 
                 <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
             </div>

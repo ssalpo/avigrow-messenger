@@ -52,8 +52,8 @@ const props = defineProps({
             </div>
 
             <div v-else>
-                <div class="message__quote" v-if="message.quote !== null">
-                    {{message.quote.content.text}}
+                <div class="message__quote" v-if="message.quote !== null && message.quote?.content">
+                    {{message.quote?.content.text}}
                 </div>
 
                 {{ message.content.text }}
