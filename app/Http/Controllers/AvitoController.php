@@ -111,11 +111,6 @@ class AvitoController extends Controller
         $payload['value']['created_at'] = Carbon::createFromTimestamp($payload['value']['created'])->format('Y.m.d, H:i');
         $payload['value']['is_me'] = $payload['value']['author_id'] === $me['id'];
 
-        NewMessage::dispatch($account->id, [
-            'unreadChatIds' => $this->avito->setAccount($account)->getUnreadChatIds(),
-            'chat' => $payload
-        ]);
-
         if (!$payload['value']['is_me'] && !isset($payload['value']['read'])) {
             SendMessageToTelegram::dispatch(
                 $account->id,
@@ -125,6 +120,11 @@ class AvitoController extends Controller
                 $payload['value']
             );
         }
+
+        NewMessage::dispatch($account->id, [
+            'unreadChatIds' => $this->avito->setAccount($account)->getUnreadChatIds(),
+            'chat' => $payload
+        ]);
     }
 
     protected function chatResponse(array $chat, Account $account): array
