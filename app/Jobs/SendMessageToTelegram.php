@@ -32,9 +32,10 @@ class SendMessageToTelegram implements ShouldQueue
     {
         $account = Account::findOrFail($this->account);
         $contextMessage = Avito::getMessageBasedOnType($this->payload);
+        $accountUrl = url("/accounts/{$account->id}/chats");
 
         $message = <<<MSG
-<b>Аккаунт:</b> {$account->name}
+<b>Аккаунт:</b> <a href="$accountUrl">{$account->name}</a>
 <b>Контекст:</b> {$this->getContext($account)}
 {$contextMessage}
 MSG;
