@@ -55,7 +55,7 @@ onMounted(() => {
 let newMessageChannel = null;
 
 onMounted(() => {
-    newMessageChannel = Echo.channel(`avito.${this.activeAccountId}.new.message`)
+    newMessageChannel = Echo.channel(`avito.${props.activeAccountId}.new.message`)
 
     newMessageChannel.listen('NewMessage', (e) => {
             const data = e.data.chat.value;
