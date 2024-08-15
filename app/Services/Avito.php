@@ -15,15 +15,13 @@ class Avito
     protected function client(): PendingRequest
     {
         return Http::baseUrl(self::BASE_API_URL)
-            ->timeout(100)
-            ->retry(1, 100);
+            ->timeout(120)
+            ->retry(2, 3000);
     }
 
     protected function clientWithToken(): PendingRequest
     {
-        return Http::baseUrl(self::BASE_API_URL)
-            ->timeout(100)
-            ->retry(1, 100)
+        return $this->client()
             ->withToken($this->account->external_access_token);
     }
 
