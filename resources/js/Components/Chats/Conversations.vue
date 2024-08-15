@@ -41,7 +41,7 @@ let newMessageChannel = null;
 onMounted(() => {
     chatIds.value = map(chats.value, 'id');
 
-    newMessageChannel = Echo.channel(`avito.new.message`);
+    newMessageChannel = Echo.channel(`avito.${this.activeAccountId}.new.message`);
 
     newMessageChannel.listen('NewMessage', (e) => {
         if (e.account !== props.activeAccountId) {
