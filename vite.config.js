@@ -3,6 +3,15 @@ import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
+    build: {
+        extend(config) {
+            config.module.rules.push({
+                test: /\.mjs$/,
+                include: /node_modules/,
+                type: "javascript/auto"
+            });
+        }
+    },
     plugins: [
         laravel({
             input: 'resources/js/app.js',

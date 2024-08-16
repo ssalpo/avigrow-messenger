@@ -3,6 +3,7 @@ import {Head, Link} from '@inertiajs/vue3';
 import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 import MessageItem from "@/Components/Chats/MessageItem.vue";
 import FastMessages from "@/Components/FastMessages.vue";
+import {useTextareaAutosize} from "@vueuse/core";
 
 const props = defineProps({
     activeAccountId: {
@@ -18,6 +19,8 @@ const props = defineProps({
         type: Array
     }
 });
+
+const {textarea, input} = useTextareaAutosize();
 
 const messagesAll = ref(props.messages);
 const hasMoreMessages = ref(props.has_more);
@@ -55,6 +58,8 @@ onMounted(() => {
 let newMessageChannel = null;
 
 onMounted(() => {
+    textarea.value.focus();
+
     newMessageChannel = Echo.channel(`avito.${props.activeAccountId}.new.message`)
 
     newMessageChannel.listen('NewMessage', (e) => {
@@ -85,8 +90,6 @@ onBeforeUnmount(() => {
 })
 
 
-let message = ref('');
-
 const sendMessage = () => {
     if (isBusy.value === true) {
         return;
@@ -95,22 +98,21 @@ const sendMessage = () => {
     isBusy.value = true;
 
     axios
-        .post(`/api/messages/${props.activeAccountId}/${props.chat.id}/send`, {message: {text: message.value}})
+        .post(`/api/messages/${props.activeAccountId}/${props.chat.id}/send`, {message: {text: input.value}})
         .then((response) => {
             messagesAll.value.push(response.data);
 
-            message.value = '';
+            input.value = '';
 
             setTimeout(scrollToEnd, 50);
 
+            setTimeout(() => textarea.value.focus(), 60)
         })
         .finally(() => isBusy.value = false)
 }
 
 function onFastTemplateSelect(e) {
-    console.log(e);
-
-    message.value = e.content;
+    input.value = e.content;
 }
 
 </script>
@@ -155,7 +157,7 @@ function onFastTemplateSelect(e) {
 
                 <fast-messages @selected="onFastTemplateSelect" />
 
-                <textarea :disabled="isBusy" @keydown.meta.enter="sendMessage" v-model="message" placeholder="Введите сообщение..."></textarea>
+                <textarea ref="textarea" :disabled="isBusy" @keydown.meta.enter="sendMessage" v-model="input" placeholder="Введите сообщение..."></textarea>
 
                 <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
             </div>
