@@ -15,6 +15,7 @@ class Avito
     protected function client(): PendingRequest
     {
         return Http::baseUrl(self::BASE_API_URL)
+            ->asJson()
             ->timeout(120)
             ->retry(2, 3000);
     }
@@ -150,6 +151,13 @@ class Avito
                 'type' => 'text'
             ]
         )->json() ?? [];
+    }
+
+    public function deleteMessage(string $chatId, string $messageId): void
+    {
+        $this->clientWithToken()->post(
+            "/messenger/v1/accounts/{$this->account->external_id}/chats/{$chatId}/messages/{$messageId}"
+        );
     }
 
     public function me(): array

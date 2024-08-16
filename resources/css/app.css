@@ -186,16 +186,21 @@ body {
     height: 100%;
 }
 
-.message__read-status.read {
-    color: green;
-}
-
-.message__time, .message__read-status {
+.message__time, .message__read-status, .message__delete-btn {
     font-size: 11px;
     text-align: right;
     padding: 8px 0;
     color: #828282;
     margin-left: 10px;
+}
+
+.message__read-status.read {
+    color: green;
+}
+
+.message__delete-btn {
+    color: red;
+    cursor: pointer;
 }
 
 .message__item.left .message__time {

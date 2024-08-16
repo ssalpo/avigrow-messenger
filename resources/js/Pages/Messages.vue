@@ -107,6 +107,10 @@ const sendMessage = () => {
         .finally(() => isBusy.value = false)
 }
 
+function onDeleteMessage(message) {
+    messagesAll.value[messagesAll.value.indexOf(message)].content_type = 'deleted';
+}
+
 function onFastTemplateSelect(e) {
     input.value = e.content;
 }
@@ -142,7 +146,10 @@ function onFastTemplateSelect(e) {
             <div v-for="message in messagesAll">
                 <message-item
                     :message="message"
+                    :accountId="activeAccountId"
+                    :chatId="chat.id"
                     :key="message.id"
+                    @deleted="onDeleteMessage"
                 />
             </div>
         </div>

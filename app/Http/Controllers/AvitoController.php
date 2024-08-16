@@ -96,7 +96,7 @@ class AvitoController extends Controller
                 'content_type' => $message['type'],
                 'content' => $message['content'],
                 'is_read' => false,
-                'created_at' => Carbon::createFromTimestamp($message['created'])->format('Y.m.d, H:i'),
+                'created_at' => Carbon::createFromTimestamp($message['created'], 'Asia/Dushanbe')->format('Y.m.d, H:i'),
                 'created_at_timestamp' => $message['created']
             ]
         );
@@ -156,5 +156,10 @@ class AvitoController extends Controller
     public function markAsRead(Account $account, string $chatId): void
     {
         $this->avito->setAccount($account)->markChatAsRead($chatId);
+    }
+
+    public function deleteMessage(Account $account, string $chatId,  string $messageId): void
+    {
+        $this->avito->setAccount($account)->deleteMessage($chatId, $messageId);
     }
 }
