@@ -104,9 +104,11 @@ const sendMessage = () => {
 
             input.value = '';
 
-            setTimeout(scrollToEnd, 50);
+            setTimeout(() => {
+                textarea.value.focus();
 
-            setTimeout(() => textarea.value.focus(), 60)
+                scrollToEnd();
+            }, 50);
         })
         .finally(() => isBusy.value = false)
 }
