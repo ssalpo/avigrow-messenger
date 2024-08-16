@@ -58,8 +58,6 @@ onMounted(() => {
 let newMessageChannel = null;
 
 onMounted(() => {
-    textarea.value.focus();
-
     newMessageChannel = Echo.channel(`avito.${props.activeAccountId}.new.message`)
 
     newMessageChannel.listen('NewMessage', (e) => {
@@ -104,11 +102,7 @@ const sendMessage = () => {
 
             input.value = '';
 
-            setTimeout(() => {
-                textarea.value.focus();
-
-                scrollToEnd();
-            }, 50);
+            setTimeout(scrollToEnd, 50);
         })
         .finally(() => isBusy.value = false)
 }
