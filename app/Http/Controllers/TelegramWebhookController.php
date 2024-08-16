@@ -58,7 +58,7 @@ class TelegramWebhookController extends Controller
 
     private function accountInfo(string $text): ?array
     {
-        if (preg_match('/\[(\d+), (.+?)\]/', $text, $matches)) {
+        if (preg_match('/\[(\d+),(.+?)\]/', $text, $matches)) {
             return [
                 'accountId' => $matches[1],
                 'chatId' => $matches[2],
