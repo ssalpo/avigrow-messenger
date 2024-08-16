@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AvitoController;
 use App\Http\Controllers\FastTemplateController;
+use App\Http\Controllers\TelegramWebhookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,3 +27,5 @@ Route::post('/messages/{account}/{chatId}/send', [AvitoController::class, 'sendM
 Route::delete('/messages/{account}/{chatId}/{messageId}', [AvitoController::class, 'deleteMessage']);
 
 Route::post('/webhook/{account}', [AvitoController::class, 'handleWebhook']);
+
+Route::post('t-webhook', TelegramWebhookController::class);

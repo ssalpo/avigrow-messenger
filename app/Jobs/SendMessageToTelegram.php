@@ -35,7 +35,7 @@ class SendMessageToTelegram implements ShouldQueue
         $accountUrl = url("/accounts/{$account->id}/chats");
 
         $message = <<<MSG
-<b>Аккаунт:</b> <a href="$accountUrl">{$account->name}</a>
+<b>Аккаунт:</b> <a href="$accountUrl">{$account->name}</a> [{$account->id},{$this->chatId}]
 <b>Контекст:</b> {$this->getContext($account)}
 {$contextMessage}
 MSG;
