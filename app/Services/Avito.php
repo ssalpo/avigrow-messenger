@@ -168,7 +168,7 @@ class Avito
     public static function getMessageBasedOnType(array $data)
     {
         return match ($data['type']) {
-            'text' => $data['content']['text'],
+            'text', 'system' => $data['content']['text'],
             'call' => 'Звонок',
             'image' => 'Фото',
             'item' => 'Объявление',

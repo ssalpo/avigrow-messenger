@@ -47,7 +47,7 @@ function onLongPressCopyText(e) {
          :class="[message.is_me ? 'right' : 'left', message.content_type]">
         <div class="message__text">
             <div v-if="message.content_type === 'image'">
-                <a :href="message.content.image.sizes['640x480']" target="_blank">
+                <a :href="message.content.image.sizes['1280x960']" target="_blank">
                     <img class="message__image" :src="message.content.image.sizes['640x480']" />
                 </a>
             </div>
