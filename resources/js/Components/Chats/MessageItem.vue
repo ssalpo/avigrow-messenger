@@ -1,5 +1,7 @@
 <script setup>
 import {ref} from "vue";
+import { vOnLongPress } from '@vueuse/components'
+import { useClipboard } from '@vueuse/core'
 
 const props = defineProps({
     accountId: Number,
@@ -28,10 +30,21 @@ function deleteMessage() {
 function diffInHours(date) {
     return Math.abs((new Date).getTime() - (new Date(date)).getTime()) / 3600000
 }
+
+function onLongPressCopyText(e) {
+    const text = e.target.innerText || e.target.textContent;
+
+    if(text) {
+        console.log(text)
+        navigator.clipboard.writeText(text)
+    }
+}
 </script>
 
 <template>
-    <div class="message__item" :data-some="[message.id]" :class="[message.is_me ? 'right' : 'left', message.content_type]">
+    <div class="message__item"
+         v-on-long-press.prevent="[onLongPressCopyText, { delay: 500}]"
+         :class="[message.is_me ? 'right' : 'left', message.content_type]">
         <div class="message__text">
             <div v-if="message.content_type === 'image'">
                 <a :href="message.content.image.sizes['640x480']" target="_blank">
