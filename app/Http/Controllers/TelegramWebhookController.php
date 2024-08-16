@@ -14,6 +14,12 @@ class TelegramWebhookController extends Controller
     {
     }
 
+    /**
+     * Чтобы установить вебхук или удалить воспользуйтесь примером
+     * https://api.telegram.org/bot{TokenBot}/setWebhook?url=https://{url}/api/t-webhook
+     *
+     * https://api.telegram.org/bot{TokenBot}/deleteWebhook?url=https://{url}/api/t-webhook
+     */
     public function __invoke()
     {
 //        logger()->info(request()->all());
