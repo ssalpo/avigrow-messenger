@@ -36,6 +36,7 @@ return [
     ],
 
     'telegram' => [
+        'token' => env('TELEGRAM_BOT_TOKEN'),
         'ids' => explode(',', env('TELEGRAM_IDS'))
     ],
 

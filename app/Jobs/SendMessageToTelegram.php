@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Account;
 use App\Services\Avito;
+use App\Services\Telegram;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -40,22 +41,7 @@ class SendMessageToTelegram implements ShouldQueue
 {$contextMessage}
 MSG;
 
-        foreach ($this->telegramIds as $telegramId) {
-            $this->sendMessage($telegramId, $message);
-        }
-    }
-
-    private function sendMessage(int $chatId, string $message): void
-    {
-        $apiToken = '6327522747:AAE0mb4LsWELuTN7GVX1h_f1ys8pVmHB35o';
-
-        $data = [
-            'chat_id' => $chatId,
-            'text' => $message,
-            'parse_mode' => 'html'
-        ];
-
-        file_get_contents("https://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($data));
+        Telegram::sendMessageToExistIds($message);
     }
 
     public function getContext(Account $account)
