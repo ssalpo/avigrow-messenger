@@ -3,7 +3,10 @@
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['check.auth'])->group(function () {
+Route::get('login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
+Route::post('login', [\App\Http\Controllers\AuthController::class, 'auth']);
+
+Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index']);
 
     Route::get('/accounts/{account}/chats/{chat}', [HomeController::class, 'messages'])->name('account.chat.messages');

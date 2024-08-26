@@ -1,6 +1,6 @@
 <script setup>
 import {Head, Link} from '@inertiajs/vue3';
-import {computed, onBeforeUnmount, onMounted, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import MessageItem from "@/Components/Chats/MessageItem.vue";
 import FastMessages from "@/Components/FastMessages.vue";
 import {useTextareaAutosize} from "@vueuse/core";
@@ -22,6 +22,8 @@ const props = defineProps({
 
 const {textarea, input} = useTextareaAutosize();
 
+const sendFromOtherText = ref('');
+const sendFromOther = ref(false);
 const messagesAll = ref(props.messages);
 const hasMoreMessages = ref(props.has_more);
 const currentPage = ref(1);
@@ -58,29 +60,43 @@ onMounted(() => {
 let newMessageChannel = null;
 
 onMounted(() => {
-    newMessageChannel = Echo.channel(`avito.${props.activeAccountId}.new.message`)
+    newMessageChannel = Echo.private(`avito.${props.activeAccountId}.new.message`)
 
     newMessageChannel.listen('NewMessage', (e) => {
-            const data = e.data.chat.value;
+        const data = e.data.chat.value;
 
-            if (data.chat_id !== props.chat.id || messageAllIds.value.includes(data.id)) {
-                return
-            }
+        if (data.chat_id !== props.chat.id || messageAllIds.value.includes(data.id)) {
+            return
+        }
 
-            messagesAll.value.push({
-                id: data.id,
-                is_me: data.is_me,
-                content_type: data.type,
-                content: data.content,
-                is_read: false,
-                created_at: data.created_at,
-                created_at_timestamp: data.created,
-            })
+        messagesAll.value.push({
+            id: data.id,
+            is_me: data.is_me,
+            content_type: data.type,
+            content: data.content,
+            is_read: false,
+            created_at: data.created_at,
+            created_at_timestamp: data.created,
+        })
 
-            setTimeout(scrollToEnd, 100)
+        setTimeout(scrollToEnd, 100)
 
-            axios.post(route('chats.mark-as-read', {account: props.activeAccountId, chatId: props.chat.id}))
-        });
+        axios.post(route('chats.mark-as-read', {account: props.activeAccountId, chatId: props.chat.id}))
+    });
+
+    newMessageChannel.listenForWhisper('typing', function (v) {
+        sendFromOther.value = true
+        sendFromOtherText.value = v
+    })
+
+    newMessageChannel.listenForWhisper('typing-stop', function (v) {
+        sendFromOther.value = false
+        sendFromOtherText.value = null
+    })
+})
+
+watch(input, () => {
+    newMessageChannel.whisper('typing', input.value);
 })
 
 onBeforeUnmount(() => {
@@ -102,6 +118,8 @@ const sendMessage = () => {
 
             input.value = '';
 
+            newMessageChannel.whisper('typing-stop');
+
             setTimeout(scrollToEnd, 50);
         })
         .finally(() => isBusy.value = false)
@@ -113,6 +131,12 @@ function onDeleteMessage(message) {
 
 function onFastTemplateSelect(e) {
     input.value = e.content;
+}
+
+function onBlurTextarea() {
+    if (input.value) return;
+
+    newMessageChannel.whisper('typing-stop')
 }
 
 </script>
@@ -158,9 +182,16 @@ function onFastTemplateSelect(e) {
             <div>
                 <button :disabled="isBusy" class="left-btn" type="button">📎</button>
 
-                <fast-messages @selected="onFastTemplateSelect" />
+                <fast-messages @selected="onFastTemplateSelect"/>
 
-                <textarea ref="textarea" :disabled="isBusy" @keydown.meta.enter="sendMessage" v-model="input" placeholder="Введите сообщение..."></textarea>
+                <textarea
+                    ref="textarea"
+                    @blur="onBlurTextarea"
+                    :disabled="isBusy || sendFromOther"
+                    @keydown.meta.enter="sendMessage"
+                    v-model="input"
+                    :placeholder="sendFromOtherText || `Введите сообщение...`">
+                </textarea>
 
                 <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
             </div>
