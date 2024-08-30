@@ -33,7 +33,7 @@ class NewMessage implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel(sprintf('avito.%s.new.message', $this->account)),
+            new PrivateChannel(sprintf('avito.%s.new.message', $this->account)),
         ];
     }
 }
