@@ -111,7 +111,10 @@ class AvitoController extends Controller
         $payload['value']['created_at'] = Carbon::createFromTimestamp($payload['value']['created'])->format('Y.m.d, H:i');
         $payload['value']['is_me'] = $payload['value']['author_id'] === $me['id'];
 
-        if (!$payload['value']['is_me'] && !isset($payload['value']['read'])) {
+        if (
+            (!$payload['value']['is_me'] && !isset($payload['value']['read'])) &&
+            count(config('services.telegram.ids'))
+        ) {
             SendMessageToTelegram::dispatch(
                 $account->id,
                 config('services.telegram.ids'),
