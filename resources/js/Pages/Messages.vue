@@ -1,13 +1,13 @@
 <script setup>
-import {Head, Link} from '@inertiajs/vue3';
+import {Head, Link, router} from '@inertiajs/vue3';
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import MessageItem from "@/Components/Chats/MessageItem.vue";
 import FastMessages from "@/Components/FastMessages.vue";
 import {useTextareaAutosize} from "@vueuse/core";
 
 const props = defineProps({
-    activeAccountId: {
-        type: Number
+    activeAccount: {
+        type: Object
     },
     chat: {
         type: Object
@@ -39,7 +39,7 @@ const showMorePage = () => {
 
     currentPage.value++;
 
-    axios.get(`/api/messages/${props.activeAccountId}/${props.chat.id}?page=${currentPage.value}`)
+    axios.get(`/api/messages/${props.activeAccount.id}/${props.chat.id}?page=${currentPage.value}`)
         .then((response) => {
             messagesAll.value = response.data.messages.concat(messagesAll.value)
 
@@ -60,7 +60,7 @@ onMounted(() => {
 let newMessageChannel = null;
 
 onMounted(() => {
-    newMessageChannel = Echo.private(`avito.${props.activeAccountId}.new.message`)
+    newMessageChannel = Echo.private(`avito.${props.activeAccount.id}.new.message`)
 
     newMessageChannel.listen('NewMessage', (e) => {
         const data = e.data.chat.value;
@@ -81,7 +81,7 @@ onMounted(() => {
 
         setTimeout(scrollToEnd, 100)
 
-        axios.post(route('chats.mark-as-read', {account: props.activeAccountId, chatId: props.chat.id}))
+        axios.post(route('chats.mark-as-read', {account: props.activeAccount.id, chatId: props.chat.id}))
     });
 
     newMessageChannel.listenForWhisper('typing', function (v) {
@@ -112,7 +112,7 @@ const sendMessage = () => {
     isBusy.value = true;
 
     axios
-        .post(`/api/messages/${props.activeAccountId}/${props.chat.id}/send`, {message: {text: input.value}})
+        .post(`/api/messages/${props.activeAccount.id}/${props.chat.id}/send`, {message: {text: input.value}})
         .then((response) => {
             messagesAll.value.push(response.data);
 
@@ -144,21 +144,33 @@ function onBlurTextarea() {
 <template>
     <Head title="Сообщение"/>
 
+
     <div style="display: flex; flex-direction: column; position: relative">
-        <div class="message-page-head">
-            <div>
-                <Link :href="route('account.chats', {account: activeAccountId})" class="message-page-head__back">
-                    🔙
-                </Link>
-            </div>
-            <div>
-                <div class="message-page-head__title">{{ chat.user.name }}</div>
-                <div class="message-page-head__ads">
-                    <a v-if="chat?.url" :href="chat.url" target="_blank">{{ chat.context }} - {{ chat.price }}</a>
-                    <span v-else>{{ chat.context }} - {{ chat.price }}</span>
-                </div>
-            </div>
-        </div>
+        <v-sheet :elevation="6" color="primary" class="message-page-head">
+            <v-list class="pa-1 bg-blue-darken-1">
+                <v-list-item
+                    :title="chat.user.name"
+                >
+                    <template v-slot:prepend>
+                        <Link :href="route('account.chats', {account: props.activeAccount.id})" class="mr-3">
+                            <v-icon color="white">mdi-arrow-left</v-icon>
+                        </Link>
+                    </template>
+
+                    <template v-slot:subtitle>
+                        <small>
+                            <a v-if="chat?.url" :href="chat.url" target="_blank"
+                               class="text-white text-decoration-none">{{ chat.context }}</a>
+                            <span v-else>{{ chat.context }}</span>
+                        </small>
+                    </template>
+
+                    <template v-slot:append>
+                        <small class="pl-2">{{ chat.price }}</small>
+                    </template>
+                </v-list-item>
+            </v-list>
+        </v-sheet>
 
         <div class="messages">
 
@@ -170,7 +182,7 @@ function onBlurTextarea() {
             <div v-for="message in messagesAll">
                 <message-item
                     :message="message"
-                    :accountId="activeAccountId"
+                    :accountId="props.activeAccount.id"
                     :chatId="chat.id"
                     :key="message.id"
                     @deleted="onDeleteMessage"
@@ -180,10 +192,6 @@ function onBlurTextarea() {
 
         <div class="message-send-input">
             <div>
-                <button :disabled="isBusy" class="left-btn" type="button">📎</button>
-
-                <fast-messages @selected="onFastTemplateSelect"/>
-
                 <textarea
                     ref="textarea"
                     @blur="onBlurTextarea"
@@ -192,6 +200,10 @@ function onBlurTextarea() {
                     v-model="input"
                     :placeholder="sendFromOtherText || `Введите сообщение...`">
                 </textarea>
+
+                <button v-show="!input" :disabled="isBusy" class="left-btn message-icon" type="button">📎</button>
+
+                <fast-messages v-if="!input" class="message-icon"  @selected="onFastTemplateSelect"/>
 
                 <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
             </div>

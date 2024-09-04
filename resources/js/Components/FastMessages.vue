@@ -43,7 +43,7 @@ const deleteFastTemplate = (index, id) => {
 </script>
 
 <template>
-    <button @click="isOpen = true" class="left-btn" type="button">📝</button>
+    <button @click="isOpen = true" :class="$attrs.class" class="left-btn" type="button">📝</button>
 
     <Teleport to="body">
         <div class="fast-messages" v-show="isOpen">

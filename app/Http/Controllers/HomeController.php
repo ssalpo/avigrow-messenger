@@ -31,7 +31,7 @@ class HomeController extends Controller
         return Inertia::render('Home', [
             'unreadChatIds' => $unreadChatIds,
             'currentUserId' => $me['id'],
-            'activeAccountId' => (int)($account ?? $activeAccount->id),
+            'activeAccount' => $activeAccount,
             'accounts' => $accounts->map(fn($a) => [
                 'id' => $a->id,
                 'name' => $a->name
@@ -59,7 +59,7 @@ class HomeController extends Controller
         $me = $this->avito->me();
 
         return Inertia::render('Messages', [
-            'activeAccountId' => $accountId,
+            'activeAccount' => $account,
             'chat' => $this->chatResponse($chat, $account),
             'has_more' => $response['meta']['has_more'],
             'messages' => collect($response['messages'])

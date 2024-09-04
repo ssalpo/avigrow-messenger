@@ -1,8 +1,7 @@
 <script setup>
-import {Link} from '@inertiajs/vue3';
 import {router} from '@inertiajs/vue3'
-import {computed, onBeforeUnmount, onMounted, ref} from "vue";
-import {filter, map, omit, orderBy, sortBy} from "lodash";
+import {onBeforeUnmount, onMounted, ref} from "vue";
+import {map, orderBy} from "lodash";
 
 const props = defineProps({
     currentUserId: {
@@ -99,68 +98,72 @@ const showMorePage = () => {
         })
 }
 
-function truncate(text, limit) {
-    if (text.length > limit) {
-        for (let i = limit; i > 0; i--){
-            if(text.charAt(i) === ' ' && (text.charAt(i-1) != ','||text.charAt(i-1) != '.'||text.charAt(i-1) != ';')) {
-                return text.substring(0, i) + '...';
-            }
-        }
-        return text.substring(0, limit) + '...';
-    } else {
-        return text;
+function contextType(chat) {
+    let currentType = 'incorrect';
+
+    switch (chat.last_message.content_type) {
+        case 'image':
+            currentType = 'Фото'
+            break;
+        case 'video':
+            currentType = 'Видео'
+            break;
+        case 'location':
+            currentType = `Локация: ${chat.last_message.content.location.text}`
+            break;
+        case 'voice':
+            currentType = 'Голосовое сообщение'
+            break;
+        case 'deleted':
+            currentType = 'Сообщение удалено'
+            break;
+        case 'item':
+            currentType = 'Объявление'
+            break;
+        case 'link':
+            currentType = 'Ссылка'
+            break;
+        default:
+            currentType = chat.last_message.content.text
     }
+
+    return currentType
 }
 
 </script>
 
 <template>
-    <div class="chats-wrap">
-        <div class="chats">
-            <div class="chats-item"
-                 :class="{unread: unreadChats.includes(chat.id)}"
-                 @click="openItem(chat.id)" v-for="chat in chats">
-                <div>
-                    <div class="chats-item__avatar">
-                        <img :src="chat.image">
-                    </div>
-                </div>
-                <div>
-                    <div class="chats-item__title">{{ chat.user.name }}</div>
-                    <div class="chats-item__ads">{{ chat.context }}</div>
-                    <div class="chats-item__last-message">
-                        <div v-if="chat.last_message.content_type === 'image'">
-                            Фото
-                        </div>
-                        <div v-if="chat.last_message.content_type === 'video'">
-                            Видео
-                        </div>
-                        <div v-if="chat.last_message.content_type === 'location'">
-                            Локация: {{chat.last_message.content.location.text}}
-                        </div>
-                        <div v-if="chat.last_message.content_type === 'voice'">
-                            Голосовое сообщение
-                        </div>
-                        <div v-if="chat.last_message.content_type === 'deleted'">
-                            Сообщение удалено
-                        </div>
-                        <div v-if="chat.last_message.content_type === 'item'">
-                            Объявление
-                        </div>
-                        <div v-if="chat.last_message.content_type === 'link'">
-                            Ссылка
-                        </div>
-                        <div v-else>
-                            {{ truncate(chat.last_message.content.text ?? '', 90) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <v-list lines="two">
+        <template
+            v-for="chat in chats"
+            :key="chat.id"
+        >
+            <v-list-item
+                @click="openItem(chat.id)"
+                :title="chat.user.name"
+                :subtitle="contextType(chat)"
+                :prepend-avatar="chat.image"
+            >
+                <template v-slot:title="{title}">
+                    <div class="v-list-item-title" :class="{'text-red-darken-1': unreadChats.includes(chat.id)}">{{ title }}</div>
+                    <small :class="{'text-red-darken-1': unreadChats.includes(chat.id)}">{{ chat.context }}</small>
+                </template>
 
-            <div style="text-align: center">
-                <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreChats" @click.prevent="showMorePage">Показать
-                    еще</a>
-            </div>
-        </div>
+                <template v-slot:subtitle="{subtitle}">
+                    <small>{{ subtitle }}</small>
+                </template>
+
+                <template v-slot:prepend>
+                    <v-avatar :image="chat.image" size="45"></v-avatar>
+                </template>
+            </v-list-item>
+            <v-divider />
+        </template>
+    </v-list>
+
+    <div class="text-center mt-3 mb-5">
+        <v-btn variant="outlined" size="x-small" :disabled="isBusy" color="primary" v-if="hasMoreChats" @click.prevent="showMorePage">
+            Показать еще
+        </v-btn>
     </div>
 </template>
