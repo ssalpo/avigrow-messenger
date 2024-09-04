@@ -55,6 +55,7 @@ const deleteFastTemplate = (index, id) => {
 
 function onEdit(selected) {
     form.id = selected.id
+    form.title = selected.title
     form.content = selected.content
     isDialogOpen.value = true
 }
