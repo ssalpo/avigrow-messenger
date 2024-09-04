@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PwaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
@@ -42,4 +43,9 @@ Route::get('redirect', function() {
     ]);
 
     return redirect('/');
+});
+
+
+Route::group(['prefix' => 'pwa', 'as' => 'pwa.'], static function () {
+    Route::get('manifest', [PwaController::class, 'manifest'])->name('manifest');
 });
