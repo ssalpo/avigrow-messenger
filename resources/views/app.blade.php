@@ -7,6 +7,9 @@
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Scripts -->
+        <link rel="manifest" href="/build/manifest.json">
+        <script src="/build/registerSW.js"></script>
+
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
