@@ -20,7 +20,7 @@ const props = defineProps({
     }
 });
 
-const {textarea, input} = useTextareaAutosize();
+const {textarea, input} = useTextareaAutosize({input: ''});
 
 const sendFromOtherText = ref('');
 const sendFromOther = ref(false);
