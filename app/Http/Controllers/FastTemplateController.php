@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FastTemplateRequest;
 use App\Models\FastTemplate;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,22 +14,14 @@ class FastTemplateController extends Controller
         return response()->json(FastTemplate::orderByDesc('updated_at')->get());
     }
 
-    public function store(Request $request)
+    public function store(FastTemplateRequest $request): void
     {
-        $request->validate(['content' => 'required|min:2']);
-
-        FastTemplate::create([
-            'content' => $request->post('content')
-        ]);
+        FastTemplate::create($request->validated());
     }
 
-    public function update(int $id, Request $request)
+    public function update(int $id, FastTemplateRequest $request): void
     {
-        $request->validate(['content' => 'required|min:2']);
-
-        FastTemplate::findOrFail($id)->update([
-            'content' => $request->post('content')
-        ]);
+        FastTemplate::findOrFail($id)->update($request->validated());
     }
 
     public function destroy(int $id): void

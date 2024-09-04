@@ -104,7 +104,7 @@ onBeforeUnmount(() => {
 })
 
 
-const sendMessage = () => {
+const sendMessage = (text) => {
     if (isBusy.value === true) {
         return;
     }
@@ -112,7 +112,7 @@ const sendMessage = () => {
     isBusy.value = true;
 
     axios
-        .post(`/api/messages/${props.activeAccount.id}/${props.chat.id}/send`, {message: {text: input.value}})
+        .post(`/api/messages/${props.activeAccount.id}/${props.chat.id}/send`, {message: {text: input.value || text}})
         .then((response) => {
             messagesAll.value.push(response.data);
 
@@ -203,7 +203,7 @@ function onBlurTextarea() {
 
 <!--                <button v-show="!input" :disabled="isBusy" class="left-btn message-icon" type="button">📎</button>-->
 
-                <fast-messages v-if="!input" class="message-icon"  @selected="onFastTemplateSelect"/>
+                <fast-messages v-if="!input" class="message-icon" @sendFastly="(text) => sendMessage(text)"  @selected="onFastTemplateSelect"/>
 
                 <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
             </div>

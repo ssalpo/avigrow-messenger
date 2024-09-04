@@ -10,6 +10,7 @@ class FastTemplate extends Model
     use HasFactory;
 
     protected $fillable = [
+        'title',
         'content'
     ];
 }

@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AvitoController;
 use App\Http\Controllers\DigisellerWebhookController;
-use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\TelegramWebhookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -10,8 +9,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
-
-Route::resource('/fast-templates', FastTemplateController::class);
 
 Route::get('/accounts', [AvitoController::class, 'getAccounts']);
 
