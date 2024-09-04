@@ -201,7 +201,7 @@ function onBlurTextarea() {
                     :placeholder="sendFromOtherText || `Введите сообщение...`">
                 </textarea>
 
-                <button v-show="!input" :disabled="isBusy" class="left-btn message-icon" type="button">📎</button>
+<!--                <button v-show="!input" :disabled="isBusy" class="left-btn message-icon" type="button">📎</button>-->
 
                 <fast-messages v-if="!input" class="message-icon"  @selected="onFastTemplateSelect"/>
 

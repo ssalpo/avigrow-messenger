@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue";
 import { router } from '@inertiajs/vue3'
 
-const isLoading = ref(0);
+const isLoading = ref(false);
 
 onMounted(() => {
     router.on('start', () => isLoading.value = true)
@@ -13,7 +13,18 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="state-loader" v-if="isLoading">
-        <div class="loader"></div>
+    <div class="text-center">
+        <v-overlay
+            persistent
+            v-model="isLoading"
+            scroll-strategy="block"
+            class="align-center justify-center"
+        >
+            <v-progress-circular
+                color="primary"
+                size="64"
+                indeterminate
+            ></v-progress-circular>
+        </v-overlay>
     </div>
 </template>
