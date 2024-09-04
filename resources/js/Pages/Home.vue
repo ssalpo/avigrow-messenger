@@ -1,6 +1,7 @@
 <script setup>
 import { Head, router } from '@inertiajs/vue3';
 import Conversations from "@/Components/Chats/Conversations.vue";
+import {onMounted} from "vue";
 
 const props = defineProps({
     activeAccount: {
@@ -19,6 +20,12 @@ const props = defineProps({
         type: Boolean,
     }
 });
+
+onMounted(() => {
+    setTimeout(() => {
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
+    }, 100)
+})
 
 </script>
 

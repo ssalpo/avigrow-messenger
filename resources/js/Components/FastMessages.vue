@@ -118,9 +118,9 @@ function sendFastly(selected) {
             </v-container>
 
             <v-list lines="two">
-                <v-list-item
-                    v-for="(fastTemplate, i) in fastTemplates"
-                    :key="i"
+                <template v-for="(fastTemplate, i) in fastTemplates"
+                          :key="i">
+                    <v-list-item
                     :title="fastTemplate.title"
                     @click="() => onSelect(fastTemplate)"
                 >
@@ -146,6 +146,9 @@ function sendFastly(selected) {
                         <div v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')"></div>
                     </template>
                 </v-list-item>
+
+                    <v-divider />
+                </template>
             </v-list>
 
         </v-sheet>
@@ -193,29 +196,6 @@ function sendFastly(selected) {
             </v-form>
         </template>
     </v-dialog>
-    <!--
-        <button @click="isOpen = true" :class="$attrs.class" class="left-btn" type="button">📝</button>
-
-        <Teleport to="body">
-            <div class="fast-messages" v-show="isOpen">
-                <div class="fast-messages__left">
-                    <div class="fast-messages__close" @click="isOpen = false">❌</div>
-                </div>
-
-                <div class="fast-messages__templates">
-                    <fast-template-new :fast-template="editFastTemplate" @saved="onSaved"/>
-
-                    <div class="fast-messages-template" v-if="!editFastTemplate?.id" v-for="(fastTemplate, index) in fastTemplates">
-                        <div class="fast-messages-template__content" @click="onSelect(fastTemplate)" v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')">
-                        </div>
-                        <div>
-                            <div class="fast-messages-template__edit" @click="editFastTemplate = fastTemplate">🖊</div>
-                            <div class="fast-messages-template__edit" @click="deleteFastTemplate(index, fastTemplate.id)">🗑️</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </Teleport>-->
 </template>
 
 <style scoped>
