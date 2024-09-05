@@ -210,7 +210,7 @@ function onBlurTextarea() {
                 <schedule-review-request
                     :chat-id="chat.id"
                     :account-id="activeAccount.id"
-                    v-if="!hasReviewSchedules"
+                    v-if="!hasReviewSchedules && !input"
                 />
 
                 <fast-messages v-if="!input" class="message-icon" @sendFastly="(text) => sendMessage(text)"  @selected="onFastTemplateSelect"/>
