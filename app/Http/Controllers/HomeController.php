@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\SendMessageToTelegram;
 use App\Models\Account;
+use App\Models\ReviewSchedule;
 use App\Services\Avito;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
@@ -18,9 +19,7 @@ class HomeController extends Controller
 
     public function index(string $account = null)
     {
-        $accounts = Account::all();
-
-        $activeAccount = $account ? Account::findOrFail($account) : $accounts->first();
+        $activeAccount = $account ? Account::findOrFail($account) : Account::first();
         $this->avito->setAccount($activeAccount);
         $response = $this->avito->setAccount($activeAccount)->getChats(30);
 
@@ -31,11 +30,6 @@ class HomeController extends Controller
         return Inertia::render('Home', [
             'unreadChatIds' => $unreadChatIds,
             'currentUserId' => $me['id'],
-            'activeAccount' => $activeAccount,
-            'accounts' => $accounts->map(fn($a) => [
-                'id' => $a->id,
-                'name' => $a->name
-            ]),
             'conversations' => collect($response['chats'])->map(
                 fn($chat) => $this->chatResponse($chat, $activeAccount)
             ),
@@ -61,6 +55,7 @@ class HomeController extends Controller
         return Inertia::render('Messages', [
             'activeAccount' => $account,
             'chat' => $this->chatResponse($chat, $account),
+            'hasReviewSchedules' => ReviewSchedule::hasAnyForChat($chatId),
             'has_more' => $response['meta']['has_more'],
             'messages' => collect($response['messages'])
                 ->map(function ($message) use ($me) {

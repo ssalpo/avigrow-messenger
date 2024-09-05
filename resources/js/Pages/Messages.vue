@@ -4,6 +4,7 @@ import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import MessageItem from "@/Components/Chats/MessageItem.vue";
 import FastMessages from "@/Components/FastMessages.vue";
 import {useTextareaAutosize} from "@vueuse/core";
+import ScheduleReviewRequest from "@/Components/ScheduleReviewRequest.vue";
 
 const props = defineProps({
     activeAccount: {
@@ -11,6 +12,9 @@ const props = defineProps({
     },
     chat: {
         type: Object
+    },
+    hasReviewSchedules: {
+        type: Boolean
     },
     has_more: {
         type: Boolean
@@ -202,6 +206,12 @@ function onBlurTextarea() {
                 </textarea>
 
 <!--                <button v-show="!input" :disabled="isBusy" class="left-btn message-icon" type="button">📎</button>-->
+
+                <schedule-review-request
+                    :chat-id="chat.id"
+                    :account-id="activeAccount.id"
+                    v-if="!hasReviewSchedules"
+                />
 
                 <fast-messages v-if="!input" class="message-icon" @sendFastly="(text) => sendMessage(text)"  @selected="onFastTemplateSelect"/>
 

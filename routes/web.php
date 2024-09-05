@@ -1,19 +1,25 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PwaController;
+use App\Http\Controllers\ReviewScheduleController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
-Route::post('login', [\App\Http\Controllers\AuthController::class, 'auth']);
+Route::get('login', [AuthController::class, 'login'])->name('login');
+Route::post('login', [AuthController::class, 'auth']);
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', [HomeController::class, 'index']);
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('/accounts/{account}/chats/{chat}', [HomeController::class, 'messages'])->name('account.chat.messages');
     Route::get('/accounts/{account}/chats', [HomeController::class, 'index'])->name('account.chats');
     Route::resource('/fast-templates', FastTemplateController::class);
+
+    Route::group(['prefix' => '/accounts/{account}'], function() {
+        Route::resource('schedule-reviews', ReviewScheduleController::class)->only(['index', 'store', 'destroy']);
+    });
 });
 
 Route::get('redirect', function() {

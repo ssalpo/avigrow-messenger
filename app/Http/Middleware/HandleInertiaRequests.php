@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Account;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -29,11 +30,24 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $accounts = [];
+        $activeAccount = [];
+
+        if (auth()->check()) {
+            $accounts = Account::all();
+
+            $activeAccount = $request->route()->hasParameter('account')
+                ? Account::findOrFail($request->route()->parameter('account'))
+                : $accounts->first();
+        }
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
+            'accounts' => $accounts,
+            'activeAccount' => $activeAccount,
         ];
     }
 }

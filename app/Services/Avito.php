@@ -177,4 +177,9 @@ class Avito
             'video' => 'Видео',
         };
     }
+
+    public function reviews(int $offset = 0, int $limit = 10)
+    {
+        return $this->clientWithToken()->get("/ratings/v1/reviews?offset=$offset&limit=$limit")->json() ?? [];
+    }
 }
