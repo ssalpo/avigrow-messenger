@@ -21,6 +21,7 @@ class ReviewScheduleResource extends JsonResource
             'id' => $this->id,
             'chat_id' => $this->chat_id,
             'account_id' => $this->account_id,
+            'send_at' => $this->send_at->format('d.m.Y H:i'),
             'created_at' => $this->created_at->format('d.m.Y H:i'),
         ];
     }

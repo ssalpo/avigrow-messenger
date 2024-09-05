@@ -30,7 +30,7 @@ function remove(account, id) {
             elevation="4"
         >
             <v-card-text>
-                Запустится <b>{{review.created_at}}</b>
+                Запустится <b>{{review.send_at}}</b>
             </v-card-text>
 
             <template v-slot:actions>
