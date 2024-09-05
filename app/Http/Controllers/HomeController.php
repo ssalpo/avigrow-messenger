@@ -55,7 +55,7 @@ class HomeController extends Controller
         return Inertia::render('Messages', [
             'activeAccount' => $account,
             'chat' => $this->chatResponse($chat, $account),
-            'hasReviewSchedules' => ReviewSchedule::hasAnyForChat($chatId),
+            'hasReviewSchedules' => ReviewSchedule::hasAnyForChatAndAccount($chatId, $account->id),
             'has_more' => $response['meta']['has_more'],
             'messages' => collect($response['messages'])
                 ->map(function ($message) use ($me) {

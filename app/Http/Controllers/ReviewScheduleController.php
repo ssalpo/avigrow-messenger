@@ -18,7 +18,7 @@ class ReviewScheduleController extends Controller
 
     public function store(ReviewScheduleRequest $request): void
     {
-        if (!ReviewSchedule::hasAnyForChat($request->chat_id)) {
+        if (!ReviewSchedule::hasAnyForChatAndAccount($request->chat_id, $request->account_id)) {
             ReviewSchedule::create($request->validated() + ['send_at' => now()->addMonth()->setTime(19, 0, 0)]);
         }
     }

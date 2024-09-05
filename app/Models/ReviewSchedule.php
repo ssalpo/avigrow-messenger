@@ -21,9 +21,9 @@ class ReviewSchedule extends Model
         'send_at' => 'datetime',
     ];
 
-    public static function hasAnyForChat(string $id): bool
+    public static function hasAnyForChatAndAccount(string $id, string $accountId): bool
     {
-        return self::where(['chat_id' => $id])->exists();
+        return self::where(['chat_id' => $id, 'account_id' => $accountId])->exists();
     }
 
     public static function scopeForAccount($q, $accountId): void
