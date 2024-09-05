@@ -17,6 +17,10 @@ class ReviewSchedule extends Model
         'status',
     ];
 
+    protected $casts = [
+        'send_at' => 'datetime',
+    ];
+
     public static function hasAnyForChat(string $id): bool
     {
         return self::where(['chat_id' => $id])->exists();

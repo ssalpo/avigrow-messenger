@@ -281,6 +281,7 @@ body {
     margin-right: 5px;
     flex-grow: 1;
     font-size: 14px;
+    line-height: 18px;
     resize: none;
     max-height: 62px;
     overflow: auto;
