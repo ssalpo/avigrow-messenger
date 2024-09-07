@@ -76,6 +76,10 @@ function onLongPressCopyText(e) {
                 <b>Пользователь отправил видео (не поддерживается)</b>
             </div>
 
+            <div v-else-if="message.content_type === 'file'">
+                <b>Пользователь прикрепил файл (не поддерживается)</b>
+            </div>
+
             <div v-else-if="message.content_type === 'voice'">
                 <b>Пользователь отправил голосовое сообщение (не поддерживается)</b>
             </div>

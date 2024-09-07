@@ -175,6 +175,7 @@ class Avito
             'link' => 'Ссылка',
             'location' => 'Локация',
             'video' => 'Видео',
+            'file' => 'Файл',
         };
     }
 

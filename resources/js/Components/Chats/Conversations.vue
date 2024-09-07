@@ -123,6 +123,9 @@ function contextType(chat) {
         case 'link':
             currentType = 'Ссылка'
             break;
+        case 'file':
+            currentType = 'Файл'
+            break;
         default:
             currentType = chat.last_message.content.text
     }
