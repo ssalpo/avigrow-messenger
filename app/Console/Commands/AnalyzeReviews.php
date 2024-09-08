@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Account;
 use App\Services\Avito;
+use App\Services\Telegram;
 use Illuminate\Console\Command;
 
 class AnalyzeReviews extends Command
@@ -27,18 +28,55 @@ class AnalyzeReviews extends Command
      */
     public function handle(Avito $avito)
     {
-        // Получаем данные аккаунта
-        // Получаем список чатов на анализ
-        // Получаем список отзывов за вчера
-        // Получаем список имен
-        // Получаем список имен из авито
-        // Сопоставляем тех кого нету в списке и отправляем в телеграм
-        //
+        $messages = "";
 
-        $accounts = Account::with('analyzeReviews')->get();
+        $accounts = Account::with('analyzeReviews')->whereId(1)->get();
 
-        $accounts->each(function (Account $account) use ($avito) {
+        $accounts->each(function (Account $account) use ($avito, &$messages) {
+            $accountUrl = url("/accounts/{$account->id}/chats");
 
+            $accountMessageTemplate = <<<MSG
+<b>Аккаунт:</b> <a href="$accountUrl">{$account->name}</a>
+=====
+
+MSG;
+
+            $avitoReviews = collect($avito->setAccount($account)->reviews()['reviews'])->map(function ($item) {
+                return [
+                    'itemId' => $item['item']['id'],
+                    'senderName' => $item['sender']['name'],
+                    'createdAt' => \Carbon\Carbon::createFromTimestamp($item['createdAt'])
+                ];
+            })->filter(fn($item) => now()->subDay()->toDateString() === $item['createdAt']->subDay()->toDateString());
+
+            $hasAny = false;
+
+            $account->analyzeReviews->each(function ($review) use ($avitoReviews, &$accountMessageTemplate, &$hasAny) {
+
+                if(!$avitoReviews->where('itemId', $review['context_id'])->where('senderName', $review['chat_sender_name'])->count()) {
+                    $hasAny = true;
+
+                    $chatUrl = route('account.chat.messages', ['account' => $review->account_id, 'chat' => $review->chat_id]);
+
+                    $chatItem = <<<CHMSG
+<b>Чат:</b> <a href="$chatUrl">{$review['chat_sender_name']}</a>
+<b>Контекст:</b> {$review['context']}
+===========================
+
+CHMSG;
+
+                    $accountMessageTemplate .= $chatItem;
+
+                }
+            });
+
+            if($hasAny) {
+                $messages .= $accountMessageTemplate;
+            }
         });
+
+        if($messages) {
+            Telegram::sendMessageToExistIds($messages);
+        }
     }
 }

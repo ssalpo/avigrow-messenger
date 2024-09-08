@@ -57,15 +57,3 @@ Route::get('redirect', function() {
 Route::group(['prefix' => 'pwa', 'as' => 'pwa.'], static function () {
     Route::get('manifest', [PwaController::class, 'manifest'])->name('manifest');
 });
-
-Route::get('/test', function (\App\Services\Avito $avito) {
-    $accountId = 1;
-
-    $account = Account::findOrFail($accountId);
-    $items = $avito->setAccount($account)->reviews();
-
-    foreach ($items['reviews'] as $review) {
-
-    }
-
-});
