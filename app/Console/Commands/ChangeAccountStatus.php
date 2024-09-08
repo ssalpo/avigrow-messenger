@@ -30,7 +30,7 @@ class ChangeAccountStatus extends Command
         $accounts = Account::all();
 
         $accounts->each(function ($account) use($avito) {
-            $avito->setAccount($account)->me();
+            $avito->setAccount($account)->getChats(10);
         });
     }
 }
