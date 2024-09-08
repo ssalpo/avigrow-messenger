@@ -5,6 +5,8 @@ use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PwaController;
 use App\Http\Controllers\ReviewScheduleController;
+use App\Models\Account;
+use App\Models\AnalyzeReview;
 use Illuminate\Support\Facades\Route;
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
@@ -54,4 +56,16 @@ Route::get('redirect', function() {
 
 Route::group(['prefix' => 'pwa', 'as' => 'pwa.'], static function () {
     Route::get('manifest', [PwaController::class, 'manifest'])->name('manifest');
+});
+
+Route::get('/test', function (\App\Services\Avito $avito) {
+    $accountId = 1;
+
+    $account = Account::findOrFail($accountId);
+    $items = $avito->setAccount($account)->reviews();
+
+    foreach ($items['reviews'] as $review) {
+
+    }
+
 });

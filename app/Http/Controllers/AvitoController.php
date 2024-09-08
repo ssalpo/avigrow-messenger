@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewMessage;
+use App\Jobs\AddToAnalyzeReviews;
 use App\Jobs\SendMessageToTelegram;
 use App\Models\Account;
 use App\Services\Avito;
@@ -128,6 +129,10 @@ class AvitoController extends Controller
             'unreadChatIds' => $this->avito->setAccount($account)->getUnreadChatIds(),
             'chat' => $payload
         ]);
+
+        AddToAnalyzeReviews::dispatch(
+            $account->id, $payload['value']['chat_id']
+        );
     }
 
     protected function chatResponse(array $chat, Account $account): array
