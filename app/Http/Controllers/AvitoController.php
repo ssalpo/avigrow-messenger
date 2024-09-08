@@ -130,9 +130,11 @@ class AvitoController extends Controller
             'chat' => $payload
         ]);
 
-        AddToAnalyzeReviews::dispatch(
-            $account->id, $payload['value']['chat_id']
-        );
+        if(!$payload['value']['is_me']) {
+            AddToAnalyzeReviews::dispatch(
+                $account->id, $payload['value']['chat_id']
+            );
+        }
     }
 
     protected function chatResponse(array $chat, Account $account): array
