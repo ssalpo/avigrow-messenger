@@ -78,6 +78,9 @@ CHMSG;
         });
 
         if($messages) {
+
+            $messages = '<b>Анализатор отзывов</b> ' . PHP_EOL. PHP_EOL . $messages;
+
             Telegram::sendMessageToExistIds($messages);
         }
     }
