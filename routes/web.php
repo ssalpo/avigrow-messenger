@@ -5,6 +5,8 @@ use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PwaController;
 use App\Http\Controllers\ReviewScheduleController;
+use App\Models\Account;
+use App\Models\AnalyzeReview;
 use Illuminate\Support\Facades\Route;
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
