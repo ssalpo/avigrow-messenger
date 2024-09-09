@@ -19,7 +19,7 @@ const stageTypes = {
             <v-list-item
                 class="px-0"
                 :title="review.sender.name"
-                subtitle="6 сентября"
+                :subtitle="review.createdAt"
             >
                 <template v-slot:title="{title}">
                     <b>{{ title }}</b>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Services\Avito;
+use Carbon\Carbon;
 
 class ReviewController extends Controller
 {
@@ -26,7 +27,10 @@ class ReviewController extends Controller
 
         return inertia('Reviews', [
             'accountId' => $account,
-            'reviews' => $reviews['reviews'],
+            'reviews' => array_map(function($item) {
+                $item['createdAt'] = Carbon::createFromTimestamp($item['createdAt'])->format('d-m-Y H:i');
+                return $item;
+            }, $reviews['reviews']),
             'lastPage' => $lastPage,
         ]);
     }
