@@ -115,41 +115,41 @@ function sendFastly(selected) {
                         <v-btn icon="mdi-plus" @click="onCreate" size="auto" color="success"></v-btn>
                     </v-col>
                 </v-row>
+
+                <v-list lines="two">
+                    <template v-for="(fastTemplate, i) in fastTemplates"
+                              :key="i">
+                        <v-list-item
+                        :title="fastTemplate.title"
+                        @click="() => onSelect(fastTemplate)"
+                    >
+                        <template v-slot:title="{title}">
+                            <div class="v-list-item-title">
+                                {{ title }}
+
+                                <v-menu>
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn size="x-small" icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
+                                    </template>
+
+                                    <v-list density="compact">
+                                        <v-list-item title="Отправить сразу" @click="sendFastly(fastTemplate)"></v-list-item>
+                                        <v-list-item @click="() => onEdit(fastTemplate)" title="Редактировать"></v-list-item>
+                                        <v-list-item @click="deleteFastTemplate(i, fastTemplate.id)" title="Удалить"></v-list-item>
+                                    </v-list>
+                                </v-menu>
+                            </div>
+                        </template>
+
+                        <template v-slot:subtitle>
+                            <div v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')"></div>
+                        </template>
+                    </v-list-item>
+
+                        <v-divider />
+                    </template>
+                </v-list>
             </v-container>
-
-            <v-list lines="two">
-                <template v-for="(fastTemplate, i) in fastTemplates"
-                          :key="i">
-                    <v-list-item
-                    :title="fastTemplate.title"
-                    @click="() => onSelect(fastTemplate)"
-                >
-                    <template v-slot:title="{title}">
-                        <div class="v-list-item-title">
-                            {{ title }}
-
-                            <v-menu>
-                                <template v-slot:activator="{ props }">
-                                    <v-btn size="x-small" icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
-                                </template>
-
-                                <v-list density="compact">
-                                    <v-list-item title="Отправить сразу" @click="sendFastly(fastTemplate)"></v-list-item>
-                                    <v-list-item @click="() => onEdit(fastTemplate)" title="Редактировать"></v-list-item>
-                                    <v-list-item @click="deleteFastTemplate(i, fastTemplate.id)" title="Удалить"></v-list-item>
-                                </v-list>
-                            </v-menu>
-                        </div>
-                    </template>
-
-                    <template v-slot:subtitle>
-                        <div v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')"></div>
-                    </template>
-                </v-list-item>
-
-                    <v-divider />
-                </template>
-            </v-list>
 
         </v-sheet>
 

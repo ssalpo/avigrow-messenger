@@ -30,7 +30,7 @@ class AnalyzeReviews extends Command
     {
         $messages = "";
 
-        $accounts = Account::with('analyzeReviews')->whereId(1)->get();
+        $accounts = Account::with('analyzeReviews')->whereHas('analyzeReviews')->get();
 
         $accounts->each(function (Account $account) use ($avito, &$messages) {
             $accountUrl = url("/accounts/{$account->id}/chats");
@@ -67,18 +67,17 @@ CHMSG;
 
                     $accountMessageTemplate .= $chatItem;
 
-                    // $review->delete();
+                     $review->delete();
 
                 }
             });
 
             if($hasAny) {
-                $messages .= $accountMessageTemplate;
+                $messages .= $accountMessageTemplate . PHP_EOL . PHP_EOL;
             }
         });
 
         if($messages) {
-
             $messages = '<b>Анализатор отзывов</b> ' . PHP_EOL. PHP_EOL . $messages;
 
             Telegram::sendMessageToExistIds($messages);
