@@ -67,7 +67,7 @@ CHMSG;
 
                     $accountMessageTemplate .= $chatItem;
 
-                    $review->delete();
+                    // $review->delete();
 
                 }
             });
