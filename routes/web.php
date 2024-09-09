@@ -4,10 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PwaController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewScheduleController;
-use App\Models\Account;
-use App\Models\AnalyzeReview;
-use App\Services\Telegram;
 use Illuminate\Support\Facades\Route;
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
@@ -16,12 +14,15 @@ Route::post('login', [AuthController::class, 'auth']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
-    Route::get('/accounts/{account}/chats/{chat}', [HomeController::class, 'messages'])->name('account.chat.messages');
-    Route::get('/accounts/{account}/chats', [HomeController::class, 'index'])->name('account.chats');
     Route::resource('/fast-templates', FastTemplateController::class);
 
     Route::group(['prefix' => '/accounts/{account}'], function() {
         Route::resource('schedule-reviews', ReviewScheduleController::class)->only(['index', 'store', 'destroy']);
+
+        Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
+
+        Route::get('chats/{chat}', [HomeController::class, 'messages'])->name('account.chat.messages');
+        Route::get('chats', [HomeController::class, 'index'])->name('account.chats');
     });
 });
 

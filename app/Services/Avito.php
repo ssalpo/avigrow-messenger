@@ -179,8 +179,10 @@ class Avito
         };
     }
 
-    public function reviews(int $offset = 0, int $limit = 10)
+    public function reviews(int $limit = 10, int $page = 1)
     {
+        $offset = ceil(($page - 1) * $limit);
+
         return $this->clientWithToken()->get("/ratings/v1/reviews?offset=$offset&limit=$limit")->json() ?? [];
     }
 }

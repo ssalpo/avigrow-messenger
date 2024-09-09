@@ -48,6 +48,12 @@ const activeAccount = page.props.activeAccount
                     title="Запросы отзывов"
                     @click="() => router.visit(route('schedule-reviews.index', {account: activeAccount.id}))"
                 />
+
+                <v-list-item
+                    color="primary"
+                    title="Отзывы"
+                    @click="() => router.visit(route('reviews.index', {account: activeAccount.id}))"
+                />
             </v-list>
         </v-menu>
     </v-toolbar>
