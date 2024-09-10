@@ -30,7 +30,9 @@ class AnalyzeReviews extends Command
     {
         $messages = "";
 
-        $accounts = Account::with('analyzeReviews')->whereHas('analyzeReviews')->get();
+        $accounts = Account::with('analyzeReviews')
+            ->whereDate('created_at', now()->subDay())
+            ->whereHas('analyzeReviews')->get();
 
         $accounts->each(function (Account $account) use ($avito, &$messages) {
             $accountUrl = url("/accounts/{$account->id}/chats");
@@ -53,7 +55,7 @@ MSG;
 
             $account->analyzeReviews->each(function ($review) use ($avitoReviews, &$accountMessageTemplate, &$hasAny) {
 
-                if(!$avitoReviews->where('itemId', $review['context_id'])->where('senderName', $review['chat_sender_name'])->count()) {
+                if (!$avitoReviews->where('itemId', $review['context_id'])->where('senderName', $review['chat_sender_name'])->count()) {
                     $hasAny = true;
 
                     $chatUrl = route('account.chat.messages', ['account' => $review->account_id, 'chat' => $review->chat_id]);
@@ -67,18 +69,18 @@ CHMSG;
 
                     $accountMessageTemplate .= $chatItem;
 
-                     $review->delete();
+                    $review->delete();
 
                 }
             });
 
-            if($hasAny) {
+            if ($hasAny) {
                 $messages .= $accountMessageTemplate . PHP_EOL . PHP_EOL;
             }
         });
 
-        if($messages) {
-            $messages = '<b>Анализатор отзывов</b> ' . PHP_EOL. PHP_EOL . $messages;
+        if ($messages) {
+            $messages = '<b>Анализатор отзывов</b> ' . PHP_EOL . PHP_EOL . $messages;
 
             Telegram::sendMessageToExistIds($messages);
         }
