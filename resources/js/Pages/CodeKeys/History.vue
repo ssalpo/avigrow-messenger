@@ -39,7 +39,10 @@ function restore(id) {
             bg-color="primary"
             v-model="tab"
         >
-            <v-tab :value="value" :key="value" v-for="(label, value) in tabs">{{ label }}</v-tab>
+            <v-tab :value="value" :key="value" v-for="(label, value) in tabs">
+                {{ label }}
+                {{keys[value] !== undefined ? `(${keys[value]?.length})` : ''}}
+            </v-tab>
         </v-tabs>
 
         <v-tabs-window v-model="tab">

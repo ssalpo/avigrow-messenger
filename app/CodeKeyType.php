@@ -8,11 +8,14 @@ enum CodeKeyType: int
 
     case SHAPR = 2;
 
+    case MIRO = 3;
+
     public static function labels(): array
     {
         return [
             self::VD->value => 'VD',
             self::SHAPR->value => 'Shapr',
+            self::MIRO->value => 'Miro',
         ];
     }
 }
