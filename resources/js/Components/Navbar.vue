@@ -5,6 +5,29 @@ defineProps(['pageTitle'])
 
 const page = usePage()
 const activeAccount = page.props.activeAccount
+
+const navs = [
+    {
+        title: 'Сообщения',
+        route: 'account.chats',
+        params: {account: activeAccount.id}
+    },
+    {
+        title: 'Запросы отзывов',
+        route: 'schedule-reviews.index',
+        params: {account: activeAccount.id}
+    },
+    {
+        title: 'Отзывы',
+        route: 'reviews.index',
+        params: {account: activeAccount.id}
+    },
+    {
+        title: 'Ключи',
+        route: 'code-keys.index',
+        params: null
+    }
+];
 </script>
 
 <template>
@@ -13,6 +36,9 @@ const activeAccount = page.props.activeAccount
         :elevation="6"
         color="blue-darken-1"
         density="comfortable">
+
+        <v-btn icon="mdi-key-chain" variant="text" @click="router.visit(route('code-keys.index'))"></v-btn>
+
         <v-menu>
             <template v-slot:activator="{ props }">
                 <v-btn icon="mdi-account-multiple-outline" variant="text" v-bind="props"></v-btn>
@@ -31,6 +57,7 @@ const activeAccount = page.props.activeAccount
                 </v-list-item>
             </v-list>
         </v-menu>
+
         <v-menu>
             <template v-slot:activator="{ props }">
                 <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
@@ -38,21 +65,10 @@ const activeAccount = page.props.activeAccount
 
             <v-list density="compact">
                 <v-list-item
+                    v-for="(nav, index) in navs"
                     color="primary"
-                    title="Сообщения"
-                    @click="() => router.visit(route('account.chats', {account: activeAccount.id}))"
-                />
-
-                <v-list-item
-                    color="primary"
-                    title="Запросы отзывов"
-                    @click="() => router.visit(route('schedule-reviews.index', {account: activeAccount.id}))"
-                />
-
-                <v-list-item
-                    color="primary"
-                    title="Отзывы"
-                    @click="() => router.visit(route('reviews.index', {account: activeAccount.id}))"
+                    :title="nav.title"
+                    @click="() => router.visit(route(nav.route, nav.params))"
                 />
             </v-list>
         </v-menu>

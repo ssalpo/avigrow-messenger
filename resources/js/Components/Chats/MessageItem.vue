@@ -1,7 +1,6 @@
 <script setup>
 import {ref} from "vue";
 import { vOnLongPress } from '@vueuse/components'
-import { useClipboard } from '@vueuse/core'
 
 const props = defineProps({
     accountId: Number,
@@ -35,7 +34,6 @@ function onLongPressCopyText(e) {
     const text = e.target.innerText || e.target.textContent;
 
     if(text) {
-        console.log(text)
         navigator.clipboard.writeText(text)
     }
 }
