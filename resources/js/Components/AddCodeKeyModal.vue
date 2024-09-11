@@ -13,8 +13,8 @@ let contentAccount = reactive({
 })
 
 let form = useForm({
-    content: null,
-    comment: null,
+    content: '',
+    comment: '',
     product_type: 1
 })
 
@@ -35,6 +35,7 @@ function send(dialog) {
     contentTypeFormatter();
 
     form.post(route('code-keys.store'), {
+        preserveState: false,
         onSuccess: () => {
             form.reset();
             dialog.value = false
@@ -44,7 +45,7 @@ function send(dialog) {
                 login: '',
                 password: ''
             }
-        },
+        }
     })
 }
 </script>
@@ -68,14 +69,13 @@ function send(dialog) {
                         :items="categories"
                     ></v-select>
 
-                    <template v-if="contentType === 1">
                         <v-text-field
+                            v-show="contentType === 1"
                             label="Код"
                             v-model="contentCode"
                         ></v-text-field>
-                    </template>
 
-                    <template v-if="contentType === 2">
+                    <v-sheet v-show="contentType === 2">
                         <v-text-field
                             label="Логин"
                             v-model="contentAccount.login"
@@ -85,7 +85,7 @@ function send(dialog) {
                             label="Пароль"
                             v-model="contentAccount.password"
                         ></v-text-field>
-                    </template>
+                    </v-sheet>
 
                     <v-text-field
                         label="Комментарий"
