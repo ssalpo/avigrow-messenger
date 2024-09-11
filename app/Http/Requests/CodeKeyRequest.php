@@ -23,7 +23,8 @@ class CodeKeyRequest extends FormRequest
     {
         return [
             'content' => 'required|string',
-            'product_type' => 'required|numeric'
+            'product_type' => 'required|numeric',
+            'comment' => 'nullable|string|max:1000',
         ];
     }
 }

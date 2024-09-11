@@ -14,6 +14,7 @@ let contentAccount = reactive({
 
 let form = useForm({
     content: null,
+    comment: null,
     product_type: 1
 })
 
@@ -71,7 +72,6 @@ function send(dialog) {
                         <v-text-field
                             label="Код"
                             v-model="contentCode"
-                            required
                         ></v-text-field>
                     </template>
 
@@ -79,15 +79,18 @@ function send(dialog) {
                         <v-text-field
                             label="Логин"
                             v-model="contentAccount.login"
-                            required
                         ></v-text-field>
 
                         <v-text-field
                             label="Пароль"
                             v-model="contentAccount.password"
-                            required
                         ></v-text-field>
                     </template>
+
+                    <v-text-field
+                        label="Комментарий"
+                        v-model="form.comment"
+                    ></v-text-field>
                 </v-card-text>
 
                 <v-divider></v-divider>

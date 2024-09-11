@@ -90,6 +90,7 @@ function destroy(id) {
                                 rounded
                                 elevation="2"
                                 :title="key.content"
+                                :subtitle="[key.comment, key.created_at_formatted].filter(x => x).join(' | ')"
                             >
                                 <template v-slot:append>
                                     <v-menu>
