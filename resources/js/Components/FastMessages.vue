@@ -2,6 +2,10 @@
 
 import {onMounted, reactive, ref} from "vue";
 
+defineOptions({
+    inheritAttrs: false
+})
+
 const emit = defineEmits(['selected', 'sendFastly']);
 
 let fastTemplates = ref([]);
@@ -11,7 +15,6 @@ let form = reactive({
     content: ''
 });
 let errorMessage = ref("");
-let isOpen = ref(false);
 let isDialogOpen = ref(false);
 let isBottomSheetOpen = ref(false);
 let editFastTemplate = ref({});
@@ -102,7 +105,7 @@ function sendFastly(selected) {
 
     <v-bottom-sheet v-model="isBottomSheetOpen">
         <template v-slot:activator="{ props }">
-            <button @click="isOpen = true" v-bind="props" :class="$attrs.class" class="left-btn" type="button">
+            <button v-bind="props" :class="$attrs.class" class="left-btn" type="button">
                 📝
             </button>
         </template>

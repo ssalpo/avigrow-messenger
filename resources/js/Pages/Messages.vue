@@ -5,8 +5,11 @@ import MessageItem from "@/Components/Chats/MessageItem.vue";
 import FastMessages from "@/Components/FastMessages.vue";
 import {useTextareaAutosize} from "@vueuse/core";
 import ScheduleReviewRequest from "@/Components/ScheduleReviewRequest.vue";
+import CodeKeysSheet from "@/Components/CodeKeysSheet.vue";
 
 const props = defineProps({
+    tabs: Object,
+    keys: Object,
     activeAccount: {
         type: Object
     },
@@ -212,6 +215,8 @@ function onBlurTextarea() {
                     :account-id="activeAccount.id"
                     v-if="!hasReviewSchedules && !input"
                 />
+
+                <code-keys-sheet :tabs="tabs" :keys="keys" />
 
                 <fast-messages v-if="!input" class="message-icon" @sendFastly="(text) => sendMessage(text)"  @selected="onFastTemplateSelect"/>
 

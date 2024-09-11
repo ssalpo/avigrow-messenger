@@ -33,7 +33,7 @@ class CodeKeyController extends Controller
         return redirect()->back();
     }
 
-    public function markAsReceipt(CodeKey $codeKey): RedirectResponse
+    public function markAsReceipt(CodeKey $codeKey): ?RedirectResponse
     {
         $codeKey->update([
             'receipt_by' => auth()->id(),
@@ -46,8 +46,11 @@ class CodeKeyController extends Controller
 {$codeKey->content}
 MSG;
 
-
         SendMessageToExistingIds::dispatch($message);
+
+        if(request('empty')) {
+            return null;
+        }
 
         return redirect()->back();
     }

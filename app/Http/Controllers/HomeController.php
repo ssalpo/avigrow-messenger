@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SendMessageToTelegram;
+use App\CodeKeyType;
 use App\Models\Account;
+use App\Models\CodeKey;
 use App\Models\ReviewSchedule;
 use App\Services\Avito;
 use Illuminate\Support\Carbon;
@@ -52,7 +53,12 @@ class HomeController extends Controller
 
         $me = $this->avito->me();
 
+        $tabs = CodeKeyType::labels();
+        $keys = CodeKey::whereNull('receipt_at')->orderByDesc('created_at')->get()->groupBy('product_type');
+
         return Inertia::render('Messages', [
+            'tabs' => $tabs,
+            'keys' => $keys,
             'activeAccount' => $account,
             'chat' => $this->chatResponse($chat, $account),
             'hasReviewSchedules' => ReviewSchedule::hasAnyForChatAndAccount($chatId, $account->id),

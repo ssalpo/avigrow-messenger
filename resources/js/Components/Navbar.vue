@@ -28,6 +28,8 @@ const navs = [
         params: null
     }
 ];
+
+const exceptRoutes = ['home', 'code-keys.histories', 'code-keys.index']
 </script>
 
 <template>
@@ -51,7 +53,7 @@ const navs = [
                     :value="account.id"
                     :active="account.id === activeAccount.id"
                     color="primary"
-                    @click="() => router.visit(route(route().current() === 'home' ? 'account.chats' : route().current(), {account: account.id}))"
+                    @click="() => router.visit(route(exceptRoutes.includes(route().current())  ? 'account.chats' : route().current(), {account: account.id}))"
                 >
                     <v-list-item-title>{{ account.name }}</v-list-item-title>
                 </v-list-item>
