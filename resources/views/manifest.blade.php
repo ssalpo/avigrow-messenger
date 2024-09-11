@@ -6,7 +6,7 @@
     "lang": "en",
     "scope": "/",
     "id": "/",
-    "orientation": "natural",
+    "orientation": "portrait",
     "icons": [
         {
             "src": "/icons/icon_72.png",
