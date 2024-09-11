@@ -230,33 +230,22 @@ function reloadPage() {
 
                 <!--                <button v-show="!input" :disabled="isBusy" class="left-btn message-icon" type="button">📎</button>-->
 
-                <v-fade-transition>
-                    <button v-show="!input && !reloadIsHide" :disabled="isBusy" @click="reloadPage" class="left-btn message-icon"
-                            type="button">🔄
-                    </button>
-                </v-fade-transition>
+                <button v-show="!input && !reloadIsHide" :disabled="isBusy" @click="reloadPage" class="left-btn message-icon"
+                        type="button">🔄
+                </button>
 
-                <v-fade-transition>
-                    <schedule-review-request
-                        :chat-id="chat.id"
-                        :account-id="activeAccount.id"
-                        v-if="!hasReviewSchedules && !input"
-                    />
-                </v-fade-transition>
+                <schedule-review-request
+                    :chat-id="chat.id"
+                    :account-id="activeAccount.id"
+                    v-if="!hasReviewSchedules && !input"
+                />
 
-                <v-fade-transition>
-                    <code-keys-sheet v-if="!input" :tabs="tabs" :keys="keys" @selected="onCodeKeysSelect"/>
-                </v-fade-transition>
+                <code-keys-sheet v-if="!input" :tabs="tabs" :keys="keys" @selected="onCodeKeysSelect"/>
 
-                <v-fade-transition>
-                    <fast-messages v-if="!input" class="message-icon" @sendFastly="(text) => sendMessage(text)"
-                                   @selected="onFastTemplateSelect"/>
-                </v-fade-transition>
+                <fast-messages v-if="!input" class="message-icon" @sendFastly="(text) => sendMessage(text)"
+                               @selected="onFastTemplateSelect"/>
 
-                <v-fade-transition>
-                    <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
-                </v-fade-transition>
-
+                <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
             </div>
         </div>
     </div>
