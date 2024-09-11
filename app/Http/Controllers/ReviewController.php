@@ -21,16 +21,18 @@ class ReviewController extends Controller
 
         $lastPage = ceil($reviews['total'] / 10) - 1;
 
+        $reviews['reviews'] = array_map(function($item) {
+            $item['createdAt'] = Carbon::createFromTimestamp($item['createdAt'])->format('d-m-Y H:i');
+            return $item;
+        }, $reviews['reviews']);
+
         if($page) {
            return response()->json($reviews['reviews']);
         }
 
         return inertia('Reviews', [
             'accountId' => $account,
-            'reviews' => array_map(function($item) {
-                $item['createdAt'] = Carbon::createFromTimestamp($item['createdAt'])->format('d-m-Y H:i');
-                return $item;
-            }, $reviews['reviews']),
+            'reviews' => $reviews['reviews'],
             'lastPage' => $lastPage,
         ]);
     }
