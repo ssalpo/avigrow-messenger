@@ -35,6 +35,7 @@ const messagesAll = ref(props.messages);
 const hasMoreMessages = ref(props.has_more);
 const currentPage = ref(1);
 const isBusy = ref(false);
+const reloadIsHide = ref(false);
 let messageAllIds = computed(() => messagesAll.value.map(m => m.id))
 
 const showMorePage = () => {
@@ -151,6 +152,20 @@ function onBlurTextarea() {
     newMessageChannel.whisper('typing-stop')
 }
 
+function reloadPage() {
+    reloadIsHide.value = true
+
+    router.visit(route('account.chat.messages', {account: props.activeAccount.id, chat: props.chat.id}), {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+            setTimeout(() => {
+                reloadIsHide.value = false
+            }, 5000)
+        }
+    })
+}
+
 </script>
 
 <template>
@@ -213,19 +228,35 @@ function onBlurTextarea() {
                     :placeholder="sendFromOtherText || `Введите сообщение...`">
                 </textarea>
 
-<!--                <button v-show="!input" :disabled="isBusy" class="left-btn message-icon" type="button">📎</button>-->
+                <!--                <button v-show="!input" :disabled="isBusy" class="left-btn message-icon" type="button">📎</button>-->
 
-                <schedule-review-request
-                    :chat-id="chat.id"
-                    :account-id="activeAccount.id"
-                    v-if="!hasReviewSchedules && !input"
-                />
+                <v-fade-transition>
+                    <button v-show="!input && !reloadIsHide" :disabled="isBusy" @click="reloadPage" class="left-btn message-icon"
+                            type="button">🔄
+                    </button>
+                </v-fade-transition>
 
-                <code-keys-sheet :tabs="tabs" :keys="keys" @selected="onCodeKeysSelect" />
+                <v-fade-transition>
+                    <schedule-review-request
+                        :chat-id="chat.id"
+                        :account-id="activeAccount.id"
+                        v-if="!hasReviewSchedules && !input"
+                    />
+                </v-fade-transition>
 
-                <fast-messages v-if="!input" class="message-icon" @sendFastly="(text) => sendMessage(text)"  @selected="onFastTemplateSelect"/>
+                <v-fade-transition>
+                    <code-keys-sheet v-if="!input" :tabs="tabs" :keys="keys" @selected="onCodeKeysSelect"/>
+                </v-fade-transition>
 
-                <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
+                <v-fade-transition>
+                    <fast-messages v-if="!input" class="message-icon" @sendFastly="(text) => sendMessage(text)"
+                                   @selected="onFastTemplateSelect"/>
+                </v-fade-transition>
+
+                <v-fade-transition>
+                    <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
+                </v-fade-transition>
+
             </div>
         </div>
     </div>
