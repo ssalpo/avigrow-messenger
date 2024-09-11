@@ -13,7 +13,7 @@ class CodeKeyController extends Controller
     public function index(): \Inertia\Response|\Inertia\ResponseFactory
     {
         $tabs = CodeKeyType::labels();
-        $keys = CodeKey::whereNull('receipt_at')->get()->groupBy('product_type');
+        $keys = CodeKey::whereNull('receipt_at')->orderByDesc('created_at')->get()->groupBy('product_type');
 
         return inertia("CodeKeys/Index", compact('tabs', 'keys'));
     }
@@ -21,7 +21,7 @@ class CodeKeyController extends Controller
     public function histories(): \Inertia\Response|\Inertia\ResponseFactory
     {
         $tabs = CodeKeyType::labels();
-        $keys = CodeKey::whereNotNull('receipt_at')->get()->groupBy('product_type');
+        $keys = CodeKey::whereNotNull('receipt_at')->orderByDesc('created_at')->get()->groupBy('product_type');
 
         return inertia("CodeKeys/History", compact('tabs', 'keys'));
     }
