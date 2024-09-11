@@ -31,10 +31,14 @@ class AnalyzeReviews extends Command
         $messages = "";
 
         $accounts = Account::with('analyzeReviews')
-            ->whereDate('created_at', now()->subDay())
-            ->whereHas('analyzeReviews')->get();
+            ->whereDate('created_at', now()->subDay()->toDateTimeString())
+            ->get();
 
         $accounts->each(function (Account $account) use ($avito, &$messages) {
+            if(!$account->analyzeReviews->count()) {
+                return;
+            }
+
             $accountUrl = url("/accounts/{$account->id}/chats");
 
             $accountMessageTemplate = <<<MSG
