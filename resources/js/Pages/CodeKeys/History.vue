@@ -27,7 +27,7 @@ function restore(id) {
     <v-container>
         <v-row class="d-flex align-center mb-2">
             <v-col class="text-center" cols="2">
-                <v-btn icon="mdi-arrow-left" size="small" color="primary" variant="text"></v-btn>
+                <v-btn icon="mdi-arrow-left" @click="router.visit(route('code-keys.index'))" size="small" color="primary" variant="text"></v-btn>
             </v-col>
 
             <v-col cols="10">
