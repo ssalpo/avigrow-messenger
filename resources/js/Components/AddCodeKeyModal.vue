@@ -96,12 +96,6 @@ function send(dialog) {
                     <v-spacer></v-spacer>
 
                     <v-btn
-                        text="Clear"
-                        variant="plain"
-                        @click="() => form.reset()"
-                    ></v-btn>
-
-                    <v-btn
                         :disabled="form.processing"
                         text="Закрыть"
                         variant="plain"
