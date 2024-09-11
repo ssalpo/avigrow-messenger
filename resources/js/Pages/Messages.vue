@@ -136,6 +136,11 @@ function onDeleteMessage(message) {
     messagesAll.value[messagesAll.value.indexOf(message)].content_type = 'deleted';
 }
 
+
+function onCodeKeysSelect(text) {
+    input.value = text;
+}
+
 function onFastTemplateSelect(e) {
     input.value = e.content;
 }
@@ -216,7 +221,7 @@ function onBlurTextarea() {
                     v-if="!hasReviewSchedules && !input"
                 />
 
-                <code-keys-sheet :tabs="tabs" :keys="keys" />
+                <code-keys-sheet :tabs="tabs" :keys="keys" @selected="onCodeKeysSelect" />
 
                 <fast-messages v-if="!input" class="message-icon" @sendFastly="(text) => sendMessage(text)"  @selected="onFastTemplateSelect"/>
 

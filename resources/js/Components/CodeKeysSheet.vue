@@ -2,6 +2,7 @@
 import {ref} from "vue";
 import {OnLongPress} from "@vueuse/components";
 
+const emit = defineEmits(['selected']);
 const props = defineProps(['tabs', 'keys'])
 
 let isBottomSheetOpen = ref(false);
@@ -9,7 +10,7 @@ const tab = ref(null)
 let baseKeys = ref({...props.keys})
 
 function copyContent(text, item, tabValue) {
-    navigator.clipboard.writeText(text)
+    emit('selected', text)
 
     axios.post(route('code-keys.mark-as-receipt', {code_key: item.id, empty: 1}))
         .then(() => {
@@ -17,6 +18,8 @@ function copyContent(text, item, tabValue) {
 
             baseKeys.value[parseInt(tabValue)].splice(items.indexOf(item), 1);
         })
+
+    isBottomSheetOpen.value = false
 }
 
 </script>
@@ -37,7 +40,7 @@ function copyContent(text, item, tabValue) {
                 >
                     <v-tab :value="value" :key="value" v-for="(label, value) in tabs">
                         {{ label }}
-                        {{baseKeys[value] !== undefined ? `(${baseKeys[value]?.length})` : ''}}
+                        {{baseKeys[value] !== undefined && baseKeys[value].length ? `(${baseKeys[value]?.length})` : ''}}
                     </v-tab>
                 </v-tabs>
 
