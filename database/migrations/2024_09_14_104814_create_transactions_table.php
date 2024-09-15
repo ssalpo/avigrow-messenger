@@ -16,6 +16,7 @@ return new class extends Migration
             $table->float('amount');
             $table->text('comment')->nullable();
             $table->foreignId('order_id')->nullable()->constrained('orders');
+            $table->tinyInteger('type');
             $table->timestamps();
         });
     }

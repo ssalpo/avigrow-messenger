@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\OrderStatus;
+use App\TransactionType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
@@ -31,7 +32,8 @@ class OrderController extends Controller
 
             Transaction::create([
                 'order_id' => $order->id,
-                'amount' => $order->price
+                'amount' => $order->price,
+                'type' => TransactionType::DEBIT->value
             ]);
         });
 

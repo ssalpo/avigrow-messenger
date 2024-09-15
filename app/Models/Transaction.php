@@ -13,6 +13,7 @@ class Transaction extends Model
         'amount',
         'comment',
         'order_id',
+        'type'
     ];
 
     protected $casts = [
