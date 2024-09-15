@@ -6,8 +6,10 @@ import FastMessages from "@/Components/FastMessages.vue";
 import {useTextareaAutosize} from "@vueuse/core";
 import ScheduleReviewRequest from "@/Components/ScheduleReviewRequest.vue";
 import CodeKeysSheet from "@/Components/CodeKeysSheet.vue";
+import NewOrderModal from "@/Components/NewOrderModal.vue";
 
 const props = defineProps({
+    errors: Object,
     tabs: Object,
     keys: Object,
     activeAccount: {
@@ -230,17 +232,57 @@ function reloadPage() {
 
                 <!--                <button v-show="!input" :disabled="isBusy" class="left-btn message-icon" type="button">📎</button>-->
 
-                <button v-show="!input && !reloadIsHide" :disabled="isBusy" @click="reloadPage" class="left-btn message-icon"
+<!--                <button v-show="!input && !reloadIsHide" :disabled="isBusy" @click="reloadPage"
+                        class="left-btn message-icon"
+                        type="button">⋮
+                </button>-->
+
+
+                <v-menu v-if="!input">
+                    <template v-slot:activator="{ props }">
+                        <button class="left-btn message-icon" type="button" v-bind="props">⋮</button>
+                    </template>
+
+                    <v-list density="compact">
+                        <new-order-modal :errors="errors" :chat-id="chat.id" :account-id="activeAccount.id">
+                            <template v-slot:default="{props}">
+                                <v-list-item
+                                    v-bind="props"
+                                    prepend-icon="mdi-cart-outline"
+                                    title="Новый заказ"
+                                />
+                            </template>
+                        </new-order-modal>
+
+                        <schedule-review-request
+                            :chat-id="chat.id"
+                            :account-id="activeAccount.id"
+                            v-if="!hasReviewSchedules"
+                        >
+                            <template v-slot:default="{props}">
+                                <v-list-item
+                                    v-bind="props"
+                                    prepend-icon="mdi-alarm"
+                                    title="Запросить отзыв позже"
+                                />
+                            </template>
+                        </schedule-review-request>
+
+                        <code-keys-sheet :tabs="tabs" :keys="keys" @selected="onCodeKeysSelect">
+                            <template v-slot:default="{props}">
+                                <v-list-item
+                                    v-bind="props"
+                                    prepend-icon="mdi-key-chain"
+                                    title="Ключи и аккаунты"
+                                />
+                            </template>
+                        </code-keys-sheet>
+                    </v-list>
+                </v-menu>
+
+<!--            <button v-show="!input && !reloadIsHide" :disabled="isBusy" @click="reloadPage" class="left-btn message-icon"
                         type="button">🔄
-                </button>
-
-                <schedule-review-request
-                    :chat-id="chat.id"
-                    :account-id="activeAccount.id"
-                    v-if="!hasReviewSchedules && !input"
-                />
-
-                <code-keys-sheet v-if="!input" :tabs="tabs" :keys="keys" @selected="onCodeKeysSelect"/>
+                </button>-->
 
                 <fast-messages v-if="!input" class="message-icon" @sendFastly="(text) => sendMessage(text)"
                                @selected="onFastTemplateSelect"/>

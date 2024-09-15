@@ -36,8 +36,10 @@ import {onMounted, ref} from "vue";
         max-width="400"
         persistent
     >
-        <template v-slot:activator="{ props: activatorProps }">
-            <button v-bind="activatorProps" v-show="!hideBtn" class="left-btn message-icon" type="button">⏰</button>
+        <template v-slot:activator="{ props }">
+            <slot :props="props">
+                <button v-bind="props" v-show="!hideBtn" class="left-btn message-icon" type="button">⏰</button>
+            </slot>
         </template>
 
         <v-card

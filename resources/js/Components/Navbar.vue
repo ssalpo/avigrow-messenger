@@ -26,6 +26,16 @@ const navs = [
         title: 'Ключи',
         route: 'code-keys.index',
         params: null
+    },
+    {
+        title: 'Продукты',
+        route: 'products.index',
+        params: null
+    },
+    {
+        title: 'Заказы',
+        route: 'orders.index',
+        params: {account: activeAccount.id}
     }
 ];
 

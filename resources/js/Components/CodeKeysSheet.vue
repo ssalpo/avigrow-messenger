@@ -27,9 +27,11 @@ function copyContent(text, item, tabValue) {
 <template>
     <v-bottom-sheet v-model="isBottomSheetOpen">
         <template v-slot:activator="{ props }">
-            <button v-bind="props" :class="$attrs.class" class="left-btn message-icon" type="button">
-                🔑
-            </button>
+            <slot :props="props">
+                <button v-bind="props" :class="$attrs.class" class="left-btn message-icon" type="button">
+                    🔑
+                </button>
+            </slot>
         </template>
 
         <v-sheet>

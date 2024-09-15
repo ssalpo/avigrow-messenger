@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AutocompleteController;
 use App\Http\Controllers\CodeKeyController;
 use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PwaController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewScheduleController;
@@ -17,6 +20,10 @@ Route::post('login', [AuthController::class, 'auth']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
+    Route::get('products/trash', [ProductController::class, 'trash'])->name('products.trash');
+    Route::post('products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore');
+    Route::resource('products', ProductController::class);
+
     Route::resource('/fast-templates', FastTemplateController::class);
 
     Route::group(['prefix' => '/accounts/{account}'], function() {
@@ -26,12 +33,19 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('chats/{chat}', [HomeController::class, 'messages'])->name('account.chat.messages');
         Route::get('chats', [HomeController::class, 'index'])->name('account.chats');
+
+        Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+        Route::resource('orders', OrderController::class);
     });
 
     Route::get('code-keys/histories', [CodeKeyController::class, 'histories'])->name('code-keys.histories');
     Route::post('code-keys/{code_key}/mark-as-receipt', [CodeKeyController::class, 'markAsReceipt'])->name('code-keys.mark-as-receipt');
     Route::post('code-keys/{code_key}/restore', [CodeKeyController::class, 'restore'])->name('code-keys.restore');
     Route::resource('code-keys', CodeKeyController::class)->only(['index', 'store', 'destroy']);
+
+    Route::group(['prefix' => 'autocomplete', 'as' => 'autocomplete.'], function() {
+        Route::get('products', [AutocompleteController::class, 'products'])->name('products');
+    });
 });
 
 Route::get('redirect', function() {

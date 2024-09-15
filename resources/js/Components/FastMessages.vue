@@ -105,9 +105,11 @@ function sendFastly(selected) {
 
     <v-bottom-sheet v-model="isBottomSheetOpen">
         <template v-slot:activator="{ props }">
-            <button v-bind="props" :class="$attrs.class" class="left-btn" type="button">
-                📝
-            </button>
+            <slot :props="props">
+                <button v-bind="props" :class="$attrs.class" class="left-btn" type="button">
+                    📝
+                </button>
+            </slot>
         </template>
 
         <v-sheet>
