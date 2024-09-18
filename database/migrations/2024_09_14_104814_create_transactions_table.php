@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('account_id')->constrained();
             $table->float('amount');
             $table->text('comment')->nullable();
             $table->foreignId('order_id')->nullable()->constrained('orders');

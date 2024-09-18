@@ -31,6 +31,7 @@ class OrderController extends Controller
                 ]);
 
             Transaction::create([
+                'account_id' => $order->account_id,
                 'order_id' => $order->id,
                 'amount' => $order->price,
                 'type' => TransactionType::DEBIT->value

@@ -36,6 +36,11 @@ const navs = [
         title: 'Заказы',
         route: 'orders.index',
         params: {account: activeAccount.id}
+    },
+    {
+        title: 'Касса',
+        route: 'transactions.index',
+        params: null
     }
 ];
 
