@@ -16,8 +16,8 @@ class OrderController extends Controller
     public function index(): \Inertia\Response|\Inertia\ResponseFactory
     {
         $orders = Order::with('product')->get();
-        $totalSum = Order::sum('price');
-        $totalSumCanceled = Order::sum('price');
+        $totalSum = Order::whereNull('status')->sum('price');
+        $totalSumCanceled = Order::where('status', OrderStatus::CANCEL->value)->sum('price');
 
         return inertia('Orders/Index', compact('orders', 'totalSum', 'totalSumCanceled'));
     }
