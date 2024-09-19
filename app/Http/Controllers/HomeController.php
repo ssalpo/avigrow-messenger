@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\CodeKeyType;
+use App\Http\Requests\SendPaymentReceiptRequest;
 use App\Models\Account;
 use App\Models\CodeKey;
 use App\Models\ReviewSchedule;
 use App\Services\Avito;
+use App\Services\Telegram;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 
@@ -81,6 +84,17 @@ class HomeController extends Controller
                 ])
                 ->values()
         ]);
+    }
+
+    public function sendPaymentReceipt(SendPaymentReceiptRequest $request): RedirectResponse
+    {
+        Telegram::sendImage(
+            config('services.telegram.reportGroup'),
+            $request->url,
+            $request->caption
+        );
+
+        return redirect()->back();
     }
 
     protected function chatResponse(array $chat, Account $account): array

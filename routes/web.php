@@ -20,6 +20,7 @@ Route::post('login', [AuthController::class, 'auth']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::post('/send-payment-receipt', [HomeController::class, 'sendPaymentReceipt'])->name('send-payment-receipt');
 
     Route::get('transactions/statistics', [TransactionController::class, 'statistics'])->name('transactions.statistics');
     Route::resource('transactions', TransactionController::class);

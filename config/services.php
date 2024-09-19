@@ -37,7 +37,8 @@ return [
 
     'telegram' => [
         'token' => env('TELEGRAM_BOT_TOKEN'),
-        'ids' => explode(',', env('TELEGRAM_IDS'))
+        'ids' => explode(',', env('TELEGRAM_IDS')),
+        'reportGroup' => env('TELEGRAM_REPORT_GROUP'),
     ],
 
     'avito' => [
