@@ -157,7 +157,7 @@ function onBlurTextarea() {
 function reloadPage() {
     reloadIsHide.value = true
 
-    router.visit(route('account.chat.messages', {account: props.activeAccount.id, chat: props.chat.id}), {
+    router.get(route('account.chat.messages', {account: props.activeAccount.id, chat: props.chat.id}), {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -280,9 +280,9 @@ function reloadPage() {
                     </v-list>
                 </v-menu>
 
-<!--            <button v-show="!input && !reloadIsHide" :disabled="isBusy" @click="reloadPage" class="left-btn message-icon"
+            <button v-show="!input && !reloadIsHide" :disabled="isBusy" @click="reloadPage" class="left-btn message-icon"
                         type="button">🔄
-                </button>-->
+                </button>
 
                 <fast-messages v-if="!input" class="message-icon" @sendFastly="(text) => sendMessage(text)"
                                @selected="onFastTemplateSelect"/>

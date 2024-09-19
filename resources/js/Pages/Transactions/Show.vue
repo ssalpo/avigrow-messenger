@@ -7,7 +7,7 @@
 </script>
 
 <template>
-    <Head title="Касса"/>
+    <Head title="Детали транзакции"/>
 
     <navbar/>
 
