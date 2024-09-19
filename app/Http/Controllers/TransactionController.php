@@ -4,19 +4,59 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TransactionRequest;
 use App\Models\Transaction;
+use App\Services\TransactionService;
+use App\TransactionType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class TransactionController extends Controller
 {
+    public function __construct(
+        private TransactionService $transactionService
+    )
+    {
+    }
+
     public function index(): \Inertia\Response|\Inertia\ResponseFactory
     {
+        $totalDebits = Transaction::debit()->sum('amount');
+        $totalCredits = Transaction::credit()->sum('amount');
+
         $transactions = Transaction::with('account')
             ->orderByDesc('created_at')
             ->get()
             ->groupBy(fn($item) => $item->created_at->format('Y-m-d'));
 
-        return inertia('Transactions/Index', compact('transactions'));
+        return inertia('Transactions/Index', compact(
+            'transactions',
+            'totalCredits',
+            'totalDebits',
+        ));
+    }
+
+    public function statistics(): \Inertia\Response|\Inertia\ResponseFactory
+    {
+        [
+            $dayDebitSum,
+            $weekDebitSum,
+            $monthDebitSum
+        ] = $this->transactionService->getStatisticsByType(TransactionType::DEBIT);
+
+        [
+            $dayCreditSum,
+            $weekCreditSum,
+            $monthCreditSum
+        ] = $this->transactionService->getStatisticsByType(TransactionType::CREDIT);
+
+        return inertia('Transactions/Statistics', compact(
+            'dayDebitSum',
+            'weekDebitSum',
+            'monthDebitSum',
+            'dayCreditSum',
+            'weekCreditSum',
+            'monthCreditSum'
+        ));
     }
 
     public function store(TransactionRequest $request): RedirectResponse

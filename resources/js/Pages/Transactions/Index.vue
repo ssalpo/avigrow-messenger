@@ -3,7 +3,7 @@ import Navbar from "@/Components/Navbar.vue";
 import {Head, router} from "@inertiajs/vue3";
 import NewTransactionModal from "@/Components/NewTransactionModal.vue";
 
-const props = defineProps(['transactions'])
+const props = defineProps(['transactions', 'totalDebits', 'totalCredits'])
 
 </script>
 
@@ -16,6 +16,21 @@ const props = defineProps(['transactions'])
         <h3 class="text-h5 mt-3 mb-4">Касса</h3>
 
         <new-transaction-modal />
+
+        <v-row class="mt-7 mx-1 mb-5">
+            <v-col class="text-center border rounded  text-primary">
+                <b class="pb-2 d-block">{{totalDebits - totalCredits}}</b>
+                <small>Остаток</small>
+            </v-col>
+            <v-col class="text-center border rounded mx-2 text-success">
+                <b class="pb-2 d-block">{{totalDebits}}</b>
+                <small>Доход</small>
+            </v-col>
+            <v-col class="text-center border rounded text-error">
+                <b class="pb-2 d-block">{{totalCredits}}</b>
+                <small>Расходы</small>
+            </v-col>
+        </v-row>
 
         <v-list lines="one" class="mt-3">
 

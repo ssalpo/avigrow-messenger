@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\TransactionType;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,5 +38,15 @@ class Transaction extends Model
         return Attribute::make(
             get: fn ($value) => $this->created_at->format('Y-m-d H:i'),
         );
+    }
+
+    public function scopeDebit($q): void
+    {
+        $q->where('type', TransactionType::DEBIT->value);
+    }
+
+    public function scopeCredit($q): void
+    {
+        $q->where('type', TransactionType::CREDIT->value);
     }
 }
