@@ -3,7 +3,7 @@
 import Navbar from "@/Components/Navbar.vue";
 import {Head, router, usePage} from "@inertiajs/vue3";
 
-defineProps(['orders'])
+defineProps(['orders', 'totalSum', 'totalSumCanceled'])
 
 const page = usePage()
 
@@ -21,12 +21,40 @@ function cancel(id) {
     <navbar/>
 
     <v-container>
+        <v-row class="mt-2 mx-1 mb-7">
+            <v-col class="text-center border rounded mx-2 text-success">
+                <v-row class="d-flex align-center">
+                    <v-col>
+                        <b class="pb-1 d-block">{{totalSum}}</b>
+                        <small>Купленных</small>
+                    </v-col>
+                    <v-col>
+                        <v-icon icon="mdi-cart-check" />
+                    </v-col>
+                </v-row>
+            </v-col>
+            <v-col class="text-center border rounded text-error">
+                <v-row class="d-flex align-center">
+                    <v-col>
+                        <b class="pb-1 d-block">{{totalSumCanceled}}</b>
+                        <small>Отмененных</small>
+                    </v-col>
+                    <v-col>
+                        <v-icon icon="mdi-cart-remove" />
+                    </v-col>
+                </v-row>
+            </v-col>
+        </v-row>
+
+        <h3 class="text-h5 mt-3 mb-4">Заказы</h3>
+
         <v-card
             :color="order.is_cancel ? 'red-lighten-4' : ''"
-            class="mb-3"
+            class="mb-3 mt-5"
             v-for="order in orders"
+            :prepend-icon="!order.is_cancel ? `mdi-cart-check` : `mdi-cart-remove`"
             :key="order.id"
-            :title="`Заказ #${order.id}`"
+            :title="`#${order.id}`"
             :subtitle="order.created_at_formatted"
         >
             <v-card-text>

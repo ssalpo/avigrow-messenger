@@ -1,6 +1,6 @@
 <script setup>
 import Navbar from "@/Components/Navbar.vue";
-import {Head} from "@inertiajs/vue3";
+import {Head, router} from "@inertiajs/vue3";
 
 defineProps([
     'dayDebitSum',
@@ -18,6 +18,16 @@ defineProps([
     <navbar />
 
     <v-container>
+
+        <v-row class="d-flex align-center mb-1">
+            <v-col class="text-center" cols="2">
+                <v-btn icon="mdi-arrow-left" @click="router.visit(route('transactions.index'))" size="small" color="primary" variant="text" />
+            </v-col>
+
+            <v-col cols="10">
+                <h3 class="text-h6">Статистика</h3>
+            </v-col>
+        </v-row>
 
         <v-card class="mb-5" variant="outlined" color="success">
             <v-card-title>

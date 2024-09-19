@@ -21,7 +21,7 @@ Route::post('login', [AuthController::class, 'auth']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
-    Route::get('transactions/statistics', [TransactionController::class, 'statistics']);
+    Route::get('transactions/statistics', [TransactionController::class, 'statistics'])->name('transactions.statistics');
     Route::resource('transactions', TransactionController::class);
 
     Route::get('products/trash', [ProductController::class, 'trash'])->name('products.trash');

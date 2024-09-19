@@ -16,8 +16,10 @@ class OrderController extends Controller
     public function index(): \Inertia\Response|\Inertia\ResponseFactory
     {
         $orders = Order::with('product')->get();
+        $totalSum = 333;
+        $totalSumCanceled = 453;
 
-        return inertia('Orders/Index', compact('orders'));
+        return inertia('Orders/Index', compact('orders', 'totalSum', 'totalSumCanceled'));
     }
 
     public function store(int $accountId, OrderRequest $request): RedirectResponse

@@ -32,6 +32,10 @@ const props = defineProps(['transactions', 'totalDebits', 'totalCredits'])
             </v-col>
         </v-row>
 
+        <v-btn size="x-small"
+               @click="() => router.visit(route('transactions.statistics'))"
+               variant="text" color="primary" prepend-icon="mdi-arrow-right">Еще статистика</v-btn>
+
         <v-list lines="one" class="mt-3">
 
             <template
