@@ -35,6 +35,7 @@ function send(dialog) {
     contentTypeFormatter();
 
     form.post(route('code-keys.store'), {
+        preserveState: false,
         onSuccess: () => {
             form.reset();
             dialog.value = false

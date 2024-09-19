@@ -2,14 +2,20 @@
 
 import Navbar from "@/Components/Navbar.vue";
 import {Head, router} from "@inertiajs/vue3";
-import {ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {OnLongPress} from '@vueuse/components'
 import AddCodeKeyModal from "@/Components/AddCodeKeyModal.vue";
 
-defineProps(['tabs', 'keys', 'errors'])
+const props = defineProps(['tabs', 'keys', 'errors'])
 
 const tab = ref(null)
 const addDialog = ref(false)
+
+onMounted(() => {
+    if(Object.keys(props.errors).length !== 0) {
+        addDialog.value = true
+    }
+})
 
 function copyContent(text, item) {
     navigator.clipboard.writeText(text)
@@ -35,7 +41,7 @@ function destroy(id) {
     <navbar/>
 
     <v-container>
-        <v-row class="d-flex align-center mt-3 mb-2">
+        <v-row class="d-flex align-center mb-2">
             <v-col cols="9">
                 <h3 class="text-h5">Ключи и аккаунты</h3>
             </v-col>
