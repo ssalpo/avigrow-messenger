@@ -2,7 +2,7 @@
 import {reactive, ref} from "vue";
 import {router, useForm} from '@inertiajs/vue3'
 
-defineProps(['categories'])
+defineProps(['categories', 'errors'])
 
 const contentType = ref(1)
 const contentCode = ref('')
@@ -23,7 +23,7 @@ function contentTypeFormatter() {
         form.content = contentCode.value
     }
 
-    if (contentType.value === 2) {
+    if (contentType.value === 2 && contentAccount.login && contentAccount.password) {
         form.content = `
 Логин: ${contentAccount.login}
 Пароль: ${contentAccount.password}
@@ -35,7 +35,6 @@ function send(dialog) {
     contentTypeFormatter();
 
     form.post(route('code-keys.store'), {
-        preserveState: false,
         onSuccess: () => {
             form.reset();
             dialog.value = false
@@ -69,20 +68,24 @@ function send(dialog) {
                         :items="categories"
                     ></v-select>
 
-                        <v-text-field
-                            v-show="contentType === 1"
-                            label="Код"
-                            v-model="contentCode"
-                        ></v-text-field>
+                    <v-text-field
+                        v-show="contentType === 1"
+                        label="Код"
+                        class="mb-4"
+                        v-model="contentCode"
+                        :error-messages="errors?.content"
+                    ></v-text-field>
 
                     <v-sheet v-show="contentType === 2">
                         <v-text-field
                             label="Логин"
+                            :error-messages="errors?.content"
                             v-model="contentAccount.login"
                         ></v-text-field>
 
                         <v-text-field
                             label="Пароль"
+                            :error-messages="errors?.content"
                             v-model="contentAccount.password"
                         ></v-text-field>
                     </v-sheet>

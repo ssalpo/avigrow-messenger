@@ -6,7 +6,7 @@ import {ref} from "vue";
 import {OnLongPress} from '@vueuse/components'
 import AddCodeKeyModal from "@/Components/AddCodeKeyModal.vue";
 
-defineProps(['tabs', 'keys'])
+defineProps(['tabs', 'keys', 'errors'])
 
 const tab = ref(null)
 const addDialog = ref(false)
@@ -118,6 +118,7 @@ function destroy(id) {
     </v-container>
 
     <add-code-key-modal
+        :errors="errors"
         :categories="Object.keys(tabs).map(k => ({value: parseInt(k), title: tabs[k]}))"
         v-model="addDialog"/>
 </template>

@@ -22,7 +22,7 @@ class CodeKeyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => 'required|string',
+            'content' => 'required|string|unique:code_keys,content',
             'product_type' => 'required|numeric',
             'comment' => 'nullable|string|max:1000',
         ];
