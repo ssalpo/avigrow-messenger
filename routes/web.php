@@ -31,7 +31,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('/fast-templates', FastTemplateController::class);
 
-    Route::group(['prefix' => '/accounts/{account}'], function() {
+    Route::group(['prefix' => '/accounts/{account}'], function () {
         Route::resource('schedule-reviews', ReviewScheduleController::class)->only(['index', 'store', 'destroy']);
 
         Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
@@ -49,22 +49,22 @@ Route::middleware(['auth'])->group(function () {
     Route::post('code-keys/{code_key}/restore', [CodeKeyController::class, 'restore'])->name('code-keys.restore');
     Route::resource('code-keys', CodeKeyController::class)->only(['index', 'store', 'destroy']);
 
-    Route::group(['prefix' => 'autocomplete', 'as' => 'autocomplete.'], function() {
+    Route::group(['prefix' => 'autocomplete', 'as' => 'autocomplete.'], function () {
         Route::get('products', [AutocompleteController::class, 'products'])->name('products');
     });
 });
 
-Route::get('redirect', function() {
+Route::get('redirect', function () {
     $code = request('code');
     $account = request('state');
 
-    if(!$code) {
+    if (!$code) {
         echo 'Code not found!';
 
         return '';
     }
 
-    if(!$account) {
+    if (!$account) {
         echo 'Account not found!';
 
         return '';
@@ -86,4 +86,23 @@ Route::get('redirect', function() {
 
 Route::group(['prefix' => 'pwa', 'as' => 'pwa.'], static function () {
     Route::get('manifest', [PwaController::class, 'manifest'])->name('manifest');
+});
+
+
+Route::get('meta-code-generator', function () {
+
+    $codes = [];
+
+    for ($i = 0; $i < 5; $i++) {
+        $code = mt_rand(0, 9);
+        $textCode = \Illuminate\Support\Str::random(5);
+
+        $textCode[mt_rand(0, 4)] = $code;
+
+        $codes[] = $textCode;
+    }
+
+    return response(
+        mb_strtoupper(implode('-', $codes))
+    );
 });
