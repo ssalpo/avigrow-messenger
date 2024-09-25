@@ -10,12 +10,15 @@ enum CodeKeyType: int
 
     case MIRO = 3;
 
+    case PHOTOSHOP = 4;
+
     public static function labels(): array
     {
         return [
             self::VD->value => 'VD',
             self::SHAPR->value => 'Shapr',
             self::MIRO->value => 'Miro',
+            self::PHOTOSHOP->value => 'Photoshop',
         ];
     }
 }
