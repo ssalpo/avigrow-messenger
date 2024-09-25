@@ -10,7 +10,7 @@ enum CodeKeyType: int
 
     case MIRO = 3;
 
-    case PHOTOSHOP = 4;
+    case JETBRAINS = 4;
 
     public static function labels(): array
     {
@@ -18,7 +18,7 @@ enum CodeKeyType: int
             self::VD->value => 'VD',
             self::SHAPR->value => 'Shapr',
             self::MIRO->value => 'Miro',
-            self::PHOTOSHOP->value => 'Photoshop',
+            self::JETBRAINS->value => 'Jetbrains',
         ];
     }
 }
