@@ -51,7 +51,7 @@ MSG;
                     'senderName' => $item['sender']['name'],
                     'createdAt' => \Carbon\Carbon::createFromTimestamp($item['createdAt'])
                 ];
-            })->filter(fn($item) => now()->subDay()->toDateString() === $item['createdAt']->subDay()->toDateString());
+            })->filter(fn($item) => now()->subDay()->toDateString() === $item['createdAt']->toDateString());
 
             $hasAny = false;
 
