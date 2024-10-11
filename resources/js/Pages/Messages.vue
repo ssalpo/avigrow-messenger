@@ -94,19 +94,19 @@ onMounted(() => {
         axios.post(route('chats.mark-as-read', {account: props.activeAccount.id, chatId: props.chat.id}))
     });
 
-    newMessageChannel.listenForWhisper(`typing.${props.activeAccount.id}`, function (v) {
+    newMessageChannel.listenForWhisper(`typing.${props.chat.id}`, function (v) {
         sendFromOther.value = true
         sendFromOtherText.value = v
     })
 
-    newMessageChannel.listenForWhisper(`typing-stop.${props.activeAccount.id}`, function (v) {
+    newMessageChannel.listenForWhisper(`typing-stop.${props.chat.id}`, function (v) {
         sendFromOther.value = false
         sendFromOtherText.value = null
     })
 })
 
 watch(input, () => {
-    newMessageChannel.whisper(`typing.${props.activeAccount.id}`, input.value);
+    newMessageChannel.whisper(`typing.${props.chat.id}`, input.value);
 })
 
 onBeforeUnmount(() => {
@@ -128,7 +128,7 @@ const sendMessage = (text) => {
 
             input.value = '';
 
-            newMessageChannel.whisper(`typing-stop.${props.activeAccount.id}`);
+            newMessageChannel.whisper(`typing-stop.${props.chat.id}`);
 
             setTimeout(scrollToEnd, 50);
         })
@@ -151,7 +151,7 @@ function onFastTemplateSelect(e) {
 function onBlurTextarea() {
     if (input.value) return;
 
-    newMessageChannel.whisper(`typing-stop.${props.activeAccount.id}`)
+    newMessageChannel.whisper(`typing-stop.${props.chat.id}`)
 }
 
 function reloadPage() {
