@@ -20,6 +20,10 @@ class AccountService
             ? $this->avito->refreshExistToken($account->external_refresh_token)
             : $this->avito->getToken();
 
+        if (isset($token['unauthorized_client'])) {
+            return;
+        }
+
         $data = [
             'external_access_token' => $token['access_token'],
             'external_access_token_expire_in' => $token['expires_in'],
