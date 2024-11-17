@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Account;
+use Illuminate\Support\Carbon;
 
 class AccountService
 {
@@ -16,7 +17,7 @@ class AccountService
     {
         $this->avito->setAccount($account);
 
-        $token = $isRefresh
+        $token = $isRefresh && $account->external_refresh_token
             ? $this->avito->refreshExistToken($account->external_refresh_token)
             : $this->avito->getToken();
 
@@ -27,10 +28,11 @@ class AccountService
         $data = [
             'external_access_token' => $token['access_token'],
             'external_access_token_expire_in' => $token['expires_in'],
+            'external_access_token_expire_date' => Carbon::now()->addSeconds($token['expires_in']),
             'token_refreshed_at' => now()
         ];
 
-        if ($isRefresh) {
+        if ($isRefresh && $account->external_refresh_token) {
             $data['external_refresh_token'] = $token['refresh_token'];
         }
 

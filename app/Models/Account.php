@@ -18,6 +18,7 @@ class Account extends Model
         'external_access_token',
         'external_refresh_token',
         'external_access_token_expire_in',
+        'external_access_token_expire_date',
         'token_refreshed_at'
     ];
 
@@ -28,11 +29,13 @@ class Account extends Model
         'external_access_token',
         'external_refresh_token',
         'external_access_token_expire_in',
+        'external_access_token_expire_date',
         'token_refreshed_at'
     ];
 
     protected $casts = [
-        'token_refreshed_at' => 'datetime'
+        'token_refreshed_at' => 'datetime',
+        'external_access_token_expire_date' => 'datetime'
     ];
 
     public function analyzeReviews(): HasMany

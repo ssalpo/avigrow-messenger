@@ -28,22 +28,11 @@ class UpdateExpiredTokens extends Command
      */
     public function handle(AccountService $accountService)
     {
-        $accounts = Account::all();
+        // Обновляет устаревшие токены за 5 минут до окончания времени жизни токена
+        $accounts = Account::where('external_access_token_expire_date', '<', Carbon::now()->subMinutes(5))->get();
 
-        foreach ($accounts as $account) {
-            if (!$account->token_refreshed_at) {
-                continue;
-            }
-
-            $current = Carbon::now()->addMinutes($account->external_access_token_expire_in);
-            $expired = Carbon::now()->addMinutes($account->external_access_token_expire_in - 20);
-
-            if ($current > $expired) {
-                $accountService->changeAccountToken(
-                    $account,
-                    !is_null($account->external_refresh_token)
-                );
-            }
-        }
+        $accounts
+            ->filter(fn($a) => $a->token_refreshed_at)
+            ->each(fn($a) => $accountService->changeAccountToken(account: $a, isRefresh: true));
     }
 }
