@@ -116,6 +116,8 @@ class AvitoController extends Controller
             (!$payload['value']['is_me'] && !isset($payload['value']['read'])) &&
             count(config('services.telegram.ids'))
         ) {
+            logger()?->info($payload['value']['chat_id'], $payload['value']);
+
             SendMessageToTelegram::dispatch(
                 $account->id,
                 config('services.telegram.ids'),
