@@ -21,7 +21,7 @@ class UpdateExpiredTokens extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Обновляет устаревшие токены, так как токены авито живет только день.';
 
     /**
      * Execute the console command.

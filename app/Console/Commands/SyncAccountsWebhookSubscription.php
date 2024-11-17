@@ -21,7 +21,7 @@ class SyncAccountsWebhookSubscription extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Формирует вебхук адрес для нашей системы';
 
     /**
      * Execute the console command.

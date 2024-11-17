@@ -19,7 +19,7 @@ class RefreshAccountsTokenInfo extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Принудительно обновляет токены';
 
     /**
      * Execute the console command.

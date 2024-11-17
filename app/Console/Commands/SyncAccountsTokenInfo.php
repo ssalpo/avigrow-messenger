@@ -19,7 +19,7 @@ class SyncAccountsTokenInfo extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Получает токен (нужно в начале когда новый аккаунт добавляется)';
 
     /**
      * Execute the console command.
