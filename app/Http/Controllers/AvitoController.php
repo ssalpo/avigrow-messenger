@@ -116,6 +116,7 @@ class AvitoController extends Controller
         $cacheId = $payload['value']['chat_id'] . $payload['value']['id'];
 
         if(Cache::has($cacheId)) {
+            logger()->info($cacheId);
             return;
         }
 
