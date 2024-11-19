@@ -112,21 +112,21 @@ class AvitoController extends Controller
     {
         $payload = (array)$request->post('payload', []);
 
+        $me = $this->avito->setAccount($account)->me();
+
         // Авито в некоторых случаях дублирует один и тот же запрос, поэтому пока добавил затычку через кэш
         $cacheId = $payload['value']['chat_id'] . $payload['value']['id'];
-
-        logger()->info([$cacheId, Cache::has($cacheId), Cache::get($cacheId), $payload]);
 
         if(Cache::has($cacheId)) {
             return;
         }
 
-        Cache::put($cacheId, $cacheId, now()->addMinutes(2));
-
-        $me = $this->avito->setAccount($account)->me();
-
         $payload['value']['created_at'] = Carbon::createFromTimestamp($payload['value']['created'])->format('Y.m.d, H:i');
         $payload['value']['is_me'] = $payload['value']['author_id'] === $me['id'];
+
+        if(!$payload['value']['is_me']) {
+            Cache::put($cacheId, $cacheId, now()->addMinutes(2));
+        }
 
         if (
             (!$payload['value']['is_me'] && !isset($payload['value']['read'])) &&
@@ -143,12 +143,12 @@ class AvitoController extends Controller
             );
         }
 
-        NewMessage::dispatch($account->id, [
-            'unreadChatIds' => $this->avito->setAccount($account)->getUnreadChatIds(),
-            'chat' => $payload
-        ]);
-
         if(!$payload['value']['is_me']) {
+            NewMessage::dispatch($account->id, [
+                'unreadChatIds' => $this->avito->setAccount($account)->getUnreadChatIds(),
+                'chat' => $payload
+            ]);
+
             AddToAnalyzeReviews::dispatch(
                 $account->id, $payload['value']['chat_id']
             );
