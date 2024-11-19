@@ -10,6 +10,7 @@ use App\Services\Avito;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AvitoController extends Controller
 {
@@ -90,6 +91,10 @@ class AvitoController extends Controller
             ->setAccount($account)
             ->sendMessage($chatId, $request->post('message'));
 
+        $cacheId = $chatId . $message['id'];
+
+        Cache::put($cacheId, $cacheId, now()->addMinutes(2));
+
         return response()->json(
             [
                 'id' => $message['id'],
@@ -106,6 +111,15 @@ class AvitoController extends Controller
     public function handleWebhook(Request $request, Account $account): void
     {
         $payload = (array)$request->post('payload', []);
+
+        // Авито в некоторых случаях дублирует один и тот же запрос, поэтому пока добавил затычку через кэш
+        $cacheId = $payload['value']['chat_id'] . $payload['value']['id'];
+
+        if(Cache::has($cacheId)) {
+            return;
+        }
+
+        Cache::put($cacheId, $cacheId, now()->addMinutes(2));
 
         $me = $this->avito->setAccount($account)->me();
 

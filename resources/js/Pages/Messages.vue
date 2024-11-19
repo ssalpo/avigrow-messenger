@@ -124,7 +124,7 @@ const sendMessage = (text) => {
     axios
         .post(`/api/messages/${props.activeAccount.id}/${props.chat.id}/send`, {message: {text: input.value || text}})
         .then((response) => {
-            // messagesAll.value.push(response.data);
+            messagesAll.value.push(response.data);
 
             input.value = '';
 
