@@ -115,8 +115,9 @@ class AvitoController extends Controller
         // Авито в некоторых случаях дублирует один и тот же запрос, поэтому пока добавил затычку через кэш
         $cacheId = $payload['value']['chat_id'] . $payload['value']['id'];
 
+        logger()->info([$cacheId, Cache::has($cacheId), Cache::get($cacheId), $payload]);
+
         if(Cache::has($cacheId)) {
-            logger()->info([$cacheId, Cache::has($cacheId), Cache::get($cacheId), $payload]);
             return;
         }
 
