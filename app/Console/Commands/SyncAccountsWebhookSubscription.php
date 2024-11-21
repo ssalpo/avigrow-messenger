@@ -21,7 +21,7 @@ class SyncAccountsWebhookSubscription extends Command
      *
      * @var string
      */
-    protected $description = 'Формирует вебхук адрес для нашей системы';
+    protected $description = 'Формирует вебхук адрес для нашей системы (при смене токена на одном из аккаунтов, повторно запустить регистрацию вебхука)';
 
     /**
      * Execute the console command.
