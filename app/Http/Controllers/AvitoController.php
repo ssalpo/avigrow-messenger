@@ -91,10 +91,6 @@ class AvitoController extends Controller
             ->setAccount($account)
             ->sendMessage($chatId, $request->post('message'));
 
-        $cacheId = $chatId . $message['id'];
-
-        Cache::put($cacheId, $cacheId, now()->addMinutes(2));
-
         return response()->json(
             [
                 'id' => $message['id'],
@@ -124,9 +120,7 @@ class AvitoController extends Controller
         $payload['value']['created_at'] = Carbon::createFromTimestamp($payload['value']['created'])->format('Y.m.d, H:i');
         $payload['value']['is_me'] = $payload['value']['author_id'] === $me['id'];
 
-        if(!$payload['value']['is_me']) {
-            Cache::put($cacheId, $cacheId, now()->addMinutes(2));
-        }
+        Cache::put($cacheId, $cacheId, now()->addMinutes(2));
 
         if (
             (!$payload['value']['is_me'] && !isset($payload['value']['read'])) &&
@@ -141,16 +135,14 @@ class AvitoController extends Controller
             );
         }
 
-        if(!$payload['value']['is_me']) {
-            NewMessage::dispatch($account->id, [
-                'unreadChatIds' => $this->avito->setAccount($account)->getUnreadChatIds(),
-                'chat' => $payload
-            ]);
+        NewMessage::dispatch($account->id, [
+            'unreadChatIds' => $this->avito->setAccount($account)->getUnreadChatIds(),
+            'chat' => $payload
+        ]);
 
-            AddToAnalyzeReviews::dispatch(
-                $account->id, $payload['value']['chat_id']
-            );
-        }
+        AddToAnalyzeReviews::dispatch(
+            $account->id, $payload['value']['chat_id']
+        );
     }
 
     protected function chatResponse(array $chat, Account $account): array
