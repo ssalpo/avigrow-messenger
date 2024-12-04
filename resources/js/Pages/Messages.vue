@@ -38,7 +38,7 @@ const hasMoreMessages = ref(props.has_more);
 const currentPage = ref(1);
 const isBusy = ref(false);
 const reloadIsHide = ref(false);
-let messageAllIds = ref(messagesAll.value.map(m => m.id))
+let messageAllIds = computed(() => messagesAll.value.map(m => m.id))
 
 const showMorePage = () => {
     if (isBusy.value === true) {
@@ -75,13 +75,13 @@ onMounted(() => {
     newMessageChannel.listen('NewMessage', (e) => {
         const data = e.data.chat.value;
 
-        if (data.chat_id !== props.chat.id || messageAllIds.value.includes(data.id)) {
+        if (data.chat_id !== props.chat.id) {
             return
         }
 
-        console.log({
-            messageAllIds, data, messagesAll
-        })
+        if(messageAllIds.value.includes(data.id)) {
+            return
+        }
 
         messagesAll.value.push({
             id: data.id,
@@ -92,8 +92,6 @@ onMounted(() => {
             created_at: data.created_at,
             created_at_timestamp: data.created,
         })
-
-        messageAllIds.value.push(data.id)
 
         setTimeout(scrollToEnd, 100)
 
@@ -131,8 +129,6 @@ const sendMessage = (text) => {
         .post(`/api/messages/${props.activeAccount.id}/${props.chat.id}/send`, {message: {text: input.value || text}})
         .then((response) => {
             messagesAll.value.push(response.data);
-
-            messageAllIds.value.push(response.data.id)
 
             input.value = '';
 
