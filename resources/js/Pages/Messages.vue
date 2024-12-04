@@ -75,7 +75,11 @@ onMounted(() => {
     newMessageChannel.listen('NewMessage', (e) => {
         const data = e.data.chat.value;
 
-        if (data.chat_id !== props.chat.id || messageAllIds.value.includes(data.id)) {
+        if (data.chat_id !== props.chat.id) {
+            return
+        }
+
+        if(messageAllIds.value.includes(data.id)) {
             return
         }
 
