@@ -26,6 +26,40 @@ class Avito
             ->withToken($this->account->external_access_token);
     }
 
+    public static function validateTelegramWebAppData(string $queryString, string $botToken): bool
+    {
+        // Преобразуем строку запроса в массив
+        parse_str($queryString, $data);
+
+//        // Проверяем наличие обязательных полей
+//        if (!isset($data['hash'], $data['auth_date'])) {
+//            return false;
+//        }
+//
+//        // Проверяем, не устарели ли данные (например, 1 час)
+//        $authDate = (int)$data['auth_date'];
+//
+//        if (time() - $authDate > 3600) {
+//            return false;
+//        }
+
+        // Формируем data-check-string
+        $checkString = collect($data)
+            ->except('hash')
+            ->map(fn($value, $key) => "$key=$value")
+            ->sortKeys()
+            ->implode("\n");
+
+        // Генерируем секретный ключ
+        $secretKey = hash_hmac('sha256', $botToken, 'WebAppData', true);
+
+        // Вычисляем хэш
+        $calculatedHash = hash_hmac('sha256', $checkString, $secretKey);
+
+        // Сравниваем хэши
+        return hash_equals($data['hash'], $calculatedHash);
+    }
+
     public function setAccount(Account $account): static
     {
         $this->account = $account;
