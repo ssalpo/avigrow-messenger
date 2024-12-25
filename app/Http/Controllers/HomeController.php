@@ -34,7 +34,7 @@ class HomeController extends Controller
         $unreadChatIds = $this->avito->getUnreadChatIds();
 
         return Inertia::render('Home', [
-            'containerClass' => 'pa-0',
+            'disableContainer' => true,
             'unreadChatIds' => $unreadChatIds,
             'currentUserId' => $me['id'],
             'conversations' => collect($response['chats'])->map(

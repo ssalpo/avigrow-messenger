@@ -17,9 +17,12 @@ const page = usePage();
         <navbar/>
 
         <v-main>
-            <v-container :class="page.props.containerClass">
+            <v-container v-if="!page.props.disableContainer">
                 <slot />
             </v-container>
+
+            <slot v-else />
+
         </v-main>
     </v-app>
 </template>
