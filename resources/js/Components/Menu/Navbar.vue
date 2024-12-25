@@ -3,57 +3,13 @@ import {router, usePage} from "@inertiajs/vue3";
 import {ref} from "vue";
 
 import ActiveConversationList from "@/Components/Conversation/ActiveConversationList.vue";
+import DrawerNav from "@/Components/Menu/DrawerNav.vue";
 
 defineProps(['pageTitle'])
 
 const page = usePage()
 const activeAccount = ref(page.props.activeAccount)
-
-const navs = [
-    {
-        title: 'Сообщения',
-        route: 'account.chats',
-        icon: 'mdi-email-outline',
-        params: {account: activeAccount.value.id}
-    },
-    {
-        title: 'Запросы отзывов',
-        route: 'schedule-reviews.index',
-        icon: 'mdi-timer-star',
-        params: {account: activeAccount.value.id}
-    },
-    {
-        title: 'Отзывы',
-        route: 'reviews.index',
-        icon: 'mdi-star-outline',
-        params: {account: activeAccount.value.id}
-    },
-    {
-        title: 'Ключи',
-        route: 'code-keys.index',
-        icon: 'mdi-key-variant',
-        params: null
-    },
-    {
-        title: 'Продукты',
-        route: 'products.index',
-        icon: 'mdi-cart-outline',
-        params: null
-    },
-    {
-        title: 'Заказы',
-        route: 'orders.index',
-        icon: 'mdi-order-bool-descending-variant',
-        params: {account: activeAccount.value.id}
-    },
-    {
-        title: 'Касса',
-        route: 'transactions.index',
-        icon: 'mdi-cash-register',
-        params: null
-    }
-];
-
+const drawer = ref(false);
 
 function selectActive(account) {
     const exceptRoutes = [
@@ -109,20 +65,8 @@ function selectActive(account) {
         <active-conversation-list
             :active-account="activeAccount" />
 
-        <v-menu>
-            <template v-slot:activator="{ props }">
-                <v-icon icon="mdi-dots-vertical" class="ml-4" v-bind="props"></v-icon>
-            </template>
-
-            <v-list density="compact">
-                <v-list-item
-                    :prepend-icon="nav.icon"
-                    v-for="nav in navs"
-                    color="primary"
-                    :title="nav.title"
-                    @click="() => router.visit(route(nav.route, nav.params))"
-                />
-            </v-list>
-        </v-menu>
+        <v-icon icon="mdi-dots-vertical" class="ml-4" @click="drawer = !drawer"></v-icon>
     </v-toolbar>
+
+    <drawer-nav v-model="drawer" />
 </template>
