@@ -76,6 +76,36 @@ function goTo(nav) {
                 @click="() => goTo(nav)"
             />
         </v-list>
+
+        <template v-slot:prepend>
+
+            <v-sheet class="d-flex align-center px-4 py-3">
+                <v-sheet class="mr-3">
+                    <v-icon icon="mdi-account-circle-outline" size="32" color="#7a7a7a"/>
+                </v-sheet>
+                <v-sheet>
+                    <v-sheet class="text-subtitle-2 font-weight-bold">{{ page.props.auth.user.name }}</v-sheet>
+                    <v-sheet class="text-body-2">{{ page.props.auth.user.email }}</v-sheet>
+                </v-sheet>
+            </v-sheet>
+
+            <v-divider/>
+        </template>
+
+        <template v-slot:append>
+            <v-sheet class="mb-5 ml-3">
+                <v-btn
+                    size="small"
+                    variant="text"
+                    color="warning"
+                    prepend-icon="mdi-power"
+                    @click="router.post(route('logout'))"
+                >
+                    Выйти
+                </v-btn>
+            </v-sheet>
+        </template>
+
     </v-navigation-drawer>
 </template>
 

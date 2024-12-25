@@ -20,6 +20,8 @@ Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'auth']);
 
 Route::middleware(['auth'])->group(function () {
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::post('/send-payment-receipt', [HomeController::class, 'sendPaymentReceipt'])->name('send-payment-receipt');
 
