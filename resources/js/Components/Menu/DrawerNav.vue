@@ -81,7 +81,9 @@ function goTo(nav) {
 
             <v-sheet class="d-flex align-center px-4 py-3">
                 <v-sheet class="mr-3">
-                    <v-icon icon="mdi-account-circle-outline" size="32" color="#7a7a7a"/>
+                    <v-avatar color="#bdbdbd">
+                        <v-icon color="white" icon="mdi-account" />
+                    </v-avatar>
                 </v-sheet>
                 <v-sheet>
                     <v-sheet class="text-subtitle-2 font-weight-bold">{{ page.props.auth.user.name }}</v-sheet>
@@ -95,7 +97,6 @@ function goTo(nav) {
         <template v-slot:append>
             <v-sheet class="mb-5 ml-3">
                 <v-btn
-                    size="small"
                     variant="text"
                     color="warning"
                     prepend-icon="mdi-power"
