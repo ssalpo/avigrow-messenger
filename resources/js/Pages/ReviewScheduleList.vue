@@ -1,6 +1,6 @@
 <script setup>
 
-import Navbar from "@/Components/Navbar.vue";
+import Navbar from "@/Components/Menu/Navbar.vue";
 import {Head, router} from "@inertiajs/vue3";
 
 const props = defineProps(['reviews']);
@@ -16,8 +16,6 @@ function remove(account, id) {
 
 <template>
     <Head title="Переписка" />
-
-    <navbar />
 
     <v-container>
         <h3 class="text-h5 mt-3 mb-5">Запросы отзывов</h3>

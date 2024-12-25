@@ -1,5 +1,5 @@
 <script setup>
-import Navbar from "@/Components/Navbar.vue";
+import Navbar from "@/Components/Menu/Navbar.vue";
 import {Head, router, useForm} from "@inertiajs/vue3";
 import { VNumberInput } from 'vuetify/labs/VNumberInput'
 
@@ -23,8 +23,6 @@ function send() {
 
 <template>
     <Head :title="form.id ? `Редактирование продукта` : `Добавление продукта`" />
-
-    <navbar />
 
     <v-container>
         <v-row class="d-flex align-center mb-1">

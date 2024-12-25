@@ -1,5 +1,5 @@
 <script setup>
-import Navbar from "@/Components/Navbar.vue";
+import Navbar from "@/Components/Menu/Navbar.vue";
 import {Head, router} from "@inertiajs/vue3";
 
 defineProps(['products'])
@@ -18,8 +18,6 @@ function destroy(id) {
 
 <template>
     <Head title="Корзина" />
-
-    <navbar />
 
     <v-container>
         <v-row class="d-flex align-center mt-3 mb-5">

@@ -1,5 +1,5 @@
 <script setup>
-import Navbar from "@/Components/Navbar.vue";
+import Navbar from "@/Components/Menu/Navbar.vue";
 import {Head, router} from "@inertiajs/vue3";
 
 defineProps([
@@ -14,8 +14,6 @@ defineProps([
 
 <template>
     <Head title="Статистика"/>
-
-    <navbar />
 
     <v-container>
 

@@ -9,7 +9,5 @@ import Navbar from "@/Components/Menu/Navbar.vue";
 
     <state-loader />
 
-    <navbar />
-
     <slot />
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import Navbar from "@/Components/Navbar.vue";
+import Navbar from "@/Components/Menu/Navbar.vue";
 import {Head, router} from "@inertiajs/vue3";
 import NewTransactionModal from "@/Components/NewTransactionModal.vue";
 
@@ -9,8 +9,6 @@ const props = defineProps(['transactions', 'totalDebits', 'totalCredits'])
 
 <template>
     <Head title="Касса"/>
-
-    <navbar/>
 
     <v-container>
         <h3 class="text-h5 mt-3 mb-4">Касса</h3>

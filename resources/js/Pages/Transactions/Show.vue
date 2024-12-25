@@ -1,5 +1,5 @@
 <script setup>
-    import Navbar from "@/Components/Navbar.vue";
+    import Navbar from "@/Components/Menu/Navbar.vue";
     import {Head, router} from "@inertiajs/vue3";
     import NewTransactionModal from "@/Components/NewTransactionModal.vue";
 
@@ -8,8 +8,6 @@
 
 <template>
     <Head title="Детали транзакции"/>
-
-    <navbar/>
 
     <v-container>
         <v-row class="d-flex align-center mb-1">

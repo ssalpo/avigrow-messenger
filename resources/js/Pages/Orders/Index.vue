@@ -1,6 +1,6 @@
 <script setup>
 
-import Navbar from "@/Components/Navbar.vue";
+import Navbar from "@/Components/Menu/Navbar.vue";
 import {Head, router, usePage} from "@inertiajs/vue3";
 
 defineProps(['orders', 'totalSum', 'totalSumCanceled'])
@@ -17,8 +17,6 @@ function cancel(id) {
 
 <template>
     <Head title="Заказы"/>
-
-    <navbar/>
 
     <v-container>
         <v-row class="mt-2 mx-1 mb-7">

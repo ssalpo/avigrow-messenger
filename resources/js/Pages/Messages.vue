@@ -8,6 +8,9 @@ import ScheduleReviewRequest from "@/Components/ScheduleReviewRequest.vue";
 import CodeKeysSheet from "@/Components/CodeKeysSheet.vue";
 import NewOrderModal from "@/Components/NewOrderModal.vue";
 import ConversationTabs from "@/Components/ConversationTabs.vue";
+import BaseLayoutWithoutNav from "@/Layouts/BaseLayoutWithoutNav.vue";
+
+defineOptions({layout: BaseLayoutWithoutNav})
 
 const props = defineProps({
     errors: Object,

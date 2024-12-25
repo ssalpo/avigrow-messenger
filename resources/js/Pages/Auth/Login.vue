@@ -1,5 +1,8 @@
 <script setup>
 import {Head, useForm} from '@inertiajs/vue3';
+import AuthLayout from "@/Layouts/AuthLayout.vue";
+
+defineOptions({layout: AuthLayout})
 
 const props = defineProps(['users', 'errors'])
 

@@ -1,6 +1,6 @@
 <script setup>
 
-import Navbar from "@/Components/Navbar.vue";
+import Navbar from "@/Components/Menu/Navbar.vue";
 import {Head, router} from "@inertiajs/vue3";
 import {ref} from "vue";
 import {OnLongPress} from '@vueuse/components'
@@ -21,8 +21,6 @@ function restore(id) {
 
 <template>
     <Head title="История использования"/>
-
-    <navbar/>
 
     <v-container>
         <v-row class="d-flex align-center mb-2">
