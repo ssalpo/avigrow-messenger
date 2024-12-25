@@ -54,9 +54,13 @@ const navs = [
     }
 ];
 
-const exceptRoutes = ['home', 'code-keys.histories', 'code-keys.index']
 
 function selectActive(account) {
+    const exceptRoutes = [
+        'home', 'code-keys.histories', 'code-keys.index',
+        'transactions.index', 'products.index'
+    ]
+
     activeAccount.value = account
 
     router.visit(route(exceptRoutes.includes(route().current())  ? 'account.chats' : route().current(), {account: account.id}))
@@ -113,7 +117,7 @@ function selectActive(account) {
             <v-list density="compact">
                 <v-list-item
                     :prepend-icon="nav.icon"
-                    v-for="(nav, index) in navs"
+                    v-for="nav in navs"
                     color="primary"
                     :title="nav.title"
                     @click="() => router.visit(route(nav.route, nav.params))"
