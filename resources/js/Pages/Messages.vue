@@ -169,15 +169,6 @@ function reloadPage() {
     })
 }
 
-function adjustChatHeight() {
-    const chatContainer = document.querySelector('.messages');
-    chatContainer.style.height = `${window.innerHeight}px`;
-}
-
-onMounted(() => {
-    window.addEventListener('resize', adjustChatHeight);
-})
-
 </script>
 
 <template>
