@@ -44,7 +44,7 @@ function clear(index, conversation) {
 
             >
                 <v-list-item-title
-                    @click.self="() => router.visit(`/accounts/${activeAccount.id}/chats/${conversation.chat_id}`)"
+                    @click.self="() => router.visit(`/accounts/${conversation.id}/chats/${conversation.chat_id}`)"
                 >{{ conversation.avito_item_name }}
                 </v-list-item-title>
                 <template v-slot:prepend>
