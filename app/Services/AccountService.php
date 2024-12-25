@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
+use App\Enums\AccountConnectStatus;
+use App\Jobs\ConnectAccount;
 use App\Models\Account;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AccountService
 {
@@ -51,5 +55,67 @@ class AccountService
         $accounts = Account::query()->whereNotNull('external_refresh_token')->get();
 
         $accounts->each(fn($a) => $this->changeAccountToken($a, true));
+    }
+
+    public function store(array $data)
+    {
+        return DB::transaction(function () use ($data) {
+            $account = Account::create($data + ['webhook_handle_token' => Str::random(32)]);
+
+            ConnectAccount::dispatch($account);
+
+            return $account;
+        });
+    }
+
+    public function reconnect(int $accountId): void
+    {
+        $account = Account::findOrFail($accountId);
+
+        $account->update([
+            'connection_status' => AccountConnectStatus::CONNECTION_PENDING
+        ]);
+
+        ConnectAccount::dispatch($account);
+    }
+
+    public function connect(Account $account): void
+    {
+        try {
+            // Подтягиваем токены
+            $this->changeAccountToken($account);
+
+            $me = $this->avito->me();
+
+            // Меняем статус подключения аккаунта и обновляем данные профиля
+            $account->forceFill([
+                'external_id' => $me['id'],
+                'avito_name' => $me['name'],
+                'avito_profile_url' => $me['profile_url'],
+                'connection_status' => AccountConnectStatus::CONNECTED
+            ])->save();
+        } catch (\Exception $exception) {
+            $account->forceFill([
+                'connection_status' => AccountConnectStatus::CONNECTION_ERROR,
+                'connection_errors' => $exception->getMessage()
+            ])->save();
+        }
+    }
+
+    public function update(int $accountId, array $data): Account
+    {
+        $account = Account::findOrFail($accountId);
+
+        $account->update($data);
+
+        $fieldChangeToDetect = [
+            'external_client_id', 'external_client_secret'
+        ];
+
+        if (!empty(array_intersect(array_keys($account->getChanges()), $fieldChangeToDetect))) {
+            $this->reconnect($accountId);
+        }
+
+        return $account;
     }
 }
