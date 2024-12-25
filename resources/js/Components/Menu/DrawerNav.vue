@@ -67,13 +67,15 @@ function goTo(nav) {
 
 <template>
     <v-navigation-drawer v-model="model" location="right" temporary>
-        <v-list-item
-            :prepend-icon="nav.icon"
-            v-for="nav in navs"
-            color="primary"
-            :title="nav.title"
-            @click="() => goTo(nav)"
-        />
+        <v-list>
+            <v-list-item
+                :prepend-icon="nav.icon"
+                v-for="nav in navs"
+                color="primary"
+                :title="nav.title"
+                @click="() => goTo(nav)"
+            />
+        </v-list>
     </v-navigation-drawer>
 </template>
 
