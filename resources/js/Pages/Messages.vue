@@ -169,38 +169,21 @@ function reloadPage() {
     })
 }
 
+function adjustChatHeight() {
+    const chatContainer = document.querySelector('.messages');
+    chatContainer.style.height = `${window.innerHeight}px`;
+}
+
+onMounted(() => {
+    window.addEventListener('resize', adjustChatHeight);
+})
+
 </script>
 
 <template>
     <Head title="Сообщение"/>
 
     <div style="display: flex; flex-direction: column; position: relative">
-<!--        <v-sheet :elevation="6" color="primary" class="message-page-head">
-            <v-list class="pa-1 bg-blue-darken-1">
-                <v-list-item
-                    :title="chat.user.name"
-                >
-                    <template v-slot:prepend>
-                        <Link :href="route('account.chats', {account: props.activeAccount.id})" class="mr-3">
-                            <v-icon color="white">mdi-arrow-left</v-icon>
-                        </Link>
-                    </template>
-
-                    <template v-slot:subtitle>
-                        <small>
-                            <a v-if="chat?.url" :href="chat.url" target="_blank"
-                               class="text-white text-decoration-none">{{ chat.context }}</a>
-                            <span v-else>{{ chat.context }}</span>
-                        </small>
-                    </template>
-
-                    <template v-slot:append>
-                        <small class="pl-2">{{ chat.price }}</small>
-                    </template>
-                </v-list-item>
-            </v-list>
-        </v-sheet>-->
-
         <conversation-tabs
             :active-account="activeAccount"
             :chat="chat"
