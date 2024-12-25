@@ -32,7 +32,7 @@ import {router} from "@inertiajs/vue3";
 </script>
 
 <template>
-    <v-sheet color="deep-purple-darken-4" class="px-3 py-2 d-flex align-center justify-between">
+    <v-sheet color="deep-purple-darken-4" class="px-3 py-2 d-flex align-center justify-between" style="z-index: 1">
         <v-icon icon="mdi-chat-processing-outline" @click="() => router.visit(`/accounts/${activeAccount.id}/chats/`)" />
 
         <v-sheet v-if="chat" color="deep-purple-darken-4" class="ml-3" max-width="220" style="font-size: 12px">
