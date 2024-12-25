@@ -1,7 +1,6 @@
 <script setup>
-import Navbar from "@/Components/Navbar.vue";
-import {Head, Link, useForm} from "@inertiajs/vue3";
-import BackBtn from "@/Components/BackBtn.vue";
+import {useForm} from "@inertiajs/vue3";
+import PageTitle from "@/Components/PageTitle.vue";
 
 const props = defineProps(['account', 'errors'])
 
@@ -23,60 +22,51 @@ function send() {
 </script>
 
 <template>
-    <Head :title="form.id ? `Редактирование аккаунта` : `Новый аккаунт`"/>
+    <page-title
+        :text="form.id ? `Редактирование аккаунта` : `Новый аккаунт`"
+        :back-url="form.id ? route('accounts.show', form.id) : route('accounts.index')"
+    />
 
-    <navbar/>
+    <v-sheet class="mx-auto" max-width="600">
+        <v-form @submit.prevent="send">
+            <v-text-field
+                label="Название"
+                variant="outlined"
+                hint="Придумайте название"
+                persistent-hint
+                class="mb-4"
+                density="compact"
+                v-model="form.name"
+                :error-messages="errors?.name"
+            ></v-text-field>
 
-    <v-container>
-        <v-sheet class="mb-5 d-flex align-center">
-            <back-btn :url="form.id ? route('accounts.show', form.id) : route('accounts.index')"/>
+            <v-text-field
+                label="Client ID"
+                variant="outlined"
+                hint="Скопируйте из личного кабинета Авито"
+                persistent-hint
+                class="mb-4"
+                density="compact"
+                v-model="form.external_client_id"
+                :error-messages="errors?.external_client_id"
+            ></v-text-field>
 
-            <v-sheet class="text-h6 font-weight-bold">
-                {{ form.id ? `Редактирование аккаунта` : `Новый аккаунт` }}
+            <v-text-field
+                label="Client Secret"
+                variant="outlined"
+                hint="Скопируйте из личного кабинета Авито"
+                persistent-hint
+                class="mb-4"
+                density="compact"
+                v-model="form.external_client_secret"
+                :error-messages="errors?.external_client_secret"
+            ></v-text-field>
+
+            <v-sheet class="text-right">
+                <v-btn class="mt-2" width="200" color="primary" type="submit">
+                    {{ form.id ? `Изменить` : `Добавить` }}
+                </v-btn>
             </v-sheet>
-        </v-sheet>
-
-        <v-sheet class="mx-auto" max-width="600">
-            <v-form @submit.prevent="send">
-                <v-text-field
-                    label="Название"
-                    variant="outlined"
-                    hint="Придумайте название"
-                    persistent-hint
-                    class="mb-4"
-                    density="compact"
-                    v-model="form.name"
-                    :error-messages="errors?.name"
-                ></v-text-field>
-
-                <v-text-field
-                    label="Client ID"
-                    variant="outlined"
-                    hint="Скопируйте из личного кабинета Авито"
-                    persistent-hint
-                    class="mb-4"
-                    density="compact"
-                    v-model="form.external_client_id"
-                    :error-messages="errors?.external_client_id"
-                ></v-text-field>
-
-                <v-text-field
-                    label="Client Secret"
-                    variant="outlined"
-                    hint="Скопируйте из личного кабинета Авито"
-                    persistent-hint
-                    class="mb-4"
-                    density="compact"
-                    v-model="form.external_client_secret"
-                    :error-messages="errors?.external_client_secret"
-                ></v-text-field>
-
-                <v-sheet class="text-right">
-                    <v-btn class="mt-2" width="200" color="primary" type="submit">
-                        {{ form.id ? `Изменить` : `Добавить` }}
-                    </v-btn>
-                </v-sheet>
-            </v-form>
-        </v-sheet>
-    </v-container>
+        </v-form>
+    </v-sheet>
 </template>

@@ -32,6 +32,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('/fast-templates', FastTemplateController::class);
 
+    Route::resource('accounts', AccountController::class);
+
     Route::group(['prefix' => '/accounts/{account}'], function () {
         Route::resource('schedule-reviews', ReviewScheduleController::class)->only(['index', 'store', 'destroy']);
 
@@ -45,7 +47,6 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
-    Route::resource('accounts', AccountController::class);
 
     Route::get('code-keys/histories', [CodeKeyController::class, 'histories'])->name('code-keys.histories');
     Route::post('code-keys/{code_key}/mark-as-receipt', [CodeKeyController::class, 'markAsReceipt'])->name('code-keys.mark-as-receipt');

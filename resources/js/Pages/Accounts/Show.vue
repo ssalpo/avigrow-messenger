@@ -1,34 +1,23 @@
 <script setup>
-import Navbar from "@/Components/Navbar.vue";
-import {Head, Link} from "@inertiajs/vue3";
-import BackBtn from "@/Components/BackBtn.vue";
+import {Link} from "@inertiajs/vue3";
+import PageTitle from "@/Components/PageTitle.vue";
 
 defineProps(['account'])
 </script>
 
 <template>
-    <Head :title="account.name + ` - Аккаунт`"/>
 
-    <navbar/>
-
-    <v-container>
-        <v-sheet class="mb-5 d-flex align-center">
-            <back-btn :url="route('accounts.index')"/>
-
-            <v-sheet class="text-h6 text-md-h5 font-weight-bold text-truncate mr-5" max-width="500">
-                {{ account.name }}
-            </v-sheet>
-
+    <page-title
+        :text="account.name"
+        :back-url="route('accounts.index')"
+    >
+        <template v-slot:append>
             <v-spacer></v-spacer>
 
             <Link :href="route('accounts.edit', account.id)" class="mr-3">
                 <v-btn color="primary" size="small" icon="mdi-pencil"/>
             </Link>
-        </v-sheet>
+        </template>
 
-    </v-container>
+    </page-title>
 </template>
-
-<style scoped>
-
-</style>
