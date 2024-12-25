@@ -7,6 +7,7 @@ import {useTextareaAutosize} from "@vueuse/core";
 import ScheduleReviewRequest from "@/Components/ScheduleReviewRequest.vue";
 import CodeKeysSheet from "@/Components/CodeKeysSheet.vue";
 import NewOrderModal from "@/Components/NewOrderModal.vue";
+import ConversationTabs from "@/Components/ConversationTabs.vue";
 
 const props = defineProps({
     errors: Object,
@@ -173,9 +174,8 @@ function reloadPage() {
 <template>
     <Head title="Сообщение"/>
 
-
     <div style="display: flex; flex-direction: column; position: relative">
-        <v-sheet :elevation="6" color="primary" class="message-page-head">
+<!--        <v-sheet :elevation="6" color="primary" class="message-page-head">
             <v-list class="pa-1 bg-blue-darken-1">
                 <v-list-item
                     :title="chat.user.name"
@@ -199,10 +199,14 @@ function reloadPage() {
                     </template>
                 </v-list-item>
             </v-list>
-        </v-sheet>
+        </v-sheet>-->
+
+        <conversation-tabs
+            :active-account="activeAccount"
+            :chat="chat"
+            style="position: fixed; width: 100%" />
 
         <div class="messages">
-
             <div style="text-align: center">
                 <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreMessages"
                    @click.prevent="showMorePage">Показать еще</a>

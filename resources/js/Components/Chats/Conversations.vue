@@ -99,7 +99,7 @@ const showMorePage = () => {
 }
 
 function contextType(chat) {
-    let currentType = 'incorrect';
+    let currentType;
 
     switch (chat.last_message.content_type) {
         case 'image':

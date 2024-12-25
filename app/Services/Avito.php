@@ -162,6 +162,8 @@ class Avito
 
     public function markChatAsRead(string $chatId): void
     {
+        ActiveConversationService::sync($this->account, $chatId);
+
         $this->clientWithToken()->post(
             "/messenger/v1/accounts/{$this->account->external_id}/chats/{$chatId}/read"
         );

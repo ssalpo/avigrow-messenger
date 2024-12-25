@@ -6,6 +6,7 @@ use App\Events\NewMessage;
 use App\Jobs\AddToAnalyzeReviews;
 use App\Jobs\SendMessageToTelegram;
 use App\Models\Account;
+use App\Models\ActiveConversation;
 use App\Services\Avito;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -28,6 +29,18 @@ class AvitoController extends Controller
                 'name' => $a->name
             ])
         );
+    }
+
+    public function activeConversations(): JsonResponse
+    {
+        return response()->json(
+            ActiveConversation::orderByDesc('created_at')->get()
+        );
+    }
+
+    public function destroyActiveConversation(int $id): void
+    {
+        ActiveConversation::find($id)?->delete();
     }
 
     public function chats(Account $account): JsonResponse

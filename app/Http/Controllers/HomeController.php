@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\CodeKeyType;
 use App\Http\Requests\SendPaymentReceiptRequest;
 use App\Models\Account;
+use App\Models\ActiveConversation;
 use App\Models\CodeKey;
 use App\Models\ReviewSchedule;
+use App\Services\ActiveConversationService;
 use App\Services\Avito;
 use App\Services\Telegram;
 use Illuminate\Http\RedirectResponse;
@@ -45,6 +47,8 @@ class HomeController extends Controller
     public function messages(int $accountId, string $chatId)
     {
         $account = Account::findOrFail($accountId);
+
+        ActiveConversationService::sync($account, $chatId);
 
         $this->avito->setAccount($account);
 

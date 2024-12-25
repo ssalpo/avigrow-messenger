@@ -3,6 +3,7 @@ import {Head, router, usePage} from '@inertiajs/vue3';
 import Conversations from "@/Components/Chats/Conversations.vue";
 import {onMounted} from "vue";
 import Navbar from "@/Components/Navbar.vue";
+import ConversationTabs from "@/Components/ConversationTabs.vue";
 
 const props = defineProps({
     accounts: {
@@ -33,6 +34,8 @@ onMounted(() => {
     <Head title="Переписка" />
 
     <navbar />
+
+    <conversation-tabs :active-account="page.props.activeAccount" />
 
     <conversations
         :unreadChatIds="unreadChatIds"
