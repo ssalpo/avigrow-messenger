@@ -136,7 +136,7 @@ function contextType(chat) {
 </script>
 
 <template>
-    <v-list lines="two">
+    <v-list lines="two" class="pt-0">
         <template
             v-for="chat in chats"
             :key="chat.id"

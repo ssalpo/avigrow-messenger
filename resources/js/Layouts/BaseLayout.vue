@@ -2,14 +2,24 @@
 import InternetStateChecker from "@/Components/InternetStateChecker.vue";
 import StateLoader from "@/Components/StateLoader.vue";
 import Navbar from "@/Components/Menu/Navbar.vue";
+import {usePage} from "@inertiajs/vue3";
+
+const page = usePage();
+
 </script>
 
 <template>
-    <internet-state-checker />
+    <internet-state-checker/>
 
-    <state-loader />
+    <state-loader/>
 
-    <navbar />
+    <v-app>
+        <navbar/>
 
-    <slot />
+        <v-main>
+            <v-container :class="page.props.containerClass">
+                <slot />
+            </v-container>
+        </v-main>
+    </v-app>
 </template>

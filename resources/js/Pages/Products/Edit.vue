@@ -1,7 +1,8 @@
 <script setup>
 import Navbar from "@/Components/Menu/Navbar.vue";
 import {Head, router, useForm} from "@inertiajs/vue3";
-import { VNumberInput } from 'vuetify/labs/VNumberInput'
+import {VNumberInput} from 'vuetify/labs/VNumberInput'
+import PageTitle from "@/Components/PageTitle.vue";
 
 const props = defineProps(['product', 'errors'])
 
@@ -12,7 +13,7 @@ const form = useForm({
 })
 
 function send() {
-    if(form.id) {
+    if (form.id) {
         form.patch(route('products.update', form.id))
         return
     }
@@ -22,38 +23,28 @@ function send() {
 </script>
 
 <template>
-    <Head :title="form.id ? `Редактирование продукта` : `Добавление продукта`" />
+    <page-title
+        :back-url="route('products.index')"
+        :text="form.id ? `Редактирование продукта` : `Добавление продукта`"
+    />
 
-    <v-container>
-        <v-row class="d-flex align-center mb-1">
-            <v-col class="text-center" cols="2">
-                <v-btn icon="mdi-arrow-left" @click="router.visit(route('products.index'))" size="small" color="primary" variant="text"></v-btn>
-            </v-col>
+    <v-form @submit.prevent="send">
+        <v-text-field
+            v-model="form.name"
+            label="Название"
+            :error-messages="errors?.name"
+            class="mb-3"
+        ></v-text-field>
 
-            <v-col cols="10">
-                <h3 class="text-h6">{{form.id ? `Редактирование продукта` : `Добавление продукта`}}</h3>
-            </v-col>
-        </v-row>
+        <v-number-input
+            v-model="form.price"
+            :error-messages="errors?.price"
+            controlVariant="stacked"
+            label="Сумма"
+            :min="1"
+            class="mb-3"
+        />
 
-        <v-form @submit.prevent="send">
-            <v-text-field
-                v-model="form.name"
-                label="Название"
-                :error-messages="errors?.name"
-                class="mb-3"
-            ></v-text-field>
-
-            <v-number-input
-                v-model="form.price"
-                :error-messages="errors?.price"
-                controlVariant="stacked"
-                label="Сумма"
-                :min="1"
-                class="mb-3"
-            />
-
-            <v-btn class="mt-2" type="submit" block>Сохранить</v-btn>
-        </v-form>
-    </v-container>
-
+        <v-btn class="mt-2" type="submit" block>Сохранить</v-btn>
+    </v-form>
 </template>

@@ -5,6 +5,7 @@ import {Head, router} from "@inertiajs/vue3";
 import {onMounted, ref, watch} from "vue";
 import {OnLongPress} from '@vueuse/components'
 import AddCodeKeyModal from "@/Components/AddCodeKeyModal.vue";
+import PageTitle from "@/Components/PageTitle.vue";
 
 const props = defineProps(['tabs', 'keys', 'errors'])
 
@@ -12,7 +13,7 @@ const tab = ref(null)
 const addDialog = ref(false)
 
 onMounted(() => {
-    if(Object.keys(props.errors).length !== 0) {
+    if (Object.keys(props.errors).length !== 0) {
         addDialog.value = true
     }
 })
@@ -36,90 +37,87 @@ function destroy(id) {
 </script>
 
 <template>
-    <Head title="Ключи и аккаунты"/>
-
-    <v-container>
-        <v-row class="d-flex align-center mb-2">
-            <v-col cols="9">
-                <h3 class="text-h5">Ключи и аккаунты</h3>
-            </v-col>
-            <v-col class="text-right">
-                <v-menu>
-                    <template v-slot:activator="{ props }">
-                        <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
-                    </template>
-
-                    <v-list density="compact">
-                        <v-list-item
-                            title="Добавить"
-                            @click="() => addDialog = true"
-                        />
-
-                        <v-list-item
-                            title="История"
-                            @click="() => router.visit(route('code-keys.histories'))"
-                        />
-                    </v-list>
-                </v-menu>
-            </v-col>
-        </v-row>
-
-        <v-tabs
-            bg-color="primary"
-            v-model="tab"
-        >
-            <v-tab :value="value" :key="value" v-for="(label, value) in tabs">
-                {{ label }}
-                {{keys[value] !== undefined ? `(${keys[value]?.length})` : ''}}
-            </v-tab>
-        </v-tabs>
-
-        <v-tabs-window v-model="tab">
-            <v-tabs-window-item
-                v-for="(label, value) in tabs"
-                :value="value"
-                :key="value"
-            >
-                <template v-if="keys[value] !== undefined">
-
-                    <v-list lines="one">
-                        <OnLongPress
-                            @trigger="copyContent(key.content, key)"
-                            v-for="key in keys[value]"
-                            :key="key.id"
-                        >
-                            <v-list-item
-                                v-ripple
-                                class="my-3 mx-2"
-                                rounded
-                                elevation="2"
-                                :title="key.content"
-                                :subtitle="[key.comment, key.created_at_formatted].filter(x => x).join(' | ')"
-                            >
-                                <template v-slot:append>
-                                    <v-menu>
-                                        <template v-slot:activator="{ props }">
-                                            <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
-                                        </template>
-
-                                        <v-list density="compact">
-                                            <v-list-item
-                                                title="Удалить"
-                                                @click="destroy(key.id)"
-                                            />
-                                        </v-list>
-                                    </v-menu>
-                                </template>
-                            </v-list-item>
-                        </OnLongPress>
-                    </v-list>
-
+    <page-title
+        :back-url="route('code-keys.index')"
+        text="Ключи и аккаунты"
+    >
+        <template v-slot:append>
+            <v-spacer />
+            <v-menu>
+                <template v-slot:activator="{ props }">
+                    <v-icon icon="mdi-dots-vertical" v-bind="props"></v-icon>
                 </template>
 
-                <v-sheet v-else class="pa-5 text-center">Список пуст</v-sheet>
-            </v-tabs-window-item>
-        </v-tabs-window>
-    </v-container>
+                <v-list density="compact">
+                    <v-list-item
+                        title="Добавить"
+                        @click="() => addDialog = true"
+                    />
+
+                    <v-list-item
+                        title="История"
+                        @click="() => router.visit(route('code-keys.histories'))"
+                    />
+                </v-list>
+            </v-menu>
+        </template>
+    </page-title>
+
+    <v-tabs
+        bg-color="primary"
+        v-model="tab"
+    >
+        <v-tab :value="value" :key="value" v-for="(label, value) in tabs">
+            {{ label }}
+            {{ keys[value] !== undefined ? `(${keys[value]?.length})` : '' }}
+        </v-tab>
+    </v-tabs>
+
+    <v-tabs-window v-model="tab">
+        <v-tabs-window-item
+            v-for="(label, value) in tabs"
+            :value="value"
+            :key="value"
+        >
+            <template v-if="keys[value] !== undefined">
+
+                <v-list lines="one">
+                    <OnLongPress
+                        @trigger="copyContent(key.content, key)"
+                        v-for="key in keys[value]"
+                        :key="key.id"
+                    >
+                        <v-list-item
+                            v-ripple
+                            class="my-3 mx-2"
+                            rounded
+                            elevation="2"
+                            :title="key.content"
+                            :subtitle="[key.comment, key.created_at_formatted].filter(x => x).join(' | ')"
+                        >
+                            <template v-slot:append>
+                                <v-menu>
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
+                                    </template>
+
+                                    <v-list density="compact">
+                                        <v-list-item
+                                            title="Удалить"
+                                            @click="destroy(key.id)"
+                                        />
+                                    </v-list>
+                                </v-menu>
+                            </template>
+                        </v-list-item>
+                    </OnLongPress>
+                </v-list>
+
+            </template>
+
+            <v-sheet v-else class="pa-5 text-center">Список пуст</v-sheet>
+        </v-tabs-window-item>
+    </v-tabs-window>
 
     <add-code-key-modal
         :errors="errors"

@@ -2,6 +2,7 @@
 
 import Navbar from "@/Components/Menu/Navbar.vue";
 import {Head, router} from "@inertiajs/vue3";
+import PageTitle from "@/Components/PageTitle.vue";
 
 const props = defineProps(['reviews']);
 
@@ -15,31 +16,28 @@ function remove(account, id) {
 </script>
 
 <template>
-    <Head title="Переписка" />
+    <page-title text="Запросы отзывов"/>
 
-    <v-container>
-        <h3 class="text-h5 mt-3 mb-5">Запросы отзывов</h3>
+    <v-card
+        v-for="review in reviews"
+        :key="review.id"
+        class="mb-4"
+        rel="noopener"
+        elevation="4"
+    >
+        <v-card-text>
+            Запустится <b>{{ review.send_at }}</b>
+        </v-card-text>
 
-        <v-card
-            v-for="review in reviews"
-            :key="review.id"
-            class="mb-4"
-            rel="noopener"
-            elevation="4"
-        >
-            <v-card-text>
-                Запустится <b>{{review.send_at}}</b>
-            </v-card-text>
+        <template v-slot:actions>
+            <v-btn color="error" icon="mdi-trash-can-outline"
+                   @click="() => remove(review.account_id, review.id)"></v-btn>
+            <v-spacer/>
+            <v-btn icon="mdi-open-in-new"
+                   :href="route('account.chat.messages', {account: review.account_id, chat: review.chat_id})"></v-btn>
+        </template>
 
-            <template v-slot:actions>
-                <v-btn color="error" icon="mdi-trash-can-outline" @click="() => remove(review.account_id, review.id)"></v-btn>
-                <v-spacer />
-                <v-btn icon="mdi-open-in-new" :href="route('account.chat.messages', {account: review.account_id, chat: review.chat_id})"></v-btn>
-            </template>
-
-        </v-card>
-    </v-container>
-
+    </v-card>
 </template>
 
 <style scoped>
