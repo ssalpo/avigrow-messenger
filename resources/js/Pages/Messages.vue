@@ -61,7 +61,9 @@ const showMorePage = () => {
 }
 
 const scrollToEnd = () => {
-    window.scrollTo(0, document.body.scrollHeight);
+    let messages = document.querySelector('.messages');
+    messages.scrollTop = messages.scrollHeight;
+
 }
 
 onMounted(() => {
