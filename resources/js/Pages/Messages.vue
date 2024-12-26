@@ -37,6 +37,7 @@ const {textarea, input} = useTextareaAutosize({input: ''});
 
 const sendFromOtherText = ref('');
 const sendFromOther = ref(false);
+const fastMessagesDialog = ref(false);
 const messagesAll = ref(props.messages);
 const hasMoreMessages = ref(props.has_more);
 const currentPage = ref(1);
@@ -148,10 +149,6 @@ function onDeleteMessage(message) {
 
 function onCodeKeysSelect(text) {
     input.value = text;
-}
-
-function onFastTemplateSelect(e) {
-    input.value = e.content;
 }
 
 function onBlurTextarea() {
@@ -267,11 +264,18 @@ function reloadPage() {
                         type="button">🔄
                 </button>
 
-                <fast-messages v-if="!input" class="message-icon" @sendFastly="(text) => sendMessage(text)"
-                               @selected="onFastTemplateSelect"/>
+                <button @click="() => fastMessagesDialog = true" class="left-btn message-icon" type="button">
+                    📝
+                </button>
 
                 <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
             </div>
         </div>
     </div>
+
+    <fast-messages
+        v-model="fastMessagesDialog"
+        @sendFastly="(text) => sendMessage(text)"
+        @selected="(e) => input = e"
+    />
 </template>

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutocompleteController;
 use App\Http\Controllers\CodeKeyController;
 use App\Http\Controllers\FastTemplateController;
+use App\Http\Controllers\FmTagController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -46,9 +47,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
         Route::resource('orders', OrderController::class);
-
     });
-
 
     Route::get('code-keys/histories', [CodeKeyController::class, 'histories'])->name('code-keys.histories');
     Route::post('code-keys/{code_key}/mark-as-receipt', [CodeKeyController::class, 'markAsReceipt'])->name('code-keys.mark-as-receipt');
@@ -58,6 +57,8 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'autocomplete', 'as' => 'autocomplete.'], function () {
         Route::get('products', [AutocompleteController::class, 'products'])->name('products');
     });
+
+    Route::get('fm-tags', [FmTagController::class, 'index'])->name('fm-tags.index');
 });
 
 Route::get('redirect', function () {

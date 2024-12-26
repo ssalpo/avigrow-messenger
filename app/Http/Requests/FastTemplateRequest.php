@@ -22,7 +22,7 @@ class FastTemplateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|min:2',
+            'tag' => 'required|max:255',
             'content' => 'required|min:2'
         ];
     }
