@@ -120,63 +120,62 @@ watch(
 </script>
 
 <template>
-    <v-sheet
+    <v-tabs v-model="tab" height="35" class="mt-4 mb-2">
+        <v-tab min-width="auto" class="px-3 text-capitalize" value="all">Все</v-tab>
+        <v-tab
+            v-for="(tag, i) in props.items"
+            :value="i"
+            min-width="auto" class="px-3  text-capitalize">{{ tag.name }}
+        </v-tab>
+    </v-tabs>
+
+    <v-tabs-window
+        v-model="tab"
         style="height: 100vh"
         v-touch="{left: () => swipe('l'), right: () => swipe('r')}"
     >
-        <v-tabs v-model="tab" height="35" class="mt-4 mb-2">
-            <v-tab min-width="auto" class="px-3 text-capitalize" value="all">Все</v-tab>
-            <v-tab
-                v-for="(tag, i) in props.items"
-                :value="i"
-                min-width="auto" class="px-3  text-capitalize">{{ tag.name }}
-            </v-tab>
-        </v-tabs>
-
-        <v-tabs-window v-model="tab">
-            <v-tabs-window-item value="all">
-                <v-sheet
-                    v-for="(fastTemplate, i) in filteredAllFastTemplates"
-                    :key="i"
-                >
-                    <v-sheet class="py-3 ps-3 text-body-2 d-flex">
-                        <div style="word-break: break-word; width: 100%"
-                                 @click="() => onSelect(fastTemplate.id)"
-                                 v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')"/>
-                        <v-spacer v-if="startManage" />
-                        <div v-if="startManage" class="ml-4">
-                            <v-icon @click="() => onEdit(fastTemplate.id)" icon="mdi-playlist-edit"
-                                    color="#808080"></v-icon>
-                        </div>
-                    </v-sheet>
-                    <v-divider/>
+        <v-tabs-window-item value="all">
+            <v-sheet
+                v-for="(fastTemplate, i) in filteredAllFastTemplates"
+                :key="i"
+            >
+                <v-sheet class="py-3 ps-3 text-body-2 d-flex">
+                    <div style="word-break: break-word; width: 100%"
+                             @click="() => onSelect(fastTemplate.id)"
+                             v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')"/>
+                    <v-spacer v-if="startManage" />
+                    <div v-if="startManage" class="ml-4">
+                        <v-icon @click="() => onEdit(fastTemplate.id)" icon="mdi-playlist-edit"
+                                color="#808080"></v-icon>
+                    </div>
                 </v-sheet>
-            </v-tabs-window-item>
+                <v-divider/>
+            </v-sheet>
+        </v-tabs-window-item>
 
-            <v-tabs-window-item
-                v-for="(tag, i) in filteredFastTemplates"
-                :key="tag.id"
-                :value="i">
+        <v-tabs-window-item
+            v-for="(tag, i) in filteredFastTemplates"
+            :key="tag.id"
+            :value="i">
 
-                <v-sheet
-                    v-for="(fastTemplate, i) in tag.fast_templates"
-                    :key="i"
-                >
-                    <v-sheet class="py-3 ps-3 text-body-2 d-flex">
-                        <v-sheet style="word-break: break-word; width: 100%"
-                                 @click="() => onSelect(fastTemplate.id)"
-                                 v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')"/>
+            <v-sheet
+                v-for="(fastTemplate, i) in tag.fast_templates"
+                :key="i"
+            >
+                <v-sheet class="py-3 ps-3 text-body-2 d-flex">
+                    <v-sheet style="word-break: break-word; width: 100%"
+                             @click="() => onSelect(fastTemplate.id)"
+                             v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')"/>
 
-                        <v-spacer v-show="startManage" />
-                        <v-sheet v-show="startManage" class="ml-4">
-                            <v-icon @click="() => onEdit(fastTemplate.id)" icon="mdi-playlist-edit"
-                                    color="#808080"></v-icon>
-                        </v-sheet>
+                    <v-spacer v-show="startManage" />
+                    <v-sheet v-show="startManage" class="ml-4">
+                        <v-icon @click="() => onEdit(fastTemplate.id)" icon="mdi-playlist-edit"
+                                color="#808080"></v-icon>
                     </v-sheet>
-                    <v-divider/>
                 </v-sheet>
+                <v-divider/>
+            </v-sheet>
 
-            </v-tabs-window-item>
-        </v-tabs-window>
-    </v-sheet>
+        </v-tabs-window-item>
+    </v-tabs-window>
 </template>
