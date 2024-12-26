@@ -121,6 +121,7 @@ watch(
 
 <template>
     <v-sheet
+        style="height: 100vh"
         v-touch="{left: () => swipe('l'), right: () => swipe('r')}"
     >
         <v-tabs v-model="tab" height="35" class="mt-4 mb-2">
