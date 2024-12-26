@@ -71,7 +71,6 @@ const searchText = ref("")
                             type="text" placeholder="Поиск" style="font-size: 15px; outline: none; width: 100%"/>
                     </v-sheet>
                     <v-sheet class="d-flex align-center">
-<!--                        <v-icon icon="mdi-plus-circle" ></v-icon>-->
                         <v-chip v-if="startManage" prepend-icon="mdi-plus-circle" size="x-small" color="success" @click="() => editDialog = true" class="mr-5">
                             Добавить
                         </v-chip>
