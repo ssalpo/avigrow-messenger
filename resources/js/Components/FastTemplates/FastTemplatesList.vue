@@ -12,6 +12,10 @@ const props = defineProps({
     searchText: {
         type: String,
         default: ""
+    },
+    startManage: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -115,8 +119,8 @@ watch(
                     <div style="word-break: break-word; width: 100%"
                              @click="() => onSelect(fastTemplate.id)"
                              v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')"/>
-                    <v-spacer/>
-                    <div class="ml-4">
+                    <v-spacer v-if="startManage" />
+                    <div v-if="startManage" class="ml-4">
                         <v-icon @click="() => onEdit(fastTemplate.id)" icon="mdi-playlist-edit"
                                 color="#808080"></v-icon>
                     </div>
@@ -138,8 +142,9 @@ watch(
                     <v-sheet style="word-break: break-word; width: 100%"
                              @click="() => onSelect(fastTemplate.id)"
                              v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')"/>
-                    <v-spacer/>
-                    <v-sheet class="ml-4">
+
+                    <v-spacer v-show="startManage" />
+                    <v-sheet v-show="startManage" class="ml-4">
                         <v-icon @click="() => onEdit(fastTemplate.id)" icon="mdi-playlist-edit"
                                 color="#808080"></v-icon>
                     </v-sheet>
