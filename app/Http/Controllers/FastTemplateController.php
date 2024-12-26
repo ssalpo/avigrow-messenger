@@ -6,6 +6,7 @@ use App\Http\Requests\FastTemplateRequest;
 use App\Models\FastTemplate;
 use App\Models\FmTag;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +19,7 @@ class FastTemplateController extends Controller
         );
     }
 
-    public function store(FastTemplateRequest $request): void
+    public function store(FastTemplateRequest $request): RedirectResponse
     {
         DB::transaction(function () use ($request) {
             $fastTemplate = FastTemplate::create($request->validated());
@@ -27,6 +28,8 @@ class FastTemplateController extends Controller
 
             $fastTemplate->fmTags()->sync($tag);
         });
+
+        return redirect()->back();
     }
 
     public function update(int $id, FastTemplateRequest $request): void

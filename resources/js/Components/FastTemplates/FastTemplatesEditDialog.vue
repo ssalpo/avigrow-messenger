@@ -1,6 +1,7 @@
 <script setup>
-import {reactive, ref, watch} from "vue";
+import {ref, watch} from "vue";
 import {includes} from "lodash";
+import {useForm} from "@inertiajs/vue3";
 
 const model = defineModel();
 
@@ -15,29 +16,30 @@ const emits = defineEmits(['created', 'updated', 'deleted'])
 
 let searchTagIndex = null
 let tags = ref([]);
-let errorMessage = ref("");
 
-let form = reactive({
+let form = useForm({
     id: null,
     content: '',
     tag: ''
 });
 
 function onSave() {
-    let url = '/fast-templates';
-
-    if (form.id) {
-        form['_method'] = 'PUT'
-        url = `/fast-templates/${form.id}`
-    }
-
-    axios
-        .post(url, form)
-        .then(() => {
+    const options = {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            form.reset()
             model.value = false
             emits(form.id ? 'updated' : 'created', form)
-        })
-        .catch((r) => errorMessage.value = r.response.data.message)
+        }
+    }
+
+    if (form.id) {
+        form.patch(route('fast-templates.update', form.id), options)
+        return
+    }
+
+    form.post(route('fast-templates.store'), options)
 }
 
 const onDelete = () => {
@@ -76,7 +78,7 @@ watch(() => props.selected, (selected) => {
 })
 
 watch(() => model.value, (state) => {
-    errorMessage.value = ""
+    form.reset()
 
     if (state === true) {
         axios.get(route('fm-tags.index')).then((response) => {
@@ -106,16 +108,17 @@ watch(() => model.value, (state) => {
                             @update:search="onTagSearchUpdate"
                             clearable
                             :items="tags"
+                            :error-messages="form.errors.tag"
+                            class="mb-3"
                         ></v-autocomplete>
 
-                        <v-textarea v-model="form.content" density="comfortable" label="Сообщение"
-                                    variant="outlined"></v-textarea>
-
-                        <v-alert
-                            v-if="errorMessage"
-                            :text="errorMessage"
-                            type="error"
-                        />
+                        <v-textarea
+                            v-model="form.content"
+                            :error-messages="form.errors.content"
+                            density="comfortable"
+                            label="Сообщение"
+                            variant="outlined"
+                        ></v-textarea>
                     </v-card-text>
 
                     <v-divider></v-divider>
@@ -124,11 +127,12 @@ watch(() => model.value, (state) => {
                         <v-icon
                             v-if="form.id"
                             @click="onDelete"
-                            icon="mdi-delete-outline" class="ml-3" color="red" />
+                            icon="mdi-delete-outline" class="ml-3" color="red"/>
 
                         <v-spacer></v-spacer>
 
                         <v-btn
+                            :disabled="form.processing"
                             type="submit"
                             color="primary"
                             text="Сохранить"
