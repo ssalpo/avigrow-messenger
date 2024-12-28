@@ -1,8 +1,12 @@
 <script setup>
 import {Link, router} from "@inertiajs/vue3";
 import PageTitle from "@/Components/PageTitle.vue";
+import BotEditModal from "@/Pages/Bots/Modals/BotEditModal.vue";
+import {ref} from "vue";
 
 defineProps(['bots'])
+
+const editModal = ref(false)
 
 const onChangeStatus = (bot) => {
     bot.is_active = !bot.is_active
@@ -15,9 +19,8 @@ const onChangeStatus = (bot) => {
     <page-title text="Чат Боты">
         <template v-slot:append>
             <v-spacer></v-spacer>
-            <Link :href="route('bots.create')" class="mr-3">
-                <v-btn color="success" size="small" icon="mdi-plus-circle-outline"/>
-            </Link>
+
+            <v-btn color="success" @click="() => editModal = true" size="small" icon="mdi-plus-circle-outline"/>
         </template>
     </page-title>
 
@@ -34,4 +37,8 @@ const onChangeStatus = (bot) => {
             <v-switch color="primary" @click="() => onChangeStatus(bot)" hide-details :model-value="bot.is_active"></v-switch>
         </v-sheet>
     </v-sheet>
+
+    <bot-edit-modal
+        v-model="editModal"
+    />
 </template>

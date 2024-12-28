@@ -23,9 +23,9 @@ class BotController extends Controller
 
     public function store(BotRequest $request): RedirectResponse
     {
-        Bot::create($request->validated() + ['type' => 1]);
+        $bot = Bot::create($request->validated() + ['type' => 1]);
 
-        return to_route('bots.index');
+        return to_route('bots.show', $bot->id);
     }
 
     public function show(Bot $bot): \Inertia\Response|\Inertia\ResponseFactory
@@ -44,7 +44,7 @@ class BotController extends Controller
     {
         $bot->update($request->validated());
 
-        return to_route('bots.index');
+        return redirect()->back();
     }
 
     public function destroy(Bot $bot): RedirectResponse

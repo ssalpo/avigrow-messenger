@@ -56,7 +56,7 @@ watch(() => props.selected, (selected) => {
     form = useForm({
         id: selected?.id,
         template: selected?.template,
-        delay: selected?.delay.toString(),
+        delay: selected?.delay?.toString(),
     })
 })
 

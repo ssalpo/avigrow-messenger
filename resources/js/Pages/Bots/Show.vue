@@ -1,18 +1,20 @@
 <script setup>
-import {Link, router} from "@inertiajs/vue3";
 import PageTitle from "@/Components/PageTitle.vue";
 import TriggerEditModal from "@/Pages/Bots/Modals/TriggerEditModal.vue";
 import {ref} from "vue";
 import GreetingEditModal from "@/Pages/Bots/Modals/GreetingEditModal.vue";
+import BotEditModal from "@/Pages/Bots/Modals/BotEditModal.vue";
 
 defineProps(['bot'])
 defineOptions({inheritAttrs: false})
 
+const mainBotEditModal = ref(false)
+
 const triggerModal = ref(false)
-const selectedTrigger = ref(null)
+const selectedTrigger = ref({})
 
 const greetingModal = ref(false)
-const selectedGreeting = ref(null)
+const selectedGreeting = ref({})
 
 const onSelectTrigger = (selected) => {
     selectedTrigger.value = selected
@@ -21,16 +23,6 @@ const onSelectTrigger = (selected) => {
 
 const onSelectGreeting = (selected) => {
     selectedGreeting.value = selected
-    greetingModal.value = true
-}
-
-const onCreate = () => {
-    selectedTrigger.value = null
-    triggerModal.value = true
-}
-
-const onCreateGreeting = () => {
-    selectedGreeting.value = null
     greetingModal.value = true
 }
 
@@ -45,9 +37,7 @@ const onCreateGreeting = () => {
         <template v-slot:append>
             <v-spacer></v-spacer>
 
-            <Link :href="route('bots.edit', bot.id)" class="mr-3">
-                <v-btn color="primary" size="small" icon="mdi-pencil"/>
-            </Link>
+            <v-btn color="primary" @click="mainBotEditModal = true" size="small" icon="mdi-pencil"/>
         </template>
     </page-title>
 
@@ -55,7 +45,7 @@ const onCreateGreeting = () => {
         <v-card-title class="d-flex align-center">
             Приветствия
             <v-spacer />
-            <v-icon size="small" icon="mdi-plus-circle-outline" @click="onCreateGreeting" />
+            <v-icon size="small" icon="mdi-plus-circle-outline" @click="() => onSelectGreeting({})" />
         </v-card-title>
         <v-divider />
         <v-card-text>
@@ -77,7 +67,7 @@ const onCreateGreeting = () => {
         <v-card-title class="d-flex align-center">
             Триггеры
             <v-spacer />
-            <v-icon size="small" icon="mdi-plus-circle-outline" @click="onCreate" />
+            <v-icon size="small" icon="mdi-plus-circle-outline" @click="() => onSelectTrigger({})" />
         </v-card-title>
         <v-divider />
         <v-card-text>
@@ -106,5 +96,10 @@ const onCreateGreeting = () => {
         :bot-id="bot.id"
         :selected="selectedGreeting"
         v-model="greetingModal"
+    />
+
+    <bot-edit-modal
+        :selected="bot"
+        v-model="mainBotEditModal"
     />
 </template>
