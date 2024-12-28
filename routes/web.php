@@ -122,3 +122,15 @@ Route::get('meta-code-generator', function () {
         mb_strtoupper(implode('-', $codes))
     );
 });
+
+Route::get('/test', function () {
+    $chatBot = new \App\Services\Bot\ChatBot();
+
+    $account = Account::find(1);
+    $chatId = 'u2i-1R3VAs3R1anQIg2Quloymw';
+    $message = 'цена';
+
+    $chatBot->handleMessage(
+        $account, $chatId, $message
+    );
+});

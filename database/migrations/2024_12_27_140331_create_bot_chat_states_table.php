@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bot_chat_states', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('account_id')->constrained();
+            $table->foreignId('account_id')->constrained()->cascadeOnDelete();
             $table->string('chat_id');
             $table->boolean('greeted')->default(false);
             $table->timestamps();

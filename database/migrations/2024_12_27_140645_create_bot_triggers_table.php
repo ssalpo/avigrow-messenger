@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bot_triggers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bot_id')->constrained('bots');
+            $table->foreignId('bot_id')->constrained('bots')->cascadeOnDelete();
             $table->jsonb('keywords');
             $table->text('response');
             $table->boolean('case_sensitive')->default(false);

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bot_greetings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bot_id')->constrained();
+            $table->foreignId('bot_id')->constrained()->cascadeOnDelete();
             $table->text('template');
             $table->integer('delay')->default(0);
             $table->timestamps();
