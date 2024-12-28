@@ -55,6 +55,12 @@ const navs = [
         route: 'accounts.index',
         icon: 'mdi-account-cog-outline',
         params: null
+    },
+    {
+        title: 'Чаты Боты',
+        route: 'bots.index',
+        icon: 'mdi-robot-outline',
+        params: null
     }
 ];
 

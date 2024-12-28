@@ -10,6 +10,9 @@ use App\Models\CodeKey;
 use App\Models\ReviewSchedule;
 use App\Services\ActiveConversationService;
 use App\Services\Avito;
+use App\Services\DTO\Avito\AvitoAuthUserDto;
+use App\Services\DTO\Avito\AvitoChatDto;
+use App\Services\DTO\Avito\AvitoItemDto;
 use App\Services\Telegram;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
@@ -29,16 +32,14 @@ class HomeController extends Controller
         $this->avito->setAccount($activeAccount);
         $response = $this->avito->setAccount($activeAccount)->getChats(30);
 
-        $me = $this->avito->me();
-
         $unreadChatIds = $this->avito->getUnreadChatIds();
 
         return Inertia::render('Home', [
             'disableContainer' => true,
             'unreadChatIds' => $unreadChatIds,
-            'currentUserId' => $me['id'],
+            'currentUserId' => $activeAccount->external_id,
             'conversations' => collect($response['chats'])->map(
-                fn($chat) => $this->chatResponse($chat, $activeAccount)
+                fn($chat) => Avito::chatResponse(AvitoChatDto::fromArray($chat), $activeAccount)
             ),
             'hasMore' => $response['meta']['has_more'],
             'currentPage' => \request('page', 1)
@@ -59,8 +60,6 @@ class HomeController extends Controller
 
         $response = $this->avito->setAccount($account)->getChatMessages($chatId, 30, request('page', 1));
 
-        $me = $this->avito->me();
-
         $tabs = CodeKeyType::labels();
         $keys = CodeKey::whereNull('receipt_at')->orderByDesc('created_at')->get()->groupBy('product_type');
 
@@ -68,14 +67,14 @@ class HomeController extends Controller
             'tabs' => $tabs,
             'keys' => $keys,
             'activeAccount' => $account,
-            'chat' => $this->chatResponse($chat, $account),
+            'chat' => Avito::chatResponse($chat, $account),
             'hasReviewSchedules' => ReviewSchedule::hasAnyForChatAndAccount($chatId, $account->id),
             'has_more' => $response['meta']['has_more'],
             'messages' => collect($response['messages'])
-                ->map(function ($message) use ($me) {
+                ->map(function ($message) use ($account) {
                     return [
                         'id' => $message['id'],
-                        'is_me' => $message['author_id'] === $me['id'],
+                        'is_me' => $message['author_id'] === (int)$account->external_id,
                         'content_type' => $message['type'],
                         'content' => $message['content'],
                         'is_read' => isset($message['read']),
@@ -100,32 +99,5 @@ class HomeController extends Controller
         );
 
         return redirect()->back();
-    }
-
-    protected function chatResponse(array $chat, Account $account): array
-    {
-        $user = collect($chat['users'])->whereNotIn('id', [$account->external_id])->last();
-
-        return [
-            'id' => $chat['id'],
-            'context_id' => $chat['context']['value']['id'],
-            'context' => $chat['context']['value']['title'],
-            'test' => $chat,
-            'image' => $chat['context']['value']['images']['main']['140x105'] ?? $user['public_user_profile']['avatar']['default'] ?? null,
-            'price' => $chat['context']['value']['price_string'] ?? '',
-            'url' => $chat['context']['value']['url'],
-            'user' => [
-                'id' => $user['id'],
-                'name' => $user['name'],
-                'avatar' => $user['public_user_profile']['avatar']['default'],
-            ],
-            'last_message' => [
-                'id' => $chat['last_message']['id'],
-                'content_type' => $chat['last_message']['type'],
-                'content' => $chat['last_message']['content'],
-                'created' => $chat['last_message']['created'],
-                'is_read' => isset($chat['last_message']['read'])
-            ]
-        ];
     }
 }

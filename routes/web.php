@@ -3,6 +3,9 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutocompleteController;
+use App\Http\Controllers\BotController;
+use App\Http\Controllers\BotGreetingController;
+use App\Http\Controllers\BotTriggerController;
 use App\Http\Controllers\CodeKeyController;
 use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\FmTagController;
@@ -36,6 +39,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/fast-templates', FastTemplateController::class);
 
     Route::resource('accounts', AccountController::class);
+
+    Route::post('/bots/{bot}/change-activity', [BotController::class, 'changeActivity'])->name('bots.change-activity');
+    Route::resource('bots', BotController::class);
+
+    Route::resource('bots.greetings', BotGreetingController::class);
+    Route::resource('bots.triggers', BotTriggerController::class);
 
     Route::group(['prefix' => '/accounts/{account}'], function () {
         Route::resource('schedule-reviews', ReviewScheduleController::class)->only(['index', 'store', 'destroy']);

@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Models\Account;
+use App\Services\DTO\Avito\AvitoAuthUserDto;
+use App\Services\DTO\Avito\AvitoChatDto;
+use App\Services\DTO\Avito\AvitoChatUserDto;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
@@ -24,6 +27,23 @@ class Avito
     {
         return $this->client()
             ->withToken($this->account->external_access_token);
+    }
+
+    protected function safeRequest(callable $callback): array
+    {
+        try {
+            $response = $callback();
+
+            if ($response->successful()) {
+                return $response->json() ?? [];
+            }
+
+            throw new \Exception("HTTP Error: " . $response->status() . " - " . $response->body());
+        } catch (\Exception $e) {
+            logger()?->error("HTTP Request failed: " . $e->getMessage());
+
+            return [];
+        }
     }
 
     public static function validateTelegramWebAppData(string $queryString, string $botToken): bool
@@ -133,10 +153,11 @@ class Avito
     public function getChats(int $limit = 50, int $page = 1): array
     {
         $offset = ceil(($page - 1) * $limit);
+        $url = "/messenger/v2/accounts/{$this->account->external_id}/chats?limit=$limit&offset=$offset&chat_types=u2i,u2u";
 
-        return $this->clientWithToken()
-            ->get("/messenger/v2/accounts/{$this->account->external_id}/chats?limit=$limit&offset=$offset&chat_types=u2i,u2u")
-            ->json() ?? [];
+        return $this->safeRequest(
+            fn() => $this->clientWithToken()->get($url)
+        );
     }
 
     public function getUnreadChats(): array
@@ -153,11 +174,14 @@ class Avito
         return array_map(fn($ch) => $ch['id'], $unreadChats);
     }
 
-    public function getChatInfoById(string $chatId)
+    public function getChatInfoById(string $chatId): AvitoChatDto
     {
-        return $this->clientWithToken()
-            ->get("/messenger/v2/accounts/{$this->account->external_id}/chats/$chatId")
-            ->json() ?? [];
+        return AvitoChatDto::fromArray(
+            $this->safeRequest(
+                fn() => $this->clientWithToken()
+                    ->get("/messenger/v2/accounts/{$this->account->external_id}/chats/$chatId")
+            )
+        );
     }
 
     public function markChatAsRead(string $chatId): void
@@ -196,14 +220,18 @@ class Avito
         );
     }
 
-    public function me(): array
+    public function me(): AvitoAuthUserDto
     {
-        return $this->clientWithToken()->get("/core/v1/accounts/self")->json() ?? [];
+        return AvitoAuthUserDto::fromArray(
+            $this->safeRequest(
+                fn () => $this->clientWithToken()->get("/core/v1/accounts/self")
+            )
+        );
     }
 
-    public static function getMessageBasedOnType(array $data)
+    public static function getMessageBasedOnType(string $type, array $data)
     {
-        return match ($data['type']) {
+        return match ($type) {
             'text', 'system' => $data['content']['text'],
             'call' => 'Звонок',
             'image' => 'Фото',
@@ -220,5 +248,43 @@ class Avito
         $offset = ceil(($page - 1) * $limit);
 
         return $this->clientWithToken()->get("/ratings/v1/reviews?offset=$offset&limit=$limit")->json() ?? [];
+    }
+
+    public static function getUserFromChat(array $users, string $accountId): AvitoChatUserDto
+    {
+        $user = collect($users)->where('id', '!=', $accountId)->first();
+
+        return AvitoChatUserDto::fromArray($user);
+    }
+
+    public static function getPriceFromChat(array $chat): ?array
+    {
+        return str_replace(' ₽', '', $chat['context']['value']['price_string']);
+    }
+
+    public static function chatResponse(AvitoChatDto $chatDto, Account $account): array
+    {
+        $user = self::getUserFromChat($chatDto->users, $account->external_id);
+
+        return [
+            'id' => $chatDto->id,
+            'context_id' => $chatDto->id,
+            'context' => $chatDto->item->title,
+            'image' => $user->avatarOthers['140x105'] ?? $user->avatar ?? null,
+            'price' => $chatDto->item->price ?? '',
+            'url' => $chatDto->item->url,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'avatar' => $user->avatar,
+            ],
+            'last_message' => [
+                'id' => $chatDto->lastMessage->id,
+                'content_type' => $chatDto->lastMessage->type,
+                'content' => $chatDto->lastMessage->content,
+                'created' => $chatDto->lastMessage->created,
+                'is_read' => $chatDto->lastMessage->isRead
+            ]
+        ];
     }
 }

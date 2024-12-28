@@ -89,9 +89,9 @@ class AccountService
 
             // Меняем статус подключения аккаунта и обновляем данные профиля
             $account->forceFill([
-                'external_id' => $me['id'],
-                'avito_name' => $me['name'],
-                'avito_profile_url' => $me['profile_url'],
+                'external_id' => $me->id,
+                'avito_name' => $me->name,
+                'avito_profile_url' => $me->profileUrl,
                 'connection_status' => AccountConnectStatus::CONNECTED
             ])->save();
         } catch (\Exception $exception) {

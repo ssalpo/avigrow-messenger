@@ -47,7 +47,7 @@ onMounted(() => {
             return
         }
 
-        const data = e.data.chat.value;
+        const data = e.data.message.value;
 
         if (chatIds.value.includes(data.chat_id)) {
             e.data.unreadChatIds.forEach((e) => {
@@ -57,7 +57,7 @@ onMounted(() => {
             let index = chatIds.value.indexOf(data.chat_id);
 
             chats.value[index]['last_message']['content'] = data.content;
-            chats.value[index]['last_message']['is_read'] = data.read !== undefined;
+            chats.value[index]['last_message']['is_read'] = data.isRead;
             chats.value[index]['last_message']['created'] = data.created;
 
             chats.value = orderBy(chats.value, 'last_message.created', 'desc')

@@ -80,7 +80,7 @@ onMounted(() => {
     newMessageChannel = Echo.private(`avito.${props.activeAccount.id}.new.message`)
 
     newMessageChannel.listen('NewMessage', (e) => {
-        const data = e.data.chat.value;
+        const data = e.data.message.value;
 
         if (data.chat_id !== props.chat.id || messageAllIds.value.includes(data.id)) {
             return

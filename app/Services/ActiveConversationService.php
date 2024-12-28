@@ -17,12 +17,12 @@ class ActiveConversationService
         if(!$exists) {
             $chatInfo = (new Avito)->setAccount($account)->getChatInfoById($chatId);
 
-            $user =  collect($chatInfo['users'])->where('id', '!=',  $account->external_id)->first();
+            $userName = Avito::getUserFromChat($chatInfo->users, $account->external_id)->name;
 
             ActiveConversation::create([
                 'account_id' => $account->id,
                 'chat_id' => $chatId,
-                'avito_item_name' => sprintf('%s - %s', $user['name'], $chatInfo['context']['value']['title'])
+                'avito_item_name' => sprintf('%s - %s', $userName, $chatInfo->item->title)
             ]);
         }
     }

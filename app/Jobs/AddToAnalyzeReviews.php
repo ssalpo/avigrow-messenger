@@ -43,15 +43,13 @@ class AddToAnalyzeReviews implements ShouldQueue
         $chatInfo = $avito->setAccount($account)->getChatInfoById($this->chatId);
 
         // Получить данные контекст и имя отправителя
-        $contextId = $chatInfo['context']['value']['id'];
-        $contextTitle = $chatInfo['context']['value']['title'];
-        $senderName = collect($chatInfo['users'])->whereNotIn('id', [$account->external_id])->first()['name'];
+        $senderName = Avito::getUserFromChat($chatInfo->users, $account->external_id)->name;
 
         AnalyzeReview::create([
             'account_id' => $this->accountId,
             'chat_id' => $this->chatId,
-            'context_id' => $contextId,
-            'context' => $contextTitle,
+            'context_id' => $chatInfo->item->id,
+            'context' => $chatInfo->item->title,
             'chat_sender_name' => $senderName
         ]);
     }

@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Account;
 use App\Services\Avito;
+use App\Services\DTO\Avito\AvitoWebhookPayloadDto;
 use App\Services\Telegram;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -23,7 +24,7 @@ class SendMessageToTelegram implements ShouldQueue
         public array  $telegramIds,
         public string $chatId,
         public string $chatType,
-        public array $payload,
+        public AvitoWebhookPayloadDto  $payload,
     )
     {
         //
@@ -32,7 +33,7 @@ class SendMessageToTelegram implements ShouldQueue
     public function handle(): void
     {
         $account = Account::findOrFail($this->account);
-        $contextMessage = Avito::getMessageBasedOnType($this->payload);
+        $contextMessage = Avito::getMessageBasedOnType($this->payload->type, $this->payload->content);
         $accountUrl = url("/accounts/{$account->id}/chats");
 
         $message = <<<MSG
@@ -44,21 +45,19 @@ MSG;
         Telegram::sendMessageToExistIds($message);
     }
 
-    public function getContext(Account $account)
+    public function getContext(Account $account): string
     {
         $avito = (new Avito)->setAccount($account);
 
         $chat = $avito->getChatInfoById($this->chatId);
 
         if ($this->chatType === 'u2i') {
-            return match ($chat['context']['type']) {
-                'item' => $chat['context']['value']['title'],
+            return match ($chat->type) {
+                'item' => $chat->item->title,
                 default => '---'
             };
         }
 
-        $user = collect($chat['users'])->whereNotIn('id', [$avito->me()['id']])->first();
-
-        return $user['name'];
+        return Avito::getUserFromChat($chat['users'], $account->external_id)->name;
     }
 }

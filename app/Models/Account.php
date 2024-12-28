@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\AccountConnectStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Account extends Model
@@ -25,6 +26,7 @@ class Account extends Model
         'avito_profile_url',
         'webhook_handle_token',
         'connection_status',
+        'bot_id',
     ];
 
     protected $hidden = [
@@ -37,7 +39,8 @@ class Account extends Model
         'external_access_token_expire_date',
         'token_refreshed_at',
         'webhook_handle_token',
-        'connection_errors'
+        'connection_errors',
+        'bot_id',
     ];
 
     protected $casts = [
@@ -49,5 +52,10 @@ class Account extends Model
     public function analyzeReviews(): HasMany
     {
         return $this->hasMany(AnalyzeReview::class);
+    }
+
+    public function bot(): BelongsTo
+    {
+        return $this->belongsTo(Bot::class);
     }
 }

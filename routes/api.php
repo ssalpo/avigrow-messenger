@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AvitoController;
+use App\Http\Controllers\AvitoWebhookHandler;
 use App\Http\Controllers\DigisellerWebhookController;
 use App\Http\Controllers\TelegramWebhookController;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ Route::post('/messages/{account}/{chatId}/send', [AvitoController::class, 'sendM
 
 Route::delete('/messages/{account}/{chatId}/{messageId}', [AvitoController::class, 'deleteMessage']);
 
-Route::post('/webhook/{account}', [AvitoController::class, 'handleWebhook']);
+Route::post('/webhook/{account}', AvitoWebhookHandler::class);
 
 Route::post('t-webhook', TelegramWebhookController::class);
 Route::post('d-webhook-order', [DigisellerWebhookController::class, 'order']);
