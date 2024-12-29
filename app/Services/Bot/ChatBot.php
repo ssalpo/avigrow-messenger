@@ -2,7 +2,7 @@
 
 namespace App\Services\Bot;
 
-use App\Jobs\TestChatBotMessageSend;
+use App\Jobs\SendMessageToAvito;
 use App\Models\Account;
 use App\Models\Bot;
 use App\Models\BotChatState;
@@ -38,11 +38,11 @@ class ChatBot
             $isGreeted = $chatState->greeted;
 
             if(!$isGreeted) {
-                $this->handleGreeting($chatId, $bot, $chatState, $placeholders);
+                $this->handleGreeting($account, $chatId, $bot, $chatState, $placeholders);
             }
 
             if ($isGreeted && $bot->triggers->count() && $bot->type->isStandard()) {
-                $this->handleTriggers($bot, $message, $placeholders);
+                $this->handleTriggers($account, $chatId, $bot, $message, $placeholders);
             }
         }
 
@@ -50,12 +50,12 @@ class ChatBot
             $bot->load(['quizzes']);
 
             (new QuizService())->processAnswer(
-                $bot, $chatId, $message, $placeholders
+                $account, $bot, $chatId, $message, $placeholders
             );
         }
     }
 
-    private function handleGreeting(string $chatId, Bot $bot, BotChatState $chatState, array $placeholders): void
+    private function handleGreeting(Account $account, string $chatId, Bot $bot, BotChatState $chatState, array $placeholders): void
     {
         $greetingManager = new GreetingManager();
 
@@ -74,15 +74,18 @@ class ChatBot
 
         if($messageToSend) {
             if($greeting->delay > 0) {
-                TestChatBotMessageSend::dispatch($messageToSend)->delay(now()->addSeconds($greeting->delay));
+                SendMessageToAvito::dispatch(
+                    $account, $chatId, $messageToSend
+                )->delay(now()->addSeconds($greeting->delay));
+
                 return;
             }
 
-            dd($messageToSend);
+            (new Avito)->setAccount($account)->sendMessage($chatId, ['text' => $messageToSend]);
         }
     }
 
-    private function handleTriggers(Bot $bot, string $message, array $placeholders): void
+    private function handleTriggers(Account $account, string $chatId, Bot $bot, string $message, array $placeholders): void
     {
         $triggerManager = new TriggerManager();
 
@@ -99,11 +102,14 @@ class ChatBot
             );
 
             if($trigger->delay > 0) {
-                TestChatBotMessageSend::dispatch($messageToSend)->delay(now()->addSeconds($trigger->delay));
+                SendMessageToAvito::dispatch(
+                    $account, $chatId, $messageToSend
+                )->delay(now()->addSeconds($trigger->delay));
+
                 return;
             }
 
-            dd($messageToSend);
+            (new Avito)->setAccount($account)->sendMessage($chatId, ['text' => $messageToSend]);
         }
     }
 

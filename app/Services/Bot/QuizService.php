@@ -2,13 +2,14 @@
 
 namespace App\Services\Bot;
 
+use App\Models\Account;
 use App\Models\Bot;
-use App\Models\BotQuiz;
 use App\Models\BotQuizState;
+use App\Services\Avito;
 
 class QuizService
 {
-    public function processAnswer(Bot $bot, string $chatId, string $message, array $placeholders = []): void
+    public function processAnswer(Account $account, Bot $bot, string $chatId, string $message, array $placeholders = []): void
     {
         if (!$bot->quizzes->count()) {
             return;
@@ -52,10 +53,12 @@ class QuizService
         }
 
         if (!is_null($contentToSend)) {
-            dd(PlaceholderService::replace(
+            $messageToSend = PlaceholderService::replace(
                 $contentToSend,
                 $placeholders
-            ));
+            );
+
+            (new Avito)->setAccount($account)->sendMessage($chatId, ['text' => $messageToSend]);
         }
     }
 }
