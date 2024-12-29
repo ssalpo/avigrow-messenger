@@ -8,3 +8,4 @@ Schedule::command('app:change-account-status')->everyFiveMinutes();
 Schedule::command('app:analyze-reviews')->dailyAt('8:00');
 Schedule::command('app:clear-inactive-conversations')->cron('*/40 * * * *');
 Schedule::command('app:clear-unused-fm-tags')->dailyAt('1:00');
+Schedule::command('quiz:close-inactive')->daily();

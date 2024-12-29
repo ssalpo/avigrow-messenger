@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Bots;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BotGreetingRequest extends FormRequest
+class BotRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class BotGreetingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'template' => 'required|string|max:255',
-            'delay' => 'nullable|numeric|in:0,5,15,30,60,180,300,600,1800',
+            'name' => 'required|string|max:255',
         ];
     }
 }

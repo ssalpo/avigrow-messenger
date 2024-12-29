@@ -18,7 +18,7 @@ const props = defineProps({
 let form = useForm({
     id: null,
     template: null,
-    delay: 0,
+    delay: '0',
 })
 
 const send = () => {
@@ -56,7 +56,7 @@ watch(() => props.selected, (selected) => {
     form = useForm({
         id: selected?.id,
         template: selected?.template,
-        delay: selected?.delay?.toString(),
+        delay: selected?.delay?.toString() || '0',
     })
 })
 
@@ -67,6 +67,7 @@ watch(() => props.selected, (selected) => {
         v-model="model"
         transition="dialog-bottom-transition"
         fullscreen
+        scrollable
     >
         <v-card>
             <v-toolbar height="50">

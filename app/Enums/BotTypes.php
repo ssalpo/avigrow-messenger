@@ -2,8 +2,12 @@
 
 namespace App\Enums;
 
+use App\Enums\Traits\EnumToCollection;
+
 enum BotTypes: int
 {
+    use EnumToCollection;
+
     case STANDARD = 1;
 
     case QUIZ = 2;

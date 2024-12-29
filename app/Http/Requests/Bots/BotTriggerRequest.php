@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Bots;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,7 +23,9 @@ class BotTriggerRequest extends FormRequest
     {
 
         return [
+            'keyword' => 'nullable|string|max:255',
             'keywords' => 'required|array',
+            'keywords.*' => 'string|max:255',
             'response' => 'required|string|max:1000',
             'delay' => 'nullable|numeric|in:0,5,15,30,60,180,300,600,1800',
         ];
@@ -38,6 +40,7 @@ class BotTriggerRequest extends FormRequest
         }
 
         $this->merge([
+            'keyword' => null,
             'keywords' => $keywords,
         ]);
     }

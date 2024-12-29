@@ -30,18 +30,28 @@ class ChatBot
 
         if(!$bot || ($bot && !$bot->is_active)) return;
 
-        $bot->load(['greetings', 'triggers']);
+        if($bot->type->isStandard()) {
+            $bot->load(['greetings', 'triggers']);
 
-        $chatState = BotChatState::firstOrCreate(['account_id' => $account->id, 'chat_id' => $chatId]);
+            $chatState = BotChatState::firstOrCreate(['account_id' => $account->id, 'chat_id' => $chatId]);
 
-        $isGreeted = $chatState->greeted;
+            $isGreeted = $chatState->greeted;
 
-        if(!$isGreeted) {
-            $this->handleGreeting($chatId, $bot, $chatState, $placeholders);
+            if(!$isGreeted) {
+                $this->handleGreeting($chatId, $bot, $chatState, $placeholders);
+            }
+
+            if ($isGreeted && $bot->triggers->count() && $bot->type->isStandard()) {
+                $this->handleTriggers($bot, $message, $placeholders);
+            }
         }
 
-        if ($isGreeted && $bot->triggers->count() && $bot->type->isStandard()) {
-            $this->handleTriggers($bot, $message, $placeholders);
+        if($bot->type->isQuiz()) {
+            $bot->load(['quizzes']);
+
+            (new QuizService())->processAnswer(
+                $bot, $chatId, $message, $placeholders
+            );
         }
     }
 

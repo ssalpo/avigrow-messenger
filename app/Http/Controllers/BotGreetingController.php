@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\BotGreetingRequest;
+use App\Http\Requests\Bots\BotGreetingRequest;
 use App\Models\BotGreeting;
 use Illuminate\Http\RedirectResponse;
 

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\BotRequest;
+use App\Enums\BotTypes;
+use App\Http\Requests\Bots\BotRequest;
 use App\Models\Bot;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class BotController extends Controller
 {
@@ -30,7 +30,13 @@ class BotController extends Controller
 
     public function show(Bot $bot): \Inertia\Response|\Inertia\ResponseFactory
     {
-        $bot->load(['greetings', 'triggers']);
+        if($bot->type->isStandard()) {
+            $bot->load(['greetings', 'triggers']);
+        }
+
+        if($bot->type->isQuiz()) {
+            $bot->load(['quizzes']);
+        }
 
         return inertia('Bots/Show', compact('bot'));
     }
@@ -57,5 +63,14 @@ class BotController extends Controller
     public function changeActivity(Bot $bot): void
     {
         $bot->update(['is_active' => !$bot->is_active]);
+    }
+
+    public function changeType(Bot $bot, int $type): RedirectResponse
+    {
+        if(BotTypes::values()->contains($type) && $bot->type->value !== $type) {
+            $bot->update(['type' => $type]);
+        }
+
+        return redirect()->back();
     }
 }

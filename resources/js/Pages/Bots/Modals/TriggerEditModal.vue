@@ -21,7 +21,7 @@ let form = useForm({
     keyword: null,
     keywords: [],
     response: null,
-    delay: 0
+    delay: '0'
 })
 
 const send = () => {
@@ -61,7 +61,7 @@ watch(() => props.selected, (selected) => {
         keyword: selected?.keyword,
         keywords: selected?.keywords || [],
         response: selected?.response,
-        delay: selected?.delay?.toString()
+        delay: selected?.delay?.toString() || '0'
     })
 })
 
@@ -72,6 +72,7 @@ watch(() => props.selected, (selected) => {
         v-model="model"
         transition="dialog-bottom-transition"
         fullscreen
+        scrollable
     >
         <v-card>
             <v-toolbar height="50">
@@ -100,9 +101,10 @@ watch(() => props.selected, (selected) => {
 
             <v-card-text class="pt-10">
                 <keywords-input
+                    label="Название"
                     v-model="form.keyword"
                     v-model:keywords="form.keywords"
-                    :error-messages="form.errors.keywords"
+                    :error-messages="form.errors.keyword || form.errors.keywords"
                 />
 
                 <v-textarea

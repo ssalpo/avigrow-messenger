@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\BotTriggerRequest;
+use App\Http\Requests\Bots\BotTriggerRequest;
 use App\Models\BotTrigger;
 use Illuminate\Http\RedirectResponse;
 

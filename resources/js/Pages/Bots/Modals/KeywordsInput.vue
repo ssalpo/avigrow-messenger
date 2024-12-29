@@ -20,7 +20,6 @@ const removeKeyword = (i) => {
         append-inner-icon="mdi-plus-box-outline"
         @click:append-inner="addKeyword"
         variant="outlined"
-        label="Название"
         class="mb-1"
         v-model="model"
         @keyup.enter="addKeyword"

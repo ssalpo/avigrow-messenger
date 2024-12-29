@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutocompleteController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\BotGreetingController;
+use App\Http\Controllers\BotQuizController;
 use App\Http\Controllers\BotTriggerController;
 use App\Http\Controllers\CodeKeyController;
 use App\Http\Controllers\FastTemplateController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\ReviewScheduleController;
 use App\Http\Controllers\TransactionController;
 use App\Models\Account;
 use App\Services\Avito;
+use App\Services\Bot\QuizService;
 use Illuminate\Support\Facades\Route;
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
@@ -41,10 +43,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('accounts', AccountController::class);
 
     Route::post('/bots/{bot}/change-activity', [BotController::class, 'changeActivity'])->name('bots.change-activity');
+    Route::post('/bots/{bot}/change-type/{type}', [BotController::class, 'changeType'])->name('bots.change-type');
     Route::resource('bots', BotController::class);
 
     Route::resource('bots.greetings', BotGreetingController::class);
     Route::resource('bots.triggers', BotTriggerController::class);
+    Route::resource('bots.quizzes', BotQuizController::class);
 
     Route::group(['prefix' => '/accounts/{account}'], function () {
         Route::resource('schedule-reviews', ReviewScheduleController::class)->only(['index', 'store', 'destroy']);
@@ -124,13 +128,21 @@ Route::get('meta-code-generator', function () {
 });
 
 Route::get('/test', function () {
-    $chatBot = new \App\Services\Bot\ChatBot();
+//    $chatBot = new \App\Services\Bot\ChatBot();
+//
+//    $account = Account::find(1);
+//    $chatId = 'u2i-1R3VAs3R1anQIg2Quloymw';
+//    $message = 'цена';
+//
+//    $chatBot->handleMessage(
+//        $account, $chatId, $message
+//    );
 
-    $account = Account::find(1);
-    $chatId = 'u2i-1R3VAs3R1anQIg2Quloymw';
-    $message = 'цена';
-
-    $chatBot->handleMessage(
-        $account, $chatId, $message
-    );
+//    $quizService = new QuizService();
+//
+//    $quizService->processAnswer(
+//        \App\Models\Bot::with('quizzes')->find(1),
+//        'u2i-1R3VAs3R1anQIg2Quloymw',
+//        'да'
+//    );
 });
