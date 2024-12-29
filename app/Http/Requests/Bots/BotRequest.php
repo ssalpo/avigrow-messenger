@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Bots;
 
+use App\Enums\BotTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BotRequest extends FormRequest
@@ -23,6 +24,7 @@ class BotRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'type' => 'required|numeric|in:' . (BotTypes::values()->implode(',')),
         ];
     }
 }

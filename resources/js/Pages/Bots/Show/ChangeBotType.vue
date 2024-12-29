@@ -19,6 +19,7 @@ const onChangeType = (type) => {
 
 <template>
     <v-select
+        variant="solo-filled"
         label="Режим бота"
         :items="types"
         :model-value="bot.type.toString()"

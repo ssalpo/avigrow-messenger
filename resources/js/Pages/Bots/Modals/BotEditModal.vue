@@ -1,8 +1,11 @@
 <script setup>
 import {router, useForm} from "@inertiajs/vue3";
 import {watch} from "vue";
+import {BOT_TYPE_STANDARD, BOT_TYPES} from "@/Constants/BotTypes.js";
 
 const model = defineModel()
+
+const types = Object.keys(BOT_TYPES).map(key => ({ key, value: BOT_TYPES[key] }));
 
 const props = defineProps({
     selected: {
@@ -13,6 +16,7 @@ const props = defineProps({
 let form = useForm({
     id: null,
     name: null,
+    type: null,
 })
 
 const send = () => {
@@ -49,7 +53,8 @@ const onDelete = () => {
 watch(() => props.selected, (selected) => {
     form = useForm({
         id: selected?.id,
-        name: selected?.name
+        name: selected?.name,
+        type: selected?.type?.toString() || `${BOT_TYPE_STANDARD}`
     })
 }, {immediate: true})
 
@@ -94,6 +99,16 @@ watch(() => props.selected, (selected) => {
                     :error-messages="form.errors.name"
                     class="mb-3"
                 ></v-text-field>
+
+                <v-select
+                    variant="outlined"
+                    label="Режим бота"
+                    :items="types"
+                    v-model="form.type"
+                    item-title="value"
+                    item-value="key"
+                    :error-messages="form.errors.type"
+                ></v-select>
 
                 <div class="text-right">
                     <v-btn
