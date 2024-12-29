@@ -287,4 +287,15 @@ class Avito
             ]
         ];
     }
+
+    public function getItems(int $perPage = 100, int $page = 1): array
+    {
+        return $this->safeRequest(
+            fn() => $this->clientWithToken()
+                ->get("/core/v1/items", [
+                    'per_page' => $perPage,
+                    'page' => $page
+                ])
+        );
+    }
 }

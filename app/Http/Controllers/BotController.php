@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Enums\BotTypes;
 use App\Http\Requests\BotAttachAccountRequest;
+use App\Http\Requests\BotAttachAdRequest;
 use App\Http\Requests\Bots\BotRequest;
 use App\Models\Account;
+use App\Models\Ad;
 use App\Models\Bot;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
@@ -95,5 +98,48 @@ class BotController extends Controller
                 $account->update(['bot_id' => $bot->id]);
             });
         });
+    }
+
+    public function connectedAdTreeView(Bot $bot): JsonResponse
+    {
+        $accounts = Account::whereHas('ads')->with('ads')->get();
+
+        $selected = $bot->ads()->pluck('external_id');
+
+        $treeView = $accounts->map(function ($account) {
+            return [
+                'id' => $account->id,
+                'title' => $account->name,
+                'children' => $account->ads->map(function ($ad) {
+                    return [
+                        'id' => $ad->external_id,
+                        'title' => $ad->title,
+                    ];
+                })
+            ];
+        });
+
+        return response()->json([
+            'selected' => $selected,
+            'treeView' => $treeView,
+        ]);
+    }
+
+    public function attachAds(Bot $bot, BotAttachAdRequest $request): RedirectResponse
+    {
+        $ads = Ad::whereIn('external_id', $request->ads)->get();
+
+        DB::transaction(static function () use ($bot, $ads, $request) {
+            $bot->ads
+                ->whereNotIn('external_id', $request->ads)
+                ->each
+                ->update(['bot_id' => null]);
+
+            $ads->each(function ($ad) use ($bot) {
+                $ad->update(['bot_id' => $bot->id]);
+            });
+        });
+
+        return redirect()->back();
     }
 }

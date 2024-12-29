@@ -42,9 +42,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('accounts', AccountController::class);
 
+    Route::get('/bots/{bot}/connected-add-treeview', [BotController::class, 'connectedAdTreeView'])->name('bots.connected-add-treeview');
     Route::post('/bots/{bot}/change-activity', [BotController::class, 'changeActivity'])->name('bots.change-activity');
     Route::post('/bots/{bot}/change-type/{type}', [BotController::class, 'changeType'])->name('bots.change-type');
     Route::post('/bots/{bot}/attach-accounts', [BotController::class, 'attachAccounts'])->name('bots.attach-accounts');
+    Route::post('/bots/{bot}/attach-ads', [BotController::class, 'attachAds'])->name('bots.attach-ads');
     Route::resource('bots', BotController::class);
 
     Route::resource('bots.greetings', BotGreetingController::class);
@@ -146,4 +148,14 @@ Route::get('/test', function () {
 //        'u2i-1R3VAs3R1anQIg2Quloymw',
 //        'да'
 //    );
+
+    $importer = (new \App\Services\Ads\AdImporter(
+        new Avito()
+    ));
+
+    Account::all()->each(function ($account) use($importer) {
+        $importer->allForAccount($account);
+    });
+
+
 });

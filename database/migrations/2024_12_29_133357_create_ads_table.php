@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('conversation_bots', function (Blueprint $table) {
+        Schema::create('ads', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('account_id')->constrained()->cascadeOnDelete();
-            $table->string('chat_id');
-            $table->foreignId('bot_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('account_id')->constrained()->onDelete('cascade');
+            $table->bigInteger('external_id')->index();
+            $table->float('price');
+            $table->string('title');
+            $table->text('url');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('conversation_bots');
+        Schema::dropIfExists('ads');
     }
 };

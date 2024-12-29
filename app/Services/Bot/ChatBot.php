@@ -4,24 +4,20 @@ namespace App\Services\Bot;
 
 use App\Jobs\SendMessageToAvito;
 use App\Models\Account;
+use App\Models\Ad;
 use App\Models\Bot;
 use App\Models\BotChatState;
-use App\Models\ConversationBot;
 use App\Services\Avito;
 
 class ChatBot
 {
-    protected function getCurrentBot(Account $account, string $chatId): ?Bot
+    protected function getCurrentBot(Account $account, string $itemId): ?Bot
     {
-        $conversation = ConversationBot::where(
-            ['account_id' => $account->id, 'chat_id' => $chatId]
+        $ad = Ad::where(
+            ['account_id' => $account->id, 'external_id' => $itemId]
         )->first();
 
-        if ($conversation) {
-            return $conversation->bot;
-        }
-
-        return $account->bot;
+        return !is_null($ad) ? $ad : $account->bot;
     }
 
     public function handleMessage(Account $account, string $chatId, string $message, array $placeholders = []): void

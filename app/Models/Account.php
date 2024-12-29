@@ -59,4 +59,9 @@ class Account extends Model
     {
         return $this->belongsTo(Bot::class);
     }
+
+    public function ads(): HasMany
+    {
+        return $this->hasMany(Ad::class);
+    }
 }

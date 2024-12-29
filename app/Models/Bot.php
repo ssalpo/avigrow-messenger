@@ -38,4 +38,9 @@ class Bot extends Model
     {
         return $this->hasMany(BotQuiz::class);
     }
+
+    public function ads(): HasMany
+    {
+        return $this->hasMany(Ad::class);
+    }
 }
