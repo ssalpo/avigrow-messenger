@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BotTypes;
+use App\Http\Requests\BotAttachAccountRequest;
 use App\Http\Requests\Bots\BotRequest;
+use App\Models\Account;
 use App\Models\Bot;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 
 class BotController extends Controller
 {
@@ -30,15 +33,19 @@ class BotController extends Controller
 
     public function show(Bot $bot): \Inertia\Response|\Inertia\ResponseFactory
     {
-        if($bot->type->isStandard()) {
+        $bot->load('accounts');
+
+        if ($bot->type->isStandard()) {
             $bot->load(['greetings', 'triggers']);
         }
 
-        if($bot->type->isQuiz()) {
+        if ($bot->type->isQuiz()) {
             $bot->load(['quizzes']);
         }
 
-        return inertia('Bots/Show', compact('bot'));
+        $accounts = Account::all();
+
+        return inertia('Bots/Show', compact('bot', 'accounts'));
     }
 
     public function edit(Bot $bot): \Inertia\Response|\Inertia\ResponseFactory
@@ -67,10 +74,26 @@ class BotController extends Controller
 
     public function changeType(Bot $bot, int $type): RedirectResponse
     {
-        if(BotTypes::values()->contains($type) && $bot->type->value !== $type) {
+        if (BotTypes::values()->contains($type) && $bot->type->value !== $type) {
             $bot->update(['type' => $type]);
         }
 
         return redirect()->back();
+    }
+
+    public function attachAccounts(Bot $bot, BotAttachAccountRequest $request): void
+    {
+        $accounts = Account::whereIn('id', $request->accounts)->get();
+
+        DB::transaction(static function () use ($bot, $accounts, $request) {
+            $bot->accounts
+                ->whereNotIn('id', $request->accounts)
+                ->each
+                ->update(['bot_id' => null]);
+
+            $accounts->each(function ($account) use ($bot) {
+                $account->update(['bot_id' => $bot->id]);
+            });
+        });
     }
 }

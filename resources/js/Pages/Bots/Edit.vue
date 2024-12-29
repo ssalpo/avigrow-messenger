@@ -38,7 +38,7 @@ function send() {
 
             <v-spacer />
 
-            <v-btn color="primary" class="mt-2" type="submit">Сохранить</v-btn>
+            <v-btn color="blue-darken-1" class="mt-2" type="submit">Сохранить</v-btn>
         </v-sheet>
 
     </v-form>

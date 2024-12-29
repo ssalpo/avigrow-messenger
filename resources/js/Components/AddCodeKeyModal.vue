@@ -111,7 +111,7 @@ function send(dialog) {
 
                     <v-btn
                         :disabled="form.processing"
-                        color="primary"
+                        color="blue-darken-1"
                         text="Сохранить"
                         variant="tonal"
                         @click="send(isActive)"

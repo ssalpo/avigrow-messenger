@@ -63,7 +63,7 @@ function send() {
             ></v-text-field>
 
             <v-sheet class="text-right">
-                <v-btn class="mt-2" width="200" color="primary" type="submit">
+                <v-btn class="mt-2" width="200" color="blue-darken-1" type="submit">
                     {{ form.id ? `Изменить` : `Добавить` }}
                 </v-btn>
             </v-sheet>

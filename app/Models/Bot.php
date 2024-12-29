@@ -19,6 +19,11 @@ class Bot extends Model
         'type' => BotTypes::class
     ];
 
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(Account::class);
+    }
+
     public function greetings(): HasMany
     {
         return $this->hasMany(BotGreeting::class);

@@ -34,7 +34,7 @@ const onChangeStatus = (bot) => {
         >
             <div @click="router.visit(route('bots.show', bot.id))" class="w-100">{{ bot.name }}</div>
             <v-spacer/>
-            <v-switch color="primary" @click="() => onChangeStatus(bot)" hide-details :model-value="bot.is_active"></v-switch>
+            <v-switch color="blue-darken-1" @click="() => onChangeStatus(bot)" hide-details :model-value="bot.is_active"></v-switch>
         </v-sheet>
     </v-sheet>
 

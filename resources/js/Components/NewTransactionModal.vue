@@ -83,7 +83,7 @@ function openDialog(type) {
                     ></v-btn>
 
                     <v-btn
-                        color="primary"
+                        color="blue-darken-1"
                         text="Сохранить"
                         variant="tonal"
                         @click="send(isActive)"

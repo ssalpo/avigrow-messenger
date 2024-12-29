@@ -16,7 +16,7 @@ onMounted(() => {
     >
         <v-list
             class="py-2"
-            color="primary"
+            color="blue-darken-1"
             elevation="12"
             rounded="lg"
         >
@@ -27,7 +27,7 @@ onMounted(() => {
             >
                 <template v-slot:prepend>
                     <div class="pe-4">
-                        <v-icon color="primary" size="x-large">mdi-connection</v-icon>
+                        <v-icon color="blue-darken-1" size="x-large">mdi-connection</v-icon>
                     </div>
                 </template>
 

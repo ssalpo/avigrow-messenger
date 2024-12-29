@@ -112,7 +112,7 @@ watch(() => props.selected, (selected) => {
                     <v-btn
                         @click="send"
                         prepend-icon="mdi-content-save-all-outline"
-                        color="primary"
+                        color="blue-darken-1"
                         text="Сохранить"
                     />
                 </div>

@@ -134,7 +134,7 @@ watch(() => model.value, (state) => {
                         <v-btn
                             :disabled="form.processing"
                             type="submit"
-                            color="primary"
+                            color="blue-darken-1"
                             text="Сохранить"
                             variant="tonal"
                         ></v-btn>

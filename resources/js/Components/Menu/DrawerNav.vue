@@ -77,7 +77,7 @@ function goTo(nav) {
             <v-list-item
                 :prepend-icon="nav.icon"
                 v-for="nav in navs"
-                color="primary"
+                color="blue-darken-1"
                 :title="nav.title"
                 @click="() => goTo(nav)"
             />

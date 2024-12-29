@@ -48,7 +48,7 @@ function loadMore({done}) {
 
         <template v-slot:load-more="{props}">
             <div class="text-center mt-3 mb-5">
-                <v-btn variant="outlined" size="x-small" color="primary" v-bind="props">
+                <v-btn variant="outlined" size="x-small" color="blue-darken-1" v-bind="props">
                     Показать еще
                 </v-btn>
             </div>

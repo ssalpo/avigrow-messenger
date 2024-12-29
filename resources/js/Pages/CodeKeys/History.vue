@@ -27,7 +27,7 @@ function restore(id) {
     />
 
     <v-tabs
-        bg-color="primary"
+        bg-color="blue-darken-1"
         v-model="tab"
     >
         <v-tab :value="value" :key="value" v-for="(label, value) in tabs">

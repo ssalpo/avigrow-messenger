@@ -31,7 +31,7 @@ defineProps(['transaction', 'errors'])
 
             <new-transaction-modal :transaction="transaction" :errors="errors">
                 <template v-slot:default="{toggleDialog}">
-                    <v-btn icon="mdi-pencil" @click="toggleDialog" color="primary"/>
+                    <v-btn icon="mdi-pencil" @click="toggleDialog" color="blue-darken-1"/>
                 </template>
             </new-transaction-modal>
 

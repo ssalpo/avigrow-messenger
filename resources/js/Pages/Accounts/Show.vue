@@ -15,7 +15,7 @@ defineProps(['account'])
             <v-spacer></v-spacer>
 
             <Link :href="route('accounts.edit', account.id)" class="mr-3">
-                <v-btn color="primary" size="small" icon="mdi-pencil"/>
+                <v-btn color="blue-darken-1" size="small" icon="mdi-pencil"/>
             </Link>
         </template>
 

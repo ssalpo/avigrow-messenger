@@ -21,7 +21,7 @@ onMounted(() => {
             class="align-center justify-center"
         >
             <v-progress-circular
-                color="primary"
+                color="blue-darken-1"
                 size="64"
                 indeterminate
             ></v-progress-circular>

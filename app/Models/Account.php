@@ -40,6 +40,7 @@ class Account extends Model
         'token_refreshed_at',
         'webhook_handle_token',
         'connection_errors',
+        'connection_status',
         'bot_id',
     ];
 

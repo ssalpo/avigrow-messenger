@@ -29,7 +29,7 @@ const props = defineProps(['transactions', 'totalDebits', 'totalCredits'])
 
     <v-btn size="x-small"
            @click="() => router.visit(route('transactions.statistics'))"
-           variant="text" color="primary" prepend-icon="mdi-arrow-right">Еще статистика
+           variant="text" color="blue-darken-1" prepend-icon="mdi-arrow-right">Еще статистика
     </v-btn>
 
     <v-list lines="one" class="mt-3">

@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/bots/{bot}/change-activity', [BotController::class, 'changeActivity'])->name('bots.change-activity');
     Route::post('/bots/{bot}/change-type/{type}', [BotController::class, 'changeType'])->name('bots.change-type');
+    Route::post('/bots/{bot}/attach-accounts', [BotController::class, 'attachAccounts'])->name('bots.attach-accounts');
     Route::resource('bots', BotController::class);
 
     Route::resource('bots.greetings', BotGreetingController::class);

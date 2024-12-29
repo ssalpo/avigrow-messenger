@@ -52,7 +52,7 @@ function selectActive(account) {
                     :key="account.id"
                     :value="account.id"
                     :active="account.id === activeAccount.id"
-                    color="primary"
+                    color="blue-darken-1"
                     @click="selectActive(account)"
                 >
                     <v-list-item-title>{{ account.name }}</v-list-item-title>

@@ -165,7 +165,7 @@ function contextType(chat) {
     </v-list>
 
     <div class="text-center mt-3 mb-5">
-        <v-btn variant="outlined" size="x-small" :disabled="isBusy" color="primary" v-if="hasMoreChats" @click.prevent="showMorePage">
+        <v-btn variant="outlined" size="x-small" :disabled="isBusy" color="blue-darken-1" v-if="hasMoreChats" @click.prevent="showMorePage">
             Показать еще
         </v-btn>
     </div>
