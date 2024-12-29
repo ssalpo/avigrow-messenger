@@ -93,7 +93,7 @@ class ChatBot
 
         if ($trigger) {
             $messageToSend = PlaceholderService::replace(
-                $trigger->getResponse($placeholders),
+                $trigger->response,
                 $placeholders
             );
 
@@ -108,5 +108,4 @@ class ChatBot
             (new Avito)->setAccount($account)->sendMessage($chatId, ['text' => $messageToSend]);
         }
     }
-
 }

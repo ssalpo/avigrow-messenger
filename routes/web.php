@@ -131,31 +131,5 @@ Route::get('meta-code-generator', function () {
 });
 
 Route::get('/test', function () {
-//    $chatBot = new \App\Services\Bot\ChatBot();
-//
-//    $account = Account::find(1);
-//    $chatId = 'u2i-1R3VAs3R1anQIg2Quloymw';
-//    $message = 'цена';
-//
-//    $chatBot->handleMessage(
-//        $account, $chatId, $message
-//    );
-
-//    $quizService = new QuizService();
-//
-//    $quizService->processAnswer(
-//        \App\Models\Bot::with('quizzes')->find(1),
-//        'u2i-1R3VAs3R1anQIg2Quloymw',
-//        'да'
-//    );
-
-    $importer = (new \App\Services\Ads\AdImporter(
-        new Avito()
-    ));
-
-    Account::all()->each(function ($account) use($importer) {
-        $importer->allForAccount($account);
-    });
-
 
 });
