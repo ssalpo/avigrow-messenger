@@ -32,7 +32,7 @@ class QuizService
 
             $isLastStep = $nextQuestionIndex === count($bot->quizzes);
 
-            if ($currentQuiz->answer_type->isArbitrary() ?? $nextQuestion) {
+            if ($currentQuiz->answer_type->isArbitrary() && $nextQuestion) {
                 $contentToSend = $nextQuestion->content;
                 $state->update(['current_step' => $nextQuestionIndex]);
             }
