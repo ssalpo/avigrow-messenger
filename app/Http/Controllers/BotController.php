@@ -6,6 +6,7 @@ use App\Enums\BotTypes;
 use App\Http\Requests\BotAttachAccountRequest;
 use App\Http\Requests\BotAttachAdRequest;
 use App\Http\Requests\Bots\BotRequest;
+use App\Jobs\ResetBotStates;
 use App\Models\Account;
 use App\Models\Ad;
 use App\Models\Bot;
@@ -79,6 +80,8 @@ class BotController extends Controller
     {
         if (BotTypes::values()->contains($type) && $bot->type->value !== $type) {
             $bot->update(['type' => $type]);
+
+            ResetBotStates::dispatch($bot->id);
         }
 
         return redirect()->back();
