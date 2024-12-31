@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Bot;
 use App\Models\BotChatState;
 use App\Models\BotQuizState;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,7 +16,7 @@ class ResetBotStates implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
-        public int $botId
+        public Bot $bot
     )
     {
         //
@@ -26,7 +27,7 @@ class ResetBotStates implements ShouldQueue
      */
     public function handle(): void
     {
-        BotChatState::where('bot_id', $this->botId)->delete();
-        BotQuizState::where('bot_id', $this->botId)->delete();
+        BotChatState::whereIn('account_id', $this->bot->accounts->pluck('id'))->delete();
+        BotQuizState::where('bot_id', $this->bot->id)->delete();
     }
 }

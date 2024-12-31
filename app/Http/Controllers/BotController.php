@@ -81,7 +81,7 @@ class BotController extends Controller
         if (BotTypes::values()->contains($type) && $bot->type->value !== $type) {
             $bot->update(['type' => $type]);
 
-            ResetBotStates::dispatch($bot->id);
+            ResetBotStates::dispatch($bot);
         }
 
         return redirect()->back();
