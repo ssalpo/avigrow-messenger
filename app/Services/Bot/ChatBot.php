@@ -17,7 +17,7 @@ class ChatBot
             ['account_id' => $account->id, 'external_id' => $itemId]
         )->first();
 
-        return !is_null($ad) ? $ad : $account->bot;
+        return !is_null($ad) ? $ad->bot : $account->bot;
     }
 
     public function handleMessage(Account $account, string $chatId, string $message, array $placeholders = []): void
