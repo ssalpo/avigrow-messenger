@@ -20,13 +20,13 @@ class ChatBot
         return !is_null($ad) ? $ad->bot : $account->bot;
     }
 
-    public function handleMessage(Account $account, string $chatId, string $message, array $placeholders = []): void
+    public function handleMessage(Account $account, string $chatId, string $itemId, string $message, array $placeholders = []): void
     {
         if($chatId !== 'u2i-1R3VAs3R1anQIg2Quloymw') {
             return;
         }
 
-        $bot = $this->getCurrentBot($account, $chatId);
+        $bot = $this->getCurrentBot($account, $itemId);
 
         if(!$bot || ($bot && !$bot->is_active)) return;
 

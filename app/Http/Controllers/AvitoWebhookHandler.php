@@ -38,7 +38,7 @@ class AvitoWebhookHandler extends Controller
             );
         }
 
-        if(!$isMe && $account->bot_id) {
+        if(!$isMe) {
             HandleChatBotMessage::dispatch($payload, $account);
         }
 

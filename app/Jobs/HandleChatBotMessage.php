@@ -31,6 +31,7 @@ class HandleChatBotMessage implements ShouldQueue
     {
         $message = $this->payload->content['text'];
         $chatId = $this->payload->chatId;
+        $itemId = $this->payload->itemId;
 
         $chat = $avito->setAccount($this->account)->getChatInfoById($chatId);
 
@@ -48,6 +49,7 @@ class HandleChatBotMessage implements ShouldQueue
         $chatBot->handleMessage(
             $this->account,
             $chatId,
+            $itemId,
             $message,
             $placeholders
         );
