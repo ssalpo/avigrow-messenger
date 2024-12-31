@@ -59,7 +59,7 @@ class QuizService
                 $contentToSend,
                 $placeholders
             );
-            dd($messageToSend);
+
             (new Avito)->setAccount($account)->sendMessage($chatId, ['text' => $messageToSend]);
         }
     }
