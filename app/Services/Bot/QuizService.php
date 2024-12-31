@@ -4,6 +4,7 @@ namespace App\Services\Bot;
 
 use App\Models\Account;
 use App\Models\Bot;
+use App\Models\BotQuiz;
 use App\Models\BotQuizState;
 use App\Services\Avito;
 
@@ -22,40 +23,42 @@ class QuizService
         $contentToSend = null;
 
         if ($state->wasRecentlyCreated) {
-            $contentToSend = $bot->quizzes[0]->content;
+            $quiz = $bot->quizzes[0];
+
+            $contentToSend = $quiz->content;
+
+            if($quiz->answer_type->isOptions()) {
+                $contentToSend = $this->handleQuizOptions($quiz);
+            }
         } else {
             // Обработка всех ответов, после отправки первого вопроса квиза
             $currentQuiz = $bot->quizzes[$state->current_step];
-            $nextQuestionIndex = $state->current_step + 1;
+            $nextQuizIndex = $state->current_step + 1;
 
-            $nextQuestion = $bot->quizzes[$nextQuestionIndex] ?? null;
+            $nextQuiz = $bot->quizzes[$nextQuizIndex] ?? null;
 
-            $isLastStep = $nextQuestionIndex === count($bot->quizzes);
+            $isLastStep = $nextQuizIndex === count($bot->quizzes);
 
-            if ($currentQuiz->answer_type->isArbitrary() && $nextQuestion) {
-                $contentToSend = $nextQuestion->content;
+            if ($currentQuiz->answer_type->isArbitrary() && $nextQuiz) {
+                $contentToSend = $nextQuiz->content;
 
-                if($nextQuestion->answer_type->isOptions()) {
-                    $optionsMSG = implode(PHP_EOL, $nextQuestion->options);
-
-                    $contentToSend = <<<MSG
-{$nextQuestion->content}
-
-Напишите один из вариантов ответа:
-{$optionsMSG}
-MSG;
+                if($nextQuiz->answer_type->isOptions()) {
+                    $contentToSend = $this->handleQuizOptions($nextQuiz);
                 }
 
-                $state->update(['current_step' => $nextQuestionIndex]);
+                $state->update(['current_step' => $nextQuizIndex]);
             }
 
             if ($currentQuiz->answer_type->isOptions()) {
                 if (in_array($message, $currentQuiz->options, true)) {
-                    if ($nextQuestion) {
+                    if ($nextQuiz) {
+                        $contentToSend = $nextQuiz->content;
 
-                        $contentToSend = $nextQuestion->content;
+                        if($nextQuiz->answer_type->isOptions()) {
+                            $contentToSend = $this->handleQuizOptions($nextQuiz);
+                        }
 
-                        $state->update(['current_step' => $nextQuestionIndex]);
+                        $state->update(['current_step' => $nextQuizIndex]);
                     }
                 } else {
                     $isLastStep = false;
@@ -75,5 +78,17 @@ MSG;
 
             (new Avito)->setAccount($account)->sendMessage($chatId, ['text' => $messageToSend]);
         }
+    }
+
+    private function handleQuizOptions(BotQuiz $question): string
+    {
+        $optionsMSG = implode(PHP_EOL, $question->options);
+
+        return <<<MSG
+{$question->content}
+
+Напишите один из вариантов ответа:
+{$optionsMSG}
+MSG;
     }
 }

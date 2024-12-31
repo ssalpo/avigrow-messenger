@@ -130,3 +130,4 @@ Route::get('meta-code-generator', function () {
         mb_strtoupper(implode('-', $codes))
     );
 });
+
