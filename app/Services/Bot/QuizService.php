@@ -26,14 +26,15 @@ class QuizService
         } else {
             // Обработка всех ответов, после отправки первого вопроса квиза
             $currentQuiz = $bot->quizzes[$state->current_step];
+            $nextQuestionIndex = $state->current_step + 1;
 
-            $nextQuestion = $bot->quizzes[$state->current_step + 1] ?? null;
+            $nextQuestion = $bot->quizzes[$nextQuestionIndex] ?? null;
 
             if ($currentQuiz->answer_type->isArbitrary()) {
                 if ($nextQuestion) {
                     $contentToSend = $nextQuestion->content;
 
-                    $state->update(['current_step' => $state->current_step + 1]);
+                    $state->update(['current_step' => $nextQuestionIndex]);
                 } else {
                     $state->delete();
                 }
@@ -43,7 +44,7 @@ class QuizService
                 if (in_array($message, $currentQuiz->options, true)) {
                     if ($nextQuestion) {
                         $contentToSend = $nextQuestion->content;
-                        $state->update(['current_step' => $state->current_step + 1]);
+                        $state->update(['current_step' => $nextQuestionIndex]);
                     } else {
                         $state->delete();
                     }
