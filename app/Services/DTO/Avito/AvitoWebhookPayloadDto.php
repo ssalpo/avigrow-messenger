@@ -15,7 +15,7 @@ class AvitoWebhookPayloadDto extends AvitoBaseDto
         public readonly string $type,
         public readonly string $chatType,
         public readonly array $content,
-        public readonly int $itemId,
+        public readonly ?int $itemId,
         public readonly string $publishedAt,
         public readonly bool $isRead
     )
@@ -33,7 +33,7 @@ class AvitoWebhookPayloadDto extends AvitoBaseDto
             $data['value']['type'],
             $data['value']['chat_type'],
             $data['value']['content'],
-            $data['value']['item_id'],
+            $data['value']['item_id'] ?? null,
             $data['value']['published_at'],
             isset($payload['value']['read'])
         );
