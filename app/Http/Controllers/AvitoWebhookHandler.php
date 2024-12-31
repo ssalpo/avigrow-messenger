@@ -24,6 +24,8 @@ class AvitoWebhookHandler extends Controller
      */
     public function __invoke(Request $request, Account $account): void
     {
+        logger()->info(json_encode($request->post('payload', [])));
+
         $payload = AvitoWebhookPayloadDto::fromArray($request->post('payload', []));
 
         $isMe = $payload->authorId === (int) $account->external_id;
