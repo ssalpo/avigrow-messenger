@@ -18,6 +18,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewScheduleController;
 use App\Http\Controllers\TransactionController;
 use App\Models\Account;
+use App\Models\Bot;
 use App\Services\Avito;
 use App\Services\Bot\QuizService;
 use Illuminate\Support\Facades\Route;
@@ -128,8 +129,4 @@ Route::get('meta-code-generator', function () {
     return response(
         mb_strtoupper(implode('-', $codes))
     );
-});
-
-Route::get('/test', function () {
-
 });

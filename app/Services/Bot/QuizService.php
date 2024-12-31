@@ -30,26 +30,27 @@ class QuizService
 
             $nextQuestion = $bot->quizzes[$nextQuestionIndex] ?? null;
 
-            if ($currentQuiz->answer_type->isArbitrary()) {
-                if ($nextQuestion) {
-                    $contentToSend = $nextQuestion->content;
+            $isLastStep = $nextQuestionIndex === count($bot->quizzes);
 
-                    $state->update(['current_step' => $nextQuestionIndex]);
-                } else {
-                    $state->delete();
-                }
+            if ($currentQuiz->answer_type->isArbitrary() ?? $nextQuestion) {
+                $contentToSend = $nextQuestion->content;
+                $state->update(['current_step' => $nextQuestionIndex]);
             }
 
             if ($currentQuiz->answer_type->isOptions()) {
                 if (in_array($message, $currentQuiz->options, true)) {
                     if ($nextQuestion) {
                         $contentToSend = $nextQuestion->content;
-                        $state->update(['current_step' => $nextQuestionIndex]);
-                    } else {
-                        $state->delete();
-                    }
 
+                        $state->update(['current_step' => $nextQuestionIndex]);
+                    }
+                } else {
+                    $isLastStep = false;
                 }
+            }
+
+            if ($isLastStep) {
+                $state->delete();
             }
         }
 
@@ -58,7 +59,7 @@ class QuizService
                 $contentToSend,
                 $placeholders
             );
-
+            dd($messageToSend);
             (new Avito)->setAccount($account)->sendMessage($chatId, ['text' => $messageToSend]);
         }
     }
