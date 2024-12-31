@@ -22,6 +22,10 @@ class ChatBot
 
     public function handleMessage(Account $account, string $chatId, string $message, array $placeholders = []): void
     {
+        if($chatId !== 'u2i-1R3VAs3R1anQIg2Quloymw') {
+            return;
+        }
+
         $bot = $this->getCurrentBot($account, $chatId);
 
         if(!$bot || ($bot && !$bot->is_active)) return;
