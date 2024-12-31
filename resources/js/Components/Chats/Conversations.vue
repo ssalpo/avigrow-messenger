@@ -47,7 +47,7 @@ onMounted(() => {
             return
         }
 
-        const data = e.data.message.value;
+        const data = e.data.message;
 
         if (chatIds.value.includes(data.chat_id)) {
             e.data.unreadChatIds.forEach((e) => {

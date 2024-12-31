@@ -232,7 +232,7 @@ class Avito
     public static function getMessageBasedOnType(string $type, array $data)
     {
         return match ($type) {
-            'text', 'system' => $data['content']['text'],
+            'text', 'system' => $data['text'],
             'call' => 'Звонок',
             'image' => 'Фото',
             'item' => 'Объявление',
