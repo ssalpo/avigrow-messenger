@@ -22,9 +22,9 @@ class AvitoItemDto extends AvitoBaseDto
         return new self(
             $item['id'],
             $item['title'],
-            self::parsePrice($item['price_string']),
+            self::parsePrice($item['price_string'] ?? ''),
             $item['url'],
-            $item['location']['title'],
+            $item['location']['title'] ?? '',
         );
     }
 
