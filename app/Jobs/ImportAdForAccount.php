@@ -11,8 +11,6 @@ class ImportAdForAccount implements ShouldQueue
 {
     use Queueable;
 
-    public $queue = 'import-ads';
-
     /**
      * Create a new job instance.
      */
