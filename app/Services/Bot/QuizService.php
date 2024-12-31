@@ -34,12 +34,25 @@ class QuizService
 
             if ($currentQuiz->answer_type->isArbitrary() && $nextQuestion) {
                 $contentToSend = $nextQuestion->content;
+
+                if($nextQuestion->answer_type->isOptions()) {
+                    $optionsMSG = implode(PHP_EOL, $nextQuestion->options);
+
+                    $contentToSend = <<<MSG
+{$nextQuestion->content}
+
+Напишите один из вариантов ответа:
+{$optionsMSG}
+MSG;
+                }
+
                 $state->update(['current_step' => $nextQuestionIndex]);
             }
 
             if ($currentQuiz->answer_type->isOptions()) {
                 if (in_array($message, $currentQuiz->options, true)) {
                     if ($nextQuestion) {
+
                         $contentToSend = $nextQuestion->content;
 
                         $state->update(['current_step' => $nextQuestionIndex]);
@@ -59,7 +72,7 @@ class QuizService
                 $contentToSend,
                 $placeholders
             );
-
+dd($messageToSend);
             (new Avito)->setAccount($account)->sendMessage($chatId, ['text' => $messageToSend]);
         }
     }
