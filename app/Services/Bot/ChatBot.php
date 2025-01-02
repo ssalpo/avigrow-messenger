@@ -13,11 +13,11 @@ class ChatBot
 {
     protected function getCurrentBot(Account $account, string $itemId): ?Bot
     {
-        $ad = Ad::where(
+        $adBot = Ad::where(
             ['account_id' => $account->id, 'external_id' => $itemId]
-        )->first();
+        )->first()?->bot;
 
-        return !is_null($ad) ? $ad->bot : $account->bot;
+        return !is_null($adBot) ? $adBot : $account->bot;
     }
 
     public function handleMessage(Account $account, string $chatId, string $itemId, string $message, array $placeholders = []): void
@@ -30,7 +30,7 @@ class ChatBot
 
         if (
             !$bot ||
-            $bot->is_active ||
+            !$bot->is_active ||
             !BotScheduleService::isInSchedule($bot->id)
         ) {
             return;
