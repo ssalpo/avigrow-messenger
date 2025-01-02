@@ -16,7 +16,7 @@ const props = defineProps({
     },
 })
 
-const panel = ref([0])
+const panel = ref([])
 
 </script>
 
