@@ -45,7 +45,7 @@ const onDelete = (slot) => {
             class="mb-1 d-flex align-center px-3 py-2 cursor-pointer"
         >
             <div @click="() => selectedSlot = slot"
-                 class="w-100">{{ slot.start_time }} - {{ slot.end_time }}
+                 class="w-100">{{ slot.start_time.slice(0, -3) }} - {{ slot.end_time.slice(0, -3) }}
             </div>
 
             <v-icon icon="mdi-trash-can-outline"
