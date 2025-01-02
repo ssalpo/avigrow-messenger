@@ -44,7 +44,7 @@ class BotController extends Controller
         }
 
         if ($bot->type->isQuiz()) {
-            $bot->load(['quizzes']);
+            $bot->load(['quizzes' => fn ($q) => $q->orderBy('sort')]);
         }
 
         $accounts = Account::all();

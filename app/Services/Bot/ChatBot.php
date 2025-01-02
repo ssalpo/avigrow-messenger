@@ -53,7 +53,7 @@ class ChatBot
         }
 
         if ($bot->type->isQuiz()) {
-            $bot->load(['quizzes']);
+            $bot->load(['quizzes' => fn ($q) => $q->orderBy('sort')]);
 
             (new QuizService())->processAnswer(
                 $account, $bot, $chatId, $message, $placeholders

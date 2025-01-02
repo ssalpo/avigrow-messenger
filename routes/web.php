@@ -57,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('bots.greetings', BotGreetingController::class);
     Route::resource('bots.triggers', BotTriggerController::class);
+    Route::post('/bots/{bot}/quizzes/resort', [BotQuizController::class, 'resort'])->name('bots.quizzes.resort');
     Route::resource('bots.quizzes', BotQuizController::class);
 
     Route::group(['prefix' => '/accounts/{account}'], function () {

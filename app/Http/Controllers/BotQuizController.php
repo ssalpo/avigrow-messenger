@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BotQuizResortRequest;
 use App\Http\Requests\Bots\BotQuizRequest;
 use App\Models\BotQuiz;
 use Illuminate\Http\RedirectResponse;
@@ -31,5 +32,15 @@ class BotQuizController extends Controller
             ->delete();
 
         return redirect()->back();
+    }
+
+    public function resort(int $botId, BotQuizResortRequest $request): void
+    {
+        foreach ($request->validated('quizzes') as $sortOrder => $id) {
+            BotQuiz::query()
+                ->where('bot_id', $botId)
+                ->where('id', $id)
+                ->update(['sort' => $sortOrder]);
+        }
     }
 }

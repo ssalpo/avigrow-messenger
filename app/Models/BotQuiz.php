@@ -12,7 +12,8 @@ class BotQuiz extends Model
         'name',
         'content',
         'answer_type',
-        'options'
+        'options',
+        'sort'
     ];
 
     protected $casts = [
