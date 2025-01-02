@@ -22,22 +22,28 @@ class ChatBot
 
     public function handleMessage(Account $account, string $chatId, string $itemId, string $message, array $placeholders = []): void
     {
-        if($chatId !== 'u2i-1R3VAs3R1anQIg2Quloymw') {
+        if ($chatId !== 'u2i-1R3VAs3R1anQIg2Quloymw') {
             return;
         }
 
         $bot = $this->getCurrentBot($account, $itemId);
 
-        if(!$bot || ($bot && !$bot->is_active)) return;
+        if (
+            !$bot ||
+            ($bot && !$bot->is_active) ||
+            ($bot && !BotScheduleService::isInSchedule($bot->id))
+        ) {
+            return;
+        }
 
-        if($bot->type->isStandard()) {
+        if ($bot->type->isStandard()) {
             $bot->load(['greetings', 'triggers']);
 
             $chatState = BotChatState::firstOrCreate(['account_id' => $account->id, 'chat_id' => $chatId]);
 
             $isGreeted = $chatState->greeted;
 
-            if(!$isGreeted) {
+            if (!$isGreeted) {
                 $this->handleGreeting($account, $chatId, $bot, $chatState, $placeholders);
             }
 
@@ -46,7 +52,7 @@ class ChatBot
             }
         }
 
-        if($bot->type->isQuiz()) {
+        if ($bot->type->isQuiz()) {
             $bot->load(['quizzes']);
 
             (new QuizService())->processAnswer(
@@ -72,8 +78,8 @@ class ChatBot
             $placeholders
         );
 
-        if($messageToSend) {
-            if($greeting->delay > 0) {
+        if ($messageToSend) {
+            if ($greeting->delay > 0) {
                 SendMessageToAvito::dispatch(
                     $account, $chatId, $messageToSend
                 )->delay(now()->addSeconds($greeting->delay));
@@ -101,7 +107,7 @@ class ChatBot
                 $placeholders
             );
 
-            if($trigger->delay > 0) {
+            if ($trigger->delay > 0) {
                 SendMessageToAvito::dispatch(
                     $account, $chatId, $messageToSend
                 )->delay(now()->addSeconds($trigger->delay));

@@ -6,6 +6,8 @@ use App\Http\Controllers\AutocompleteController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\BotGreetingController;
 use App\Http\Controllers\BotQuizController;
+use App\Http\Controllers\BotScheduleController;
+use App\Http\Controllers\BotScheduleSlotController;
 use App\Http\Controllers\BotTriggerController;
 use App\Http\Controllers\CodeKeyController;
 use App\Http\Controllers\FastTemplateController;
@@ -18,9 +20,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewScheduleController;
 use App\Http\Controllers\TransactionController;
 use App\Models\Account;
-use App\Models\Bot;
 use App\Services\Avito;
-use App\Services\Bot\QuizService;
 use Illuminate\Support\Facades\Route;
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
@@ -49,6 +49,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/bots/{bot}/attach-accounts', [BotController::class, 'attachAccounts'])->name('bots.attach-accounts');
     Route::post('/bots/{bot}/attach-ads', [BotController::class, 'attachAds'])->name('bots.attach-ads');
     Route::resource('bots', BotController::class);
+
+    Route::post('/bots/{bot}/schedules/{dayOfWeek}/toggle-status', [BotScheduleController::class, 'toggleStatus'])->name('bots.schedules.toggle-status');
+    Route::post('/bots/{bot}/schedules/{dayOfWeek}/slots', [BotScheduleSlotController::class, 'store'])->name('bots.schedules.slots.store');
+    Route::patch('/bots/{bot}/schedules/{dayOfWeek}/slots/{slot}', [BotScheduleSlotController::class, 'update'])->name('bots.schedules.slots.update');
+    Route::delete('/bots/{bot}/schedules/{dayOfWeek}/slots/{slot}', [BotScheduleSlotController::class, 'destroy'])->name('bots.schedules.slots.destroy');
 
     Route::resource('bots.greetings', BotGreetingController::class);
     Route::resource('bots.triggers', BotTriggerController::class);
@@ -130,4 +135,3 @@ Route::get('meta-code-generator', function () {
         mb_strtoupper(implode('-', $codes))
     );
 });
-

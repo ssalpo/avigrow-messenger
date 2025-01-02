@@ -37,7 +37,7 @@ class BotController extends Controller
 
     public function show(Bot $bot): \Inertia\Response|\Inertia\ResponseFactory
     {
-        $bot->load('accounts');
+        $bot->load('accounts', 'schedules.slots');
 
         if ($bot->type->isStandard()) {
             $bot->load(['greetings', 'triggers']);

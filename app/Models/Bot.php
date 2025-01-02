@@ -43,4 +43,9 @@ class Bot extends Model
     {
         return $this->hasMany(Ad::class);
     }
+
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(BotSchedule::class);
+    }
 }

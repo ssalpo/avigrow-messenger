@@ -8,6 +8,7 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import VueTheMask from 'vue-the-mask'
 
 // Vuetify
 import '@mdi/font/css/materialdesignicons.css'
@@ -41,6 +42,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(vuetify)
             .use(plugin)
+            .use(VueTheMask)
             .use(ZiggyVue)
             .mount(el);
     },
