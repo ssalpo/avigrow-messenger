@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\TransactionType;
 use App\Models\Transaction;
-use App\TransactionType;
 use Illuminate\Support\Carbon;
 
 class TransactionService

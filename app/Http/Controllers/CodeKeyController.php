@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CodeKeyType;
+use App\Enums\CodeKeyType;
 use App\Http\Requests\CodeKeyRequest;
 use App\Jobs\SendMessageToExistingIds;
 use App\Models\CodeKey;

@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\CodeKeyType;
+use App\Enums\CodeKeyType;
 use App\Http\Requests\SendPaymentReceiptRequest;
 use App\Models\Account;
-use App\Models\ActiveConversation;
 use App\Models\CodeKey;
 use App\Models\ReviewSchedule;
 use App\Services\ActiveConversationService;
 use App\Services\Avito;
-use App\Services\DTO\Avito\AvitoAuthUserDto;
 use App\Services\DTO\Avito\AvitoChatDto;
-use App\Services\DTO\Avito\AvitoItemDto;
 use App\Services\Telegram;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;

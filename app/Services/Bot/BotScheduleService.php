@@ -13,7 +13,7 @@ class BotScheduleService
         $schedules = BotSchedule::where('bot_id', $botId)
             ->currentWeekDay()
             ->active()
-            ->with('slots')
+            ->with(['slots' => fn ($q) => $q->active()])
             ->get();
 
         foreach ($schedules as $schedule) {

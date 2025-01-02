@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatus;
+use App\Enums\TransactionType;
 use App\Http\Requests\OrderRequest;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Transaction;
-use App\OrderStatus;
-use App\TransactionType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
