@@ -10,17 +10,19 @@ class BotScheduleService
     {
         $currentTime = now()->format('H:i:s');
 
-        $schedules = BotSchedule::where('bot_id', $botId)
+        $schedule = BotSchedule::where('bot_id', $botId)
             ->currentWeekDay()
             ->active()
-            ->with(['slots' => fn ($q) => $q->active()])
-            ->get();
+            ->with(['slots' => fn($q) => $q->active()])
+            ->first();
 
-        foreach ($schedules as $schedule) {
-            foreach ($schedule->slots as $slot) {
-                if ($slot->start_time <= $currentTime && $slot->end_time >= $currentTime) {
-                    return true;
-                }
+        if (!$schedule || ($schedule && $schedule->slots->count() === 0)) {
+            return true;
+        }
+
+        foreach ($schedule->slots as $slot) {
+            if ($slot->start_time <= $currentTime && $slot->end_time >= $currentTime) {
+                return true;
             }
         }
 
