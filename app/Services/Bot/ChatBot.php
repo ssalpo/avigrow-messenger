@@ -30,8 +30,8 @@ class ChatBot
 
         if (
             !$bot ||
-            ($bot && !$bot->is_active) ||
-            ($bot && !BotScheduleService::isInSchedule($bot->id))
+            $bot->is_active ||
+            !BotScheduleService::isInSchedule($bot->id)
         ) {
             return;
         }
