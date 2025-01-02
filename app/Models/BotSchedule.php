@@ -28,7 +28,7 @@ class BotSchedule extends Model
 
     public function scopeCurrentWeekDay(Builder $q): void
     {
-        $q->where('day_of_week', now()->format('D'));
+        $q->where('day_of_week', now()->format('w'));
     }
 
     public function bot(): BelongsTo
