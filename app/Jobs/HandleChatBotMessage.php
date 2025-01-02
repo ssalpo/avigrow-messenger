@@ -29,7 +29,7 @@ class HandleChatBotMessage implements ShouldQueue
      */
     public function handle(Avito $avito): void
     {
-        $message = $this->payload->content['text'];
+        $message = $this->payload->content['text'] ?? '';
         $chatId = $this->payload->chatId;
         $itemId = $this->payload->itemId;
 
