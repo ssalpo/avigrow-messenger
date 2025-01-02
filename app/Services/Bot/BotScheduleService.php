@@ -8,7 +8,7 @@ class BotScheduleService
 {
     public static function isInSchedule(int $botId): bool
     {
-        $currentTime = now()->format('H:i:s');
+        $currentTime = now()->format('H:i');
 
         $schedule = BotSchedule::where('bot_id', $botId)
             ->currentWeekDay()
