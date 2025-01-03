@@ -11,12 +11,14 @@ class Bot extends Model
     protected $fillable = [
         'name',
         'type',
-        'is_active'
+        'is_active',
+        'mark_chat_as_unread'
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'type' => BotTypes::class
+        'type' => BotTypes::class,
+        'mark_chat_as_unread' => 'boolean',
     ];
 
     public function accounts(): HasMany

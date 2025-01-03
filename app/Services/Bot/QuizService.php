@@ -10,10 +10,10 @@ use App\Services\Avito;
 
 class QuizService
 {
-    public function processAnswer(Account $account, Bot $bot, string $chatId, string $message, array $placeholders = []): void
+    public function processAnswer(Account $account, Bot $bot, string $chatId, string $message, array $placeholders = []): ?string
     {
         if (!$bot->quizzes->count()) {
-            return;
+            return null;
         }
 
         $state = BotQuizState::firstOrCreate([
@@ -71,13 +71,13 @@ class QuizService
         }
 
         if (!is_null($contentToSend)) {
-            $messageToSend = PlaceholderService::replace(
+            return PlaceholderService::replace(
                 $contentToSend,
                 $placeholders
             );
-
-            (new Avito)->setAccount($account)->sendMessage($chatId, ['text' => $messageToSend]);
         }
+
+        return null;
     }
 
     private function handleQuizOptions(BotQuiz $question): string

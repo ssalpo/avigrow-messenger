@@ -4,6 +4,7 @@ import BotShowAccountConnection from "@/Pages/Bots/Show/BotShowAccountConnection
 import BotShowAdConnection from "@/Pages/Bots/Show/BotShowAdConnection.vue";
 import BotShowSchedules from "@/Pages/Bots/Show/BotShowSchedules.vue";
 import {ref} from "vue";
+import BotShowSettings from "@/Pages/Bots/Show/BotShowSettings.vue";
 
 const props = defineProps({
     bot: {
@@ -16,7 +17,7 @@ const props = defineProps({
     },
 })
 
-const panel = ref([])
+const panel = ref([3])
 
 </script>
 
@@ -36,6 +37,12 @@ const panel = ref([])
         <v-expansion-panel class="mb-2" title="Прикрепленные объявления">
             <v-expansion-panel-text>
                 <bot-show-ad-connection :bot="bot" />
+            </v-expansion-panel-text>
+        </v-expansion-panel>
+
+        <v-expansion-panel class="mb-2" title="Дополнительные настройки">
+            <v-expansion-panel-text>
+                <bot-show-settings :bot="bot" />
             </v-expansion-panel-text>
         </v-expansion-panel>
     </v-expansion-panels>

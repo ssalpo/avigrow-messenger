@@ -53,11 +53,15 @@ class ChatBot
         }
 
         if ($bot->type->isQuiz()) {
-            $bot->load(['quizzes' => fn ($q) => $q->orderBy('sort')]);
+            $bot->load(['quizzes' => fn($q) => $q->orderBy('sort')]);
 
-            (new QuizService())->processAnswer(
+            $answer = (new QuizService())->processAnswer(
                 $account, $bot, $chatId, $message, $placeholders
             );
+
+            if (!is_null($answer)) {
+                $this->sendMessage($account, $bot, $chatId, $message);
+            }
         }
     }
 
@@ -87,7 +91,7 @@ class ChatBot
                 return;
             }
 
-            (new Avito)->setAccount($account)->sendMessage($chatId, ['text' => $messageToSend]);
+            $this->sendMessage($account, $bot, $chatId, $messageToSend);
         }
     }
 
@@ -115,7 +119,18 @@ class ChatBot
                 return;
             }
 
-            (new Avito)->setAccount($account)->sendMessage($chatId, ['text' => $messageToSend]);
+            $this->sendMessage($account, $bot, $chatId, $messageToSend);
+        }
+    }
+
+    private function sendMessage(Account $account, Bot $bot, string $chatId, string $message): void
+    {
+        $avito = (new Avito)->setAccount($account);
+
+        $avito->sendMessage($chatId, ['text' => $message]);
+
+        if(!$bot->mark_chat_as_unread) {
+            $avito->markChatAsRead($chatId);
         }
     }
 }

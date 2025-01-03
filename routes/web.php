@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('accounts', AccountController::class);
 
+    Route::post('/bots/{bot}/update-settings', [BotController::class, 'updateSettings'])->name('bots.update-settings');
     Route::get('/bots/{bot}/connected-add-treeview', [BotController::class, 'connectedAdTreeView'])->name('bots.connected-add-treeview');
     Route::post('/bots/{bot}/change-activity', [BotController::class, 'changeActivity'])->name('bots.change-activity');
     Route::post('/bots/{bot}/change-type/{type}', [BotController::class, 'changeType'])->name('bots.change-type');

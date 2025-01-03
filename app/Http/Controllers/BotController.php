@@ -6,6 +6,7 @@ use App\Enums\BotTypes;
 use App\Http\Requests\BotAttachAccountRequest;
 use App\Http\Requests\BotAttachAdRequest;
 use App\Http\Requests\Bots\BotRequest;
+use App\Http\Requests\BotSettingRequest;
 use App\Jobs\ResetBotStates;
 use App\Models\Account;
 use App\Models\Ad;
@@ -44,7 +45,7 @@ class BotController extends Controller
         }
 
         if ($bot->type->isQuiz()) {
-            $bot->load(['quizzes' => fn ($q) => $q->orderBy('sort')]);
+            $bot->load(['quizzes' => fn($q) => $q->orderBy('sort')]);
         }
 
         $accounts = Account::all();
@@ -61,7 +62,7 @@ class BotController extends Controller
     {
         $bot->update($request->validated());
 
-        if(in_array('type', $bot->getChanges(), true)) {
+        if (in_array('type', $bot->getChanges(), true)) {
             ResetBotStates::dispatch($bot);
         }
 
@@ -146,6 +147,13 @@ class BotController extends Controller
                 $ad->update(['bot_id' => $bot->id]);
             });
         });
+
+        return redirect()->back();
+    }
+
+    public function updateSettings(Bot $bot, BotSettingRequest $request): RedirectResponse
+    {
+        $bot->update($request->validated('settings'));
 
         return redirect()->back();
     }
