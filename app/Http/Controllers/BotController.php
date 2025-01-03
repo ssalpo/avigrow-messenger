@@ -61,6 +61,10 @@ class BotController extends Controller
     {
         $bot->update($request->validated());
 
+        if(in_array('type', $bot->getChanges(), true)) {
+            ResetBotStates::dispatch($bot);
+        }
+
         return redirect()->back();
     }
 
