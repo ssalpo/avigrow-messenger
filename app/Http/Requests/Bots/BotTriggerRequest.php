@@ -27,6 +27,8 @@ class BotTriggerRequest extends FormRequest
             'keywords' => 'required|array',
             'keywords.*' => 'string|max:255',
             'response' => 'required|string|max:1000',
+            'case_sensitive' => 'required|boolean',
+            'matches_in_message' => 'required|boolean',
             'delay' => 'nullable|numeric|in:0,5,15,30,60,180,300,600,1800',
         ];
     }

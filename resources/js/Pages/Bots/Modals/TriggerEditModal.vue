@@ -21,6 +21,8 @@ let form = useForm({
     keyword: null,
     keywords: [],
     response: null,
+    case_sensitive: false,
+    matches_in_message: false,
     delay: '0'
 })
 
@@ -43,7 +45,7 @@ const send = () => {
 }
 
 const onDelete = () => {
-    if(!confirm('Уверены что хотите удалить?')) return;
+    if (!confirm('Уверены что хотите удалить?')) return;
 
     router.delete(route('bots.triggers.destroy', {bot: props.botId, trigger: form.id}), {
         preserveState: true,
@@ -61,6 +63,8 @@ watch(() => props.selected, (selected) => {
         keyword: selected?.keyword,
         keywords: selected?.keywords || [],
         response: selected?.response,
+        case_sensitive: selected?.case_sensitive || false,
+        matches_in_message: selected?.matches_in_message || false,
         delay: selected?.delay?.toString() || '0'
     })
 })
@@ -83,11 +87,11 @@ watch(() => props.selected, (selected) => {
                 ></v-btn>
 
                 <v-toolbar-title class="text-subtitle-1">
-                    {{form.id ? 'Редактирование' : 'Новый триггер'}}
+                    {{ form.id ? 'Редактирование' : 'Новый триггер' }}
                 </v-toolbar-title>
 
                 <v-toolbar-items class="pr-2">
-                    <v-spacer />
+                    <v-spacer/>
                     <v-btn
                         type="submit"
                         color="error"
@@ -106,6 +110,16 @@ watch(() => props.selected, (selected) => {
                     v-model:keywords="form.keywords"
                     :error-messages="form.errors.keyword || form.errors.keywords"
                 />
+
+                <v-switch style="height: 35px"
+                          v-model="form.case_sensitive"
+                          color="primary"
+                          label="Учитывать регистр"
+                          hide-details></v-switch>
+
+                <v-switch label="Искать триггеры по тексту"
+                          v-model="form.matches_in_message"
+                          color="primary"></v-switch>
 
                 <v-textarea
                     variant="outlined"

@@ -11,18 +11,20 @@ class BotTrigger extends Model
         'keywords',
         'response',
         'case_sensitive',
+        'matches_in_message',
         'delay'
     ];
 
     protected $casts = [
         'keywords' => 'array',
-        'case_sensitive' => 'boolean'
+        'case_sensitive' => 'boolean',
+        'matches_in_message' => 'boolean',
     ];
 
     public function matches(string $text): bool
     {
         $keywords = $this->keywords;
-        $mode = null;
+        $mode = $this->matches_in_message ? 'contains' : null;
 
         // Нормализация текста для нечувствительного к регистру поиска
         if (!$this->case_sensitive) {

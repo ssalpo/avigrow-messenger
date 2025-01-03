@@ -26,7 +26,7 @@ const removeKeyword = (i) => {
         v-bind="$attrs"
     />
 
-    <v-sheet border rounded class="pa-3 mb-8" v-if="keywords.length">
+    <v-sheet border rounded class="pa-3 mb-3" v-if="keywords.length">
         <v-chip
             v-for="(keyword, index) in keywords"
             color="teal"
