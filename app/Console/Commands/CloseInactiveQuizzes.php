@@ -2,19 +2,21 @@
 
 namespace App\Console\Commands;
 
+use App\Models\BotChatState;
 use App\Models\BotQuizState;
 use Illuminate\Console\Command;
 
 class CloseInactiveQuizzes extends Command
 {
-    protected $signature = 'quiz:close-inactive';
-    protected $description = 'Закрытие неактивных квизов.';
+    protected $signature = 'app:close-inactive-bot-states';
+    protected $description = 'Закрытие неактивных квизов и приветствий.';
 
 
-    public function handle()
+    public function handle(): void
     {
-        $timeoutInHours = 24;
+        $timeout = now()->subHours(24);
 
-        BotQuizState::where('updated_at', '<', now()->subHours($timeoutInHours))->delete();
+        BotQuizState::where('updated_at', '<', $timeout)->delete();
+        BotChatState::where('updated_at', '<', $timeout)->delete();
     }
 }
