@@ -7,6 +7,7 @@ import BotShowQuiz from "@/Pages/Bots/Show/BotShowQuiz.vue";
 import ChangeBotType from "@/Pages/Bots/Show/ChangeBotType.vue";
 import {BOT_TYPE_QUIZ, BOT_TYPE_STANDARD} from "@/Constants/BotTypes.js";
 import BotShowConnections from "@/Pages/Bots/Show/BotShowConnections.vue";
+import MacrosMenu from "@/Components/Bots/MacrosMenu.vue";
 
 defineProps(['bot', 'accounts'])
 defineOptions({inheritAttrs: false})

@@ -14,7 +14,7 @@ class PlaceholderService
     public static function replace(string $template, array $placeholders): string
     {
         // Добавляем макрос приветствия по времени
-        $placeholders['{time_greeting}'] = self::getTimeGreeting();
+        $placeholders['{welcome}'] = self::getTimeGreeting();
 
         foreach ($placeholders as $key => $value) {
             $template = str_replace($key, $value, $template);

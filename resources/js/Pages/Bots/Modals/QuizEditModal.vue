@@ -1,14 +1,17 @@
 <script setup>
 import {router, useForm} from "@inertiajs/vue3";
 import KeywordsInput from "@/Pages/Bots/Modals/KeywordsInput.vue";
-import {watch} from "vue";
+import {ref, watch} from "vue";
 import {
     QUIZ_ANSWER_TYPE_ARBITRARY,
     QUIZ_ANSWER_TYPE_OPTIONS,
     QUIZ_ANSWER_TYPES
 } from "@/Constants/BotQuizAnswerTypes.js";
+import MacrosMenu from "@/Components/Bots/MacrosMenu.vue";
 
 const model = defineModel()
+
+const contentElement = ref(null)
 
 const props = defineProps({
     botId: {
@@ -116,12 +119,25 @@ watch(() => props.selected, (selected) => {
                     :error-messages="form.errors.name"
                 />
 
-                <v-textarea
-                    variant="outlined"
-                    label="Текст сообщения"
-                    v-model="form.content"
-                    :error-messages="form.errors.content"
-                ></v-textarea>
+                <macros-menu :element="contentElement"
+                             v-model="form.content"
+                             activator="#macros-activator"/>
+
+                <div class="position-relative">
+                    <v-textarea
+                        ref="contentElement"
+                        variant="outlined"
+                        label="Текст сообщения"
+                        v-model="form.content"
+                        :error-messages="form.errors.content"
+                    ></v-textarea>
+
+                    <v-icon icon="mdi-format-list-checks"
+                            color="primary"
+                            class="position-absolute top-0 right-0 mr-5 mt-3 cursor-pointer"
+                            id="macros-activator">
+                    </v-icon>
+                </div>
 
                 <v-select
                     label="Тип ответа"

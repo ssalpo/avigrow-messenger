@@ -1,10 +1,13 @@
 <script setup>
 import {router, useForm} from "@inertiajs/vue3";
 import KeywordsInput from "@/Pages/Bots/Modals/KeywordsInput.vue";
-import {watch} from "vue";
+import {ref, watch} from "vue";
 import DurationSelect from "@/Components/Form/DurationSelect.vue";
+import MacrosMenu from "@/Components/Bots/MacrosMenu.vue";
 
 const model = defineModel()
+
+const responseElement = ref(null)
 
 const props = defineProps({
     botId: {
@@ -121,12 +124,25 @@ watch(() => props.selected, (selected) => {
                           v-model="form.matches_in_message"
                           color="primary"></v-switch>
 
-                <v-textarea
-                    variant="outlined"
-                    label="Текст сообщения"
-                    v-model="form.response"
-                    :error-messages="form.errors.response"
-                ></v-textarea>
+                <macros-menu :element="responseElement"
+                             v-model="form.response"
+                             activator="#macros-activator"/>
+
+                <div class="position-relative">
+                    <v-textarea
+                        ref="responseElement"
+                        variant="outlined"
+                        label="Текст сообщения"
+                        v-model="form.response"
+                        :error-messages="form.errors.response"
+                    ></v-textarea>
+
+                    <v-icon icon="mdi-format-list-checks"
+                            color="primary"
+                           class="position-absolute top-0 right-0 mr-5 mt-3 cursor-pointer"
+                           id="macros-activator">
+                    </v-icon>
+                </div>
 
                 <duration-select
                     variant="outlined"

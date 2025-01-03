@@ -1,9 +1,12 @@
 <script setup>
 import {router, useForm} from "@inertiajs/vue3";
-import {watch} from "vue";
+import {ref, watch} from "vue";
 import DurationSelect from "@/Components/Form/DurationSelect.vue";
+import MacrosMenu from "@/Components/Bots/MacrosMenu.vue";
 
 const model = defineModel()
+
+const templateElement = ref(null)
 
 const props = defineProps({
     botId: {
@@ -95,12 +98,25 @@ watch(() => props.selected, (selected) => {
             </v-toolbar>
 
             <v-card-text class="pt-10">
-                <v-textarea
-                    variant="outlined"
-                    label="Текст шаблона"
-                    v-model="form.template"
-                    :error-messages="form.errors.template"
-                ></v-textarea>
+                <macros-menu :element="templateElement"
+                             v-model="form.template"
+                             activator="#macros-activator"/>
+
+                <div class="position-relative">
+                    <v-textarea
+                        ref="templateElement"
+                        variant="outlined"
+                        label="Текст шаблона"
+                        v-model="form.template"
+                        :error-messages="form.errors.template"
+                    ></v-textarea>
+
+                    <v-icon icon="mdi-format-list-checks"
+                            color="primary"
+                            class="position-absolute top-0 right-0 mr-5 mt-3 cursor-pointer"
+                            id="macros-activator">
+                    </v-icon>
+                </div>
 
                 <duration-select
                     variant="outlined"

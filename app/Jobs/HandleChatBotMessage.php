@@ -42,7 +42,7 @@ class HandleChatBotMessage implements ShouldQueue
         $placeholders = [
             '{name}' => $user->name,
             '{price}' => $chat->item->price,
-            '{ad_title}' => $chat->item->title,
+            '{adTitle}' => $chat->item->title,
             '{location}' => $chat->item->location
         ];
 
