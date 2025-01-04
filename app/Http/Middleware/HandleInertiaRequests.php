@@ -48,6 +48,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'accounts' => $accounts,
             'activeAccount' => $activeAccount,
+            'backData' => $request->session()->get('backData'),
         ];
     }
 }

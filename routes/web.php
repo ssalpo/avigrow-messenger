@@ -65,6 +65,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('schedule-reviews', ReviewScheduleController::class)->only(['index', 'store', 'destroy']);
 
         Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
+        Route::post('/reviews/{review}/answer', [ReviewController::class, 'answer'])->name('reviews.answer');
+        Route::delete('/reviews/{review}/answer/{answer}', [ReviewController::class, 'answerDestroy'])->name('reviews.answer.destroy');
 
         Route::get('chats/{chat}', [HomeController::class, 'messages'])->name('account.chat.messages');
         Route::get('chats', [HomeController::class, 'index'])->name('account.chats');

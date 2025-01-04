@@ -250,6 +250,19 @@ class Avito
         return $this->clientWithToken()->get("/ratings/v1/reviews?offset=$offset&limit=$limit")->json() ?? [];
     }
 
+    public function sendAnswerToReview(int $reviewId, string $message): array
+    {
+        return $this->clientWithToken()->post("/ratings/v1/answers", [
+            'reviewId' => $reviewId,
+            'message' => $message,
+        ])->json();
+    }
+
+    public function deleteReviewAnswer(int $answerId): array
+    {
+        return $this->clientWithToken()->delete("/ratings/v1/answers/$answerId")->json();
+    }
+
     public static function getUserFromChat(array $users, string $accountId): AvitoChatUserDto
     {
         $user = collect($users)->where('id', '!=', $accountId)->first();

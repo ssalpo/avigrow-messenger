@@ -2,7 +2,18 @@
 
 import ReviewAnswer from "@/Components/ReviewAnswer.vue";
 
-const props = defineProps(['review'])
+const props = defineProps({
+    accountId: {
+        type: Number,
+        required: true
+    },
+    review: {
+        type: Object,
+        required: true
+    }
+})
+
+const emits = defineEmits(['selected'])
 
 const stageTypes = {
     "done": "Сделка состоялась",
@@ -39,7 +50,7 @@ const stageTypes = {
             />
 
             <span class="text-disabled text-body-2">
-                {{stageTypes[review.stage]}}
+                {{ stageTypes[review.stage] }}
             </span>
         </v-sheet>
 
@@ -51,7 +62,18 @@ const stageTypes = {
             {{ review.text }}
         </v-sheet>
 
-        <ReviewAnswer v-if="review.answer" :answer="review.answer"/>
+        <ReviewAnswer v-if="review.answer"
+                      @deleted="() => review.answer = null"
+                      :account-id="accountId"
+                      :review="review"/>
+
+        <v-btn variant="outlined"
+               v-if="review.canAnswer"
+               @click="() => emits('selected', review)"
+               class="mt-3"
+               density="compact"
+               color="primary"
+               text="Написать ответ"/>
     </v-sheet>
 
 </template>
