@@ -284,7 +284,15 @@ html {
     bottom: 0;
 }
 
-.message-send-input > div {
+.message-send-errors {
+    border-bottom: 1px solid #f2f2f2;
+    padding: 10px 10px;
+    font-size: 12px;
+    text-align: center;
+    color: red;
+}
+
+.message-send-input .message-input {
     padding: 0 10px;
     display: flex;
 }

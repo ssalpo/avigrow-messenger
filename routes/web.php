@@ -13,6 +13,7 @@ use App\Http\Controllers\CodeKeyController;
 use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\FmTagController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PwaController;
@@ -62,6 +63,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('bots.quizzes', BotQuizController::class);
 
     Route::group(['prefix' => '/accounts/{account}'], function () {
+        Route::post('/messages/{chatId}/send-image', [MessageController::class, 'sendImage'])->name('messages.send-image');
+
         Route::resource('schedule-reviews', ReviewScheduleController::class)->only(['index', 'store', 'destroy']);
 
         Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');

@@ -6,8 +6,10 @@ use App\Models\Account;
 use App\Services\DTO\Avito\AvitoAuthUserDto;
 use App\Services\DTO\Avito\AvitoChatDto;
 use App\Services\DTO\Avito\AvitoChatUserDto;
+use GuzzleHttp\Client;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class Avito
 {
@@ -15,17 +17,22 @@ class Avito
 
     public const BASE_API_URL = 'https://api.avito.ru';
 
-    protected function client(): PendingRequest
+    protected function client(bool $asJsonBody = true): PendingRequest
     {
-        return Http::baseUrl(self::BASE_API_URL)
-            ->asJson()
+        $client = Http::baseUrl(self::BASE_API_URL)
             ->timeout(120)
             ->retry(2, 3000);
+
+        if ($asJsonBody) {
+            return $client->asJson();
+        }
+
+        return $client;
     }
 
-    protected function clientWithToken(): PendingRequest
+    protected function clientWithToken(bool $asJsonBody = true): PendingRequest
     {
-        return $this->client()
+        return $this->client($asJsonBody)
             ->withToken($this->account->external_access_token);
     }
 
@@ -224,7 +231,7 @@ class Avito
     {
         return AvitoAuthUserDto::fromArray(
             $this->safeRequest(
-                fn () => $this->clientWithToken()->get("/core/v1/accounts/self")
+                fn() => $this->clientWithToken()->get("/core/v1/accounts/self")
             )
         );
     }
@@ -310,5 +317,32 @@ class Avito
                     'page' => $page
                 ])
         );
+    }
+
+    public function uploadImage(string $filePath, string $fileName): array
+    {
+        $userId = $this->account->external_id;
+
+        $response = $this->clientWithToken(false)
+            ->asMultipart()
+            ->attach('uploadfile[]', fopen($filePath, 'rb'), $fileName)
+            ->post("/messenger/v1/accounts/$userId/uploadImages");
+
+        $imageId = key($response->json());
+
+        return [
+            'id' =>  $imageId,
+            $response->json($imageId)
+        ];
+    }
+
+    public function sendImageMessage(string $chatId, string $imageId): array
+    {
+        return $this->clientWithToken()->post(
+            "/messenger/v1/accounts/{$this->account->external_id}/chats/$chatId/messages/image",
+            [
+                'image_id' => $imageId,
+            ]
+        )->json();
     }
 }

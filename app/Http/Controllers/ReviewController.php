@@ -45,7 +45,9 @@ class ReviewController extends Controller
             ->setAccount(Account::findOrFail($accountId))
             ->sendAnswerToReview($reviewId, $request->message);
 
-        return redirect()->back()->with('backData', $response);
+        return redirect()->back()->with('backData', [
+            'reviewAnswerResponse' => $response
+        ]);
     }
 
     public function answerDestroy(int $accountId, int $reviewId, int $answerId): RedirectResponse

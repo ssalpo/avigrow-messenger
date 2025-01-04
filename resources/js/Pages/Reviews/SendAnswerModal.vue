@@ -23,7 +23,7 @@ const send = () => {
 
     form.post(url, {
         preserveScroll: true, preserveState: true, onSuccess: () => {
-            const response = usePage().props.backData
+            const response = usePage().props.backData.reviewAnswerResponse
 
             props.review.answer = {
                 id: response.id,

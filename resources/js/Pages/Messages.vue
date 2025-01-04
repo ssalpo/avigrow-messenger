@@ -1,5 +1,5 @@
 <script setup>
-import {Head, Link, router} from '@inertiajs/vue3';
+import {Head, router, useForm, usePage} from '@inertiajs/vue3';
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import MessageItem from "@/Components/Chats/MessageItem.vue";
 import FastMessages from "@/Components/FastMessages.vue";
@@ -43,6 +43,12 @@ const hasMoreMessages = ref(props.has_more);
 const currentPage = ref(1);
 const isBusy = ref(false);
 const reloadIsHide = ref(false);
+const fileInput = ref(null)
+
+const imageForm = useForm({
+    image: null
+})
+
 let messageAllIds = computed(() => messagesAll.value.map(m => m.id))
 
 const showMorePage = () => {
@@ -171,6 +177,47 @@ function reloadPage() {
     })
 }
 
+const selectFile = () => {
+    fileInput.value.click();
+}
+
+const uploadFile = (event) => {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    imageForm.image = file
+
+    const url = route('messages.send-image', {account: props.activeAccount.id, chatId: props.chat.id})
+
+    imageForm.post(url, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+            const data = usePage().props.backData.imageSendResponse
+
+            messagesAll.value.push({
+                id: data.id,
+                is_me: data.is_me,
+                content_type: data.type,
+                content: data.content,
+                is_read: false,
+                created_at: data.created_at,
+                created_at_timestamp: data.created,
+            })
+
+            setTimeout(scrollToEnd, 100)
+
+            imageForm.reset();
+        },
+        onError: () => {
+            setTimeout(() => {
+                imageForm.setError('image', null)
+            }, 7000)
+        }
+    })
+}
+
 </script>
 
 <template>
@@ -180,11 +227,13 @@ function reloadPage() {
         <conversation-tabs
             :active-account="activeAccount"
             :chat="chat"
-            style="position: fixed; width: 100%" />
+            style="position: fixed; width: 100%"/>
 
         <div class="messages">
             <div style="text-align: center">
-                <a class="pagination" :class="{isBusy: isBusy}" v-if="hasMoreMessages"
+                <a class="pagination"
+                   :class="{isBusy: isBusy}"
+                   v-if="hasMoreMessages"
                    @click.prevent="showMorePage">Показать еще</a>
             </div>
 
@@ -200,7 +249,10 @@ function reloadPage() {
         </div>
 
         <div class="message-send-input">
-            <div>
+            <div class="message-send-errors" v-if="imageForm.errors.image">
+                {{imageForm.errors.image}}
+            </div>
+            <div class="message-input">
                 <textarea
                     ref="textarea"
                     @blur="onBlurTextarea"
@@ -210,21 +262,19 @@ function reloadPage() {
                     :placeholder="sendFromOtherText || `Введите сообщение...`">
                 </textarea>
 
-                <!--                <button v-show="!input" :disabled="isBusy" class="left-btn message-icon" type="button">📎</button>-->
-
-<!--                <button v-show="!input && !reloadIsHide" :disabled="isBusy" @click="reloadPage"
-                        class="left-btn message-icon"
-                        type="button">⋮
-                </button>-->
-
 
                 <v-menu v-if="!input">
                     <template v-slot:activator="{ props }">
-                        <button class="left-btn message-icon" type="button" v-bind="props">⋮</button>
+                        <button class="left-btn message-icon"
+                                type="button"
+                                v-bind="props">⋮
+                        </button>
                     </template>
 
                     <v-list density="compact">
-                        <new-order-modal :errors="errors" :chat-id="chat.id" :account-id="activeAccount.id">
+                        <new-order-modal :errors="errors"
+                                         :chat-id="chat.id"
+                                         :account-id="activeAccount.id">
                             <template v-slot:default="{props}">
                                 <v-list-item
                                     v-bind="props"
@@ -248,7 +298,9 @@ function reloadPage() {
                             </template>
                         </schedule-review-request>
 
-                        <code-keys-sheet :tabs="tabs" :keys="keys" @selected="onCodeKeysSelect">
+                        <code-keys-sheet :tabs="tabs"
+                                         :keys="keys"
+                                         @selected="onCodeKeysSelect">
                             <template v-slot:default="{props}">
                                 <v-list-item
                                     v-bind="props"
@@ -260,15 +312,37 @@ function reloadPage() {
                     </v-list>
                 </v-menu>
 
-            <button v-show="!input && !reloadIsHide" :disabled="isBusy" @click="reloadPage" class="left-btn message-icon"
+                <input
+                    ref="fileInput"
+                    type="file"
+                    @change="uploadFile"
+                    style="display: none;"
+                />
+
+                <button v-show="!input"
+                        :disabled="isBusy"
+                        @click="selectFile"
+                        class="left-btn message-icon"
+                        type="button">📎
+                </button>
+
+                <button v-show="!input && !reloadIsHide"
+                        :disabled="isBusy"
+                        @click="reloadPage"
+                        class="left-btn message-icon"
                         type="button">🔄
                 </button>
 
-                <button @click="() => fastMessagesDialog = true" class="left-btn message-icon" type="button">
+                <button @click="() => fastMessagesDialog = true"
+                        class="left-btn message-icon"
+                        type="button">
                     📝
                 </button>
 
-                <button :disabled="isBusy" type="button" @click="sendMessage"> ➤</button>
+                <button :disabled="isBusy"
+                        type="button"
+                        @click="sendMessage"> ➤
+                </button>
             </div>
         </div>
     </div>

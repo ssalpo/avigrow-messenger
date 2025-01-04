@@ -105,7 +105,7 @@ class AvitoController extends Controller
             [
                 'id' => $message['id'],
                 'is_me' => true,
-                'content_type' => $message['type'],
+                'type' => $message['type'],
                 'content' => $message['content'],
                 'is_read' => false,
                 'created_at' => Carbon::createFromTimestamp($message['created'], 'Asia/Dushanbe')->format('Y.m.d, H:i'),
