@@ -93,20 +93,20 @@ const onEdit = (id) => {
 const swipe = (direction) => {
     let index = tab.value;
 
-    if(direction === 'l' && index <= 0) {
-        tab.value = 'all'
-    }
-
-    if(direction === 'r' && index === 'all') {
+    if(direction === 'l' && index === 'all') {
         tab.value = 0
     }
 
-    if(direction === 'l' && filteredFastTemplates.value[index - 1] !== undefined) {
-        tab.value = index - 1
+    if(direction === 'r' && index <= 0) {
+        tab.value = 'all'
     }
 
-    if(direction === 'r' && filteredFastTemplates.value[index + 1] !== undefined) {
+    if(direction === 'l' && filteredFastTemplates.value[index + 1] !== undefined) {
         tab.value = index + 1
+    }
+
+    if(direction === 'r' && filteredFastTemplates.value[index - 1] !== undefined) {
+        tab.value = index - 1
     }
 }
 
