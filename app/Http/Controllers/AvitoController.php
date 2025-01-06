@@ -26,17 +26,6 @@ class AvitoController extends Controller
         );
     }
 
-    public function chatInfo(int $accountId, string $chatId): JsonResponse
-    {
-        $account = Account::relatedToMe()->findOrFail($accountId);
-
-        $chat = $this->avito->setAccount($account)->getChatInfoById($chatId);
-
-        return response()->json(
-            Avito::chatResponse($chat, $account)
-        );
-    }
-
     public function getMessages(int $accountId, string $chatId): JsonResponse
     {
         $account = Account::relatedToMe()->findOrFail($accountId);
@@ -91,12 +80,6 @@ class AvitoController extends Controller
                 'created_at_timestamp' => $message['created']
             ]
         );
-    }
-
-    public function markAsRead(int $accountId, string $chatId): void
-    {
-        $account = Account::relatedToMe()->findOrFail($accountId);
-        $this->avito->setAccount($account)->markChatAsRead($chatId);
     }
 
     public function deleteMessage(int $accountId, string $chatId,  string $messageId): void

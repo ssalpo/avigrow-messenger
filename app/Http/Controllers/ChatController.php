@@ -11,6 +11,7 @@ use App\Services\ActiveConversationService;
 use App\Services\Avito;
 use App\Services\DTO\Avito\AvitoChatDto;
 use App\Services\Telegram;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
@@ -90,6 +91,24 @@ class ChatController extends Controller
                 ])
                 ->values()
         ]);
+    }
+
+    public function chatInfo(int $accountId, string $chatId): JsonResponse
+    {
+        $account = Account::relatedToMe()->findOrFail($accountId);
+
+        $chat = $this->avito->setAccount($account)->getChatInfoById($chatId);
+
+        return response()->json(
+            Avito::chatResponse($chat, $account)
+        );
+    }
+
+    public function markAsRead(int $accountId, string $chatId): void
+    {
+        $this->avito->setAccount(
+            request()->attributes->get('activeAccount')
+        )->markChatAsRead($chatId);
     }
 
     public function sendPaymentReceipt(SendPaymentReceiptRequest $request): RedirectResponse

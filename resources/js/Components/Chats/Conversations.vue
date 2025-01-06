@@ -59,7 +59,8 @@ onMounted(() => {
 
             chats.value = orderBy(chats.value, 'last_message.created', 'desc')
         } else {
-            axios.get(`/api/chats/${e.account}/${data.chat_id}/info`)
+            axios
+                .get(route('chats.info', {account: e.account, chatId: data.chat_id}))
                 .then((response) => {
                     unreadChats.value.push(response.data.id);
 

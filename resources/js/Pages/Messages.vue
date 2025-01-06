@@ -59,7 +59,8 @@ const showMorePage = () => {
 
     currentPage.value++;
 
-    axios.get(`/api/messages/${props.activeAccount.id}/${props.chat.id}?page=${currentPage.value}`)
+    axios
+        .get(route('messages.getPaginated', {account: props.activeAccount.id, chatId: props.chat.id, page: currentPage.value}))
         .then((response) => {
             messagesAll.value = response.data.messages.concat(messagesAll.value)
 

@@ -92,6 +92,10 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
         Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
         Route::post('/reviews/{review}/answer', [ReviewController::class, 'answer'])->name('reviews.answer');
         Route::delete('/reviews/{review}/answer/{answer}', [ReviewController::class, 'answerDestroy'])->name('reviews.answer.destroy');
+        Route::get('/chats/{chatId}/info', [ChatController::class, 'chatInfo'])->name('chats.info');
+        Route::post('/chats/{chatId}/mark-as-read', [ChatController::class, 'markAsRead'])->name('chats.mark-as-read');
+
+        Route::get('/messages/{chatId}', [AvitoController::class, 'getMessages'])->name('messages.getPaginated');
 
         Route::match(array('GET','POST'),'chats/{chat}', [ChatController::class, 'messages'])->name('account.chat.messages');
         Route::match(array('GET','POST'),'chats', [ChatController::class, 'index'])->name('account.chats');

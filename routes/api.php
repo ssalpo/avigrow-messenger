@@ -13,12 +13,6 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/accounts', [AvitoController::class, 'getAccounts']);
 
-Route::get('/chats/{account}/{chatId}/info', [AvitoController::class, 'chatInfo']);
-
-Route::post('/chats/{account}/{chatId}/mark-as-read', [AvitoController::class, 'markAsRead'])->name('chats.mark-as-read');
-
-Route::get('/messages/{account}/{chatId}', [AvitoController::class, 'getMessages']);
-
 Route::post('/webhook/{account}/{token}', AvitoWebhookHandler::class);
 
 Route::post('t-webhook', TelegramWebhookController::class);
