@@ -17,12 +17,10 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\FmTagController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PwaController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewScheduleController;
-use App\Http\Controllers\TransactionController;
 use App\Models\Account;
 use App\Services\Avito;
 use Illuminate\Support\Facades\Route;
@@ -43,9 +41,6 @@ Route::middleware(['auth'])->group(function () {
     Route::match(array('GET','POST'), '/', [ChatController::class, 'index'])->name('home');
 
     Route::post('/send-payment-receipt', [ChatController::class, 'sendPaymentReceipt'])->name('send-payment-receipt');
-
-    Route::get('transactions/statistics', [TransactionController::class, 'statistics'])->name('transactions.statistics');
-    Route::resource('transactions', TransactionController::class);
 
     Route::get('products/trash', [ProductController::class, 'trash'])->name('products.trash');
     Route::post('products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore');
@@ -84,9 +79,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::match(array('GET','POST'),'chats/{chat}', [ChatController::class, 'messages'])->name('account.chat.messages');
         Route::match(array('GET','POST'),'chats', [ChatController::class, 'index'])->name('account.chats');
-
-        Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
-        Route::resource('orders', OrderController::class);
     });
 
     Route::get('code-keys/histories', [CodeKeyController::class, 'histories'])->name('code-keys.histories');

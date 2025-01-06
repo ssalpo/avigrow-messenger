@@ -6,7 +6,6 @@ import FastMessages from "@/Components/FastMessages.vue";
 import {useTextareaAutosize} from "@vueuse/core";
 import ScheduleReviewRequest from "@/Components/ScheduleReviewRequest.vue";
 import CodeKeysSheet from "@/Components/CodeKeysSheet.vue";
-import NewOrderModal from "@/Components/NewOrderModal.vue";
 import ConversationTabs from "@/Components/ConversationTabs.vue";
 import BaseLayoutWithoutNav from "@/Layouts/BaseLayoutWithoutNav.vue";
 
@@ -272,18 +271,6 @@ const uploadFile = (event) => {
                     </template>
 
                     <v-list density="compact">
-                        <new-order-modal :errors="errors"
-                                         :chat-id="chat.id"
-                                         :account-id="activeAccount.id">
-                            <template v-slot:default="{props}">
-                                <v-list-item
-                                    v-bind="props"
-                                    prepend-icon="mdi-cart-outline"
-                                    title="Новый заказ"
-                                />
-                            </template>
-                        </new-order-modal>
-
                         <schedule-review-request
                             :chat-id="chat.id"
                             :account-id="activeAccount.id"

@@ -33,24 +33,12 @@ const navs = [
         icon: 'mdi-key-variant',
         params: null
     },
-    // {
-    //     title: 'Продукты',
-    //     route: 'products.index',
-    //     icon: 'mdi-cart-outline',
-    //     params: null
-    // },
-    // {
-    //     title: 'Заказы',
-    //     route: 'orders.index',
-    //     icon: 'mdi-order-bool-descending-variant',
-    //     params: {account: activeAccount.value.id}
-    // },
-    // {
-    //     title: 'Касса',
-    //     route: 'transactions.index',
-    //     icon: 'mdi-cash-register',
-    //     params: null
-    // },
+    {
+        title: 'Продукты',
+        route: 'products.index',
+        icon: 'mdi-cart-outline',
+        params: null
+    },
     {
         title: 'Операторы',
         route: 'employees.index',
