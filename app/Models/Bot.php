@@ -12,7 +12,8 @@ class Bot extends Model
         'name',
         'type',
         'is_active',
-        'mark_chat_as_unread'
+        'mark_chat_as_unread',
+        'company_id'
     ];
 
     protected $casts = [

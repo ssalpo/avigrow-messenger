@@ -18,7 +18,7 @@ class AccountController extends Controller
     public function index(): \Inertia\Response|\Inertia\ResponseFactory
     {
         return inertia('Accounts/Index', [
-            'accounts' => Account::orderByDesc('created_at')->get()
+            'accounts' => Account::isOwner()->orderByDesc('created_at')->get()
         ]);
     }
 
@@ -37,14 +37,14 @@ class AccountController extends Controller
     public function show(int $accountId): \Inertia\Response|\Inertia\ResponseFactory
     {
         return inertia('Accounts/Show', [
-            'account' => Account::findOrFail($accountId)
+            'account' => Account::isOwner()->findOrFail($accountId)
         ]);
     }
 
     public function edit(int $accountId): \Inertia\Response|\Inertia\ResponseFactory
     {
         return inertia('Accounts/Edit', [
-            'account' => Account::findOrFail($accountId)
+            'account' => Account::isOwner()->findOrFail($accountId)
         ]);
     }
 

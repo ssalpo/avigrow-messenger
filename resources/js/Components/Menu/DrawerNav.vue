@@ -1,6 +1,7 @@
 <script setup>
 import {router, usePage} from "@inertiajs/vue3";
 import {ref} from "vue";
+import CompanyToggle from "@/Components/CompanyToggle.vue";
 
 const model = defineModel();
 
@@ -32,22 +33,28 @@ const navs = [
         icon: 'mdi-key-variant',
         params: null
     },
+    // {
+    //     title: 'Продукты',
+    //     route: 'products.index',
+    //     icon: 'mdi-cart-outline',
+    //     params: null
+    // },
+    // {
+    //     title: 'Заказы',
+    //     route: 'orders.index',
+    //     icon: 'mdi-order-bool-descending-variant',
+    //     params: {account: activeAccount.value.id}
+    // },
+    // {
+    //     title: 'Касса',
+    //     route: 'transactions.index',
+    //     icon: 'mdi-cash-register',
+    //     params: null
+    // },
     {
-        title: 'Продукты',
-        route: 'products.index',
-        icon: 'mdi-cart-outline',
-        params: null
-    },
-    {
-        title: 'Заказы',
-        route: 'orders.index',
-        icon: 'mdi-order-bool-descending-variant',
-        params: {account: activeAccount.value.id}
-    },
-    {
-        title: 'Касса',
-        route: 'transactions.index',
-        icon: 'mdi-cash-register',
+        title: 'Операторы',
+        route: 'employees.index',
+        icon: 'mdi-account-group-outline',
         params: null
     },
     {
@@ -73,17 +80,9 @@ function goTo(nav) {
 
 <template>
     <v-navigation-drawer v-model="model" location="right" temporary>
-        <v-list>
-            <v-list-item
-                :prepend-icon="nav.icon"
-                v-for="nav in navs"
-                color="blue-darken-1"
-                :title="nav.title"
-                @click="() => goTo(nav)"
-            />
-        </v-list>
-
         <template v-slot:prepend>
+
+            <company-toggle />
 
             <v-sheet class="d-flex align-center px-4 py-3">
                 <v-sheet class="mr-3">
@@ -99,6 +98,16 @@ function goTo(nav) {
 
             <v-divider/>
         </template>
+
+        <v-list>
+            <v-list-item
+                :prepend-icon="nav.icon"
+                v-for="nav in navs"
+                color="blue-darken-1"
+                :title="nav.title"
+                @click="() => goTo(nav)"
+            />
+        </v-list>
 
         <template v-slot:append>
             <v-sheet class="mb-5 ml-3">

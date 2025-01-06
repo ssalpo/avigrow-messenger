@@ -25,9 +25,10 @@ class HomeController extends Controller
 
     public function index(string $account = null)
     {
-        $activeAccount = $account ? Account::findOrFail($account) : Account::first();
+        $activeAccount = $account ? Account::relatedToMe()->findOrFail($account) : Account::relatedToMe()->first();
         $this->avito->setAccount($activeAccount);
-        $response = $this->avito->setAccount($activeAccount)->getChats(30);
+
+        $response = $this->avito->getChats(30);
 
         $unreadChatIds = $this->avito->getUnreadChatIds();
 
@@ -45,7 +46,7 @@ class HomeController extends Controller
 
     public function messages(int $accountId, string $chatId)
     {
-        $account = Account::findOrFail($accountId);
+        $account = Account::relatedToMe()->findOrFail($accountId);
 
         ActiveConversationService::sync($account, $chatId);
 

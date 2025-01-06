@@ -12,7 +12,8 @@ class FastTemplate extends Model
 
     protected $fillable = [
         'content',
-        'tag'
+        'tag',
+        'company_id'
     ];
 
     public function fmTags(): BelongsToMany

@@ -22,9 +22,11 @@ class AvitoWebhookHandler extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request, Account $account): void
+    public function __invoke(Request $request, int $accountId, string $webhookHandleToken): void
     {
         logger()->info(json_encode($request->post('payload', [])));
+
+        $account = Account::where(['id' => $accountId, 'webhook_handle_token' => $webhookHandleToken])->firstOrFail();
 
         $payload = AvitoWebhookPayloadDto::fromArray($request->post('payload', []));
 

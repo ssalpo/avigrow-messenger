@@ -57,15 +57,13 @@ class AccountService
         $accounts->each(fn($a) => $this->changeAccountToken($a, true));
     }
 
-    public function store(array $data)
+    public function store(array $data): Account
     {
-        return DB::transaction(function () use ($data) {
-            $account = Account::create($data + ['webhook_handle_token' => Str::random(32)]);
+        $account = Account::create($data + ['webhook_handle_token' => Str::random(32)]);
 
-            ConnectAccount::dispatch($account);
+        ConnectAccount::dispatch($account);
 
-            return $account;
-        });
+        return $account;
     }
 
     public function reconnect(int $accountId): void
@@ -104,7 +102,7 @@ class AccountService
 
     public function update(int $accountId, array $data): Account
     {
-        $account = Account::findOrFail($accountId);
+        $account = Account::isOwner()->findOrFail($accountId);
 
         $account->update($data);
 

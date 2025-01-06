@@ -10,6 +10,8 @@ use App\Http\Controllers\BotScheduleController;
 use App\Http\Controllers\BotScheduleSlotController;
 use App\Http\Controllers\BotTriggerController;
 use App\Http\Controllers\CodeKeyController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\FmTagController;
 use App\Http\Controllers\HomeController;
@@ -88,6 +90,12 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('fm-tags', [FmTagController::class, 'index'])->name('fm-tags.index');
+
+    Route::post('/companies/{company}/toggle', [CompanyController::class, 'toggleCompany'])->name('companies.toggle');
+
+    Route::get('employees', [EmployeeController::class, 'index'])->name('employees.index');
+    Route::post('/employees', [EmployeeController::class, 'sync'])->name('employees.sync');
+    Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 });
 
 Route::get('redirect', function () {

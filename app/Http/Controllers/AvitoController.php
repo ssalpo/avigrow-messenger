@@ -40,8 +40,9 @@ class AvitoController extends Controller
         ActiveConversation::find($id)?->delete();
     }
 
-    public function chats(Account $account): JsonResponse
+    public function chats(int $accountId): JsonResponse
     {
+        $account = Account::relatedToMe()->findOrFail($accountId);
         $response = $this->avito->setAccount($account)->getChats(30, request('page', 1));
 
         return response()->json([
@@ -52,8 +53,10 @@ class AvitoController extends Controller
         ]);
     }
 
-    public function chatInfo(Account $account, string $chatId): JsonResponse
+    public function chatInfo(int $accountId, string $chatId): JsonResponse
     {
+        $account = Account::relatedToMe()->findOrFail($accountId);
+
         $chat = $this->avito->setAccount($account)->getChatInfoById($chatId);
 
         return response()->json(
@@ -61,8 +64,9 @@ class AvitoController extends Controller
         );
     }
 
-    public function getMessages(Account $account, string $chatId): JsonResponse
+    public function getMessages(int $accountId, string $chatId): JsonResponse
     {
+        $account = Account::relatedToMe()->findOrFail($accountId);
         $this->avito->setAccount($account)->markChatAsRead($chatId);
 
         $response = $this->avito->setAccount($account)->getChatMessages($chatId, 30, request('page', 1));
@@ -90,12 +94,14 @@ class AvitoController extends Controller
         ]);
     }
 
-    public function sendMessage(Request $request, Account $account, string $chatId): JsonResponse
+    public function sendMessage(Request $request, int $accountId, string $chatId): JsonResponse
     {
         $request->validate([
             'message' => 'required|array',
             'message.text' => 'required'
         ]);
+
+        $account = Account::relatedToMe()->findOrFail($accountId);
 
         $message = $this->avito
             ->setAccount($account)
@@ -114,13 +120,15 @@ class AvitoController extends Controller
         );
     }
 
-    public function markAsRead(Account $account, string $chatId): void
+    public function markAsRead(int $accountId, string $chatId): void
     {
+        $account = Account::relatedToMe()->findOrFail($accountId);
         $this->avito->setAccount($account)->markChatAsRead($chatId);
     }
 
-    public function deleteMessage(Account $account, string $chatId,  string $messageId): void
+    public function deleteMessage(int $accountId, string $chatId,  string $messageId): void
     {
+        $account = Account::relatedToMe()->findOrFail($accountId);
         $this->avito->setAccount($account)->deleteMessage($chatId, $messageId);
     }
 }

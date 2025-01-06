@@ -30,25 +30,34 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $accounts = [];
-        $activeAccount = [];
-
         if (auth()->check()) {
-            $accounts = Account::all();
+            $companies = \auth()->user()->companies->map->only(['id', 'name']);
 
-            $activeAccount = $request->route()->hasParameter('account')
-                ? Account::findOrFail($request->route()->parameter('account'))
+            if(!$request->session()->has('selectedCompanyId')) {
+                $request->session()->put('selectedCompanyId', $companies[0]['id']);
+            }
+
+            $selectedCompany = $request->session()->get('selectedCompanyId') ?? $companies[0]['id'];
+
+            $accounts = Account::whereCompanyId($selectedCompany)->get();
+
+            $activeAccount = $request->route()?->hasParameter('account')
+                ? Account::whereCompanyId($selectedCompany)->findOrFail($request->route()?->parameter('account'))
                 : $accounts->first();
+
+            return [
+                ...parent::share($request),
+                'auth' => [
+                    'user' => $request->user(),
+                ],
+                'navAccounts' => $accounts,
+                'navCompanies' => $companies,
+                'selectedCompany' => $selectedCompany,
+                'activeAccount' => $activeAccount,
+                'backData' => $request->session()->get('backData'),
+            ];
         }
 
-        return [
-            ...parent::share($request),
-            'auth' => [
-                'user' => $request->user(),
-            ],
-            'accounts' => $accounts,
-            'activeAccount' => $activeAccount,
-            'backData' => $request->session()->get('backData'),
-        ];
+        return parent::share($request);
     }
 }

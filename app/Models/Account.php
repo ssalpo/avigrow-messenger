@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\AccountConnectStatus;
+use App\Services\UserService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,6 +29,7 @@ class Account extends Model
         'webhook_handle_token',
         'connection_status',
         'bot_id',
+        'company_id',
     ];
 
     protected $hidden = [
@@ -63,5 +66,22 @@ class Account extends Model
     public function ads(): HasMany
     {
         return $this->hasMany(Ad::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function scopeRelatedToMe(Builder $builder): void
+    {
+        $builder->whereIn('company_id', UserService::relatedCompanyIds(\auth()?->user()));
+    }
+
+    public function scopeIsOwner(Builder $builder): void
+    {
+        $builder->whereHas('company', function ($query) {
+            $query->where('created_by', \auth()?->id());
+        });
     }
 }

@@ -154,7 +154,7 @@ class Avito
 
     public function webhookUrl(): string
     {
-        return config('app.url') . "/api/webhook/{$this->account->id}";
+        return config('app.url') . "/api/webhook/{$this->account->id}/{$this->account->webhook_handle_token}";
     }
 
     public function getChats(int $limit = 50, int $page = 1): array

@@ -1,6 +1,6 @@
 <script setup>
 import {router, usePage} from "@inertiajs/vue3";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 
 import ActiveConversationList from "@/Components/Conversation/ActiveConversationList.vue";
 import DrawerNav from "@/Components/Menu/DrawerNav.vue";
@@ -8,7 +8,7 @@ import DrawerNav from "@/Components/Menu/DrawerNav.vue";
 defineProps(['pageTitle'])
 
 const page = usePage()
-const activeAccount = ref(page.props.activeAccount)
+const activeAccount = ref(null)
 const drawer = ref(false);
 
 function selectActive(account) {
@@ -21,6 +21,10 @@ function selectActive(account) {
 
     router.visit(route(exceptRoutes.includes(route().current())  ? 'account.chats' : route().current(), {account: account.id}))
 }
+
+watch(() => page.props.activeAccount, (value) => {
+    activeAccount.value = value
+}, {immediate: true})
 </script>
 
 <template>
@@ -48,7 +52,7 @@ function selectActive(account) {
             <v-list density="compact" class="py-0 mt-1">
                 <v-list-item
                     min-height="30"
-                    v-for="account in page.props.accounts"
+                    v-for="account in page.props.navAccounts"
                     :key="account.id"
                     :value="account.id"
                     :active="account.id === activeAccount.id"

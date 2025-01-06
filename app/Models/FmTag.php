@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class FmTag extends Model
 {
     protected $fillable = [
-        'name'
+        'name',
+        'company_id'
     ];
 
     public function fastTemplates(): BelongsToMany
