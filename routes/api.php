@@ -19,10 +19,6 @@ Route::post('/chats/{account}/{chatId}/mark-as-read', [AvitoController::class, '
 
 Route::get('/messages/{account}/{chatId}', [AvitoController::class, 'getMessages']);
 
-Route::post('/messages/{account}/{chatId}/send', [AvitoController::class, 'sendMessage']);
-
-Route::delete('/messages/{account}/{chatId}/{messageId}', [AvitoController::class, 'deleteMessage']);
-
 Route::post('/webhook/{account}/{token}', AvitoWebhookHandler::class);
 
 Route::post('t-webhook', TelegramWebhookController::class);

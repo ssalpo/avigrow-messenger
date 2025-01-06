@@ -136,12 +136,10 @@ class Avito
         ]);
     }
 
-    public function unsubscribeFromWebhook(Account $account): void
+    public function unsubscribeFromWebhook(?string $url = null): void
     {
-        $this->setAccount($account);
-
         $this->clientWithToken()->post('/messenger/v1/webhook/unsubscribe', [
-            'url' => $this->webhookUrl()
+            'url' => $url ?? $this->webhookUrl()
         ]);
     }
 

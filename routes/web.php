@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ActiveConversationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutocompleteController;
+use App\Http\Controllers\AvitoController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\BotGreetingController;
 use App\Http\Controllers\BotQuizController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\ReviewScheduleController;
 use App\Models\Account;
 use App\Services\Avito;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 
 Route::group(['middleware' => 'guest'], function () {
@@ -82,6 +84,8 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
 
     Route::group(['prefix' => '/accounts/{account}'], function () {
         Route::post('/messages/{chatId}/send-image', [MessageController::class, 'sendImage'])->name('messages.send-image');
+        Route::post('/messages/{chatId}/send', [AvitoController::class, 'sendMessage'])->name('messages.send');
+        Route::delete('/messages/{chatId}/{messageId}', [AvitoController::class, 'deleteMessage'])->name('messages.destroy');
 
         Route::resource('schedule-reviews', ReviewScheduleController::class)->only(['index', 'store', 'destroy']);
 
@@ -91,6 +95,7 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
 
         Route::match(array('GET','POST'),'chats/{chat}', [ChatController::class, 'messages'])->name('account.chat.messages');
         Route::match(array('GET','POST'),'chats', [ChatController::class, 'index'])->name('account.chats');
+
     });
 
     Route::get('code-keys/histories', [CodeKeyController::class, 'histories'])->name('code-keys.histories');

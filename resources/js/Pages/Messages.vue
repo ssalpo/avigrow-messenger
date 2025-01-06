@@ -134,7 +134,7 @@ const sendMessage = (text) => {
     isBusy.value = true;
 
     axios
-        .post(`/api/messages/${props.activeAccount.id}/${props.chat.id}/send`, {message: {text: input.value || text}})
+        .post(route('messages.send', {account: props.activeAccount.id, chatId: props.chat.id}), {message: {text: input.value || text}})
         .then((response) => {
             // messagesAll.value.push(response.data);
 

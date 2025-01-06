@@ -22,7 +22,8 @@ function deleteMessage() {
 
     isBusy.value = true;
 
-    axios.delete(`/api/messages/${props.accountId}/${props.chatId}/${props.message.id}`)
+    axios
+        .delete(route('messages.destroy', {account: props.accountId, chatId: props.chatId, messageId: props.message.id}))
         .then(() => emits('deleted', props.message))
         .catch(() => alert('Ошибка при удалении сообщения!'))
 }
