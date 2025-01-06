@@ -34,7 +34,7 @@ watch(() => page.props.activeAccount, (value) => {
         class="px-3"
         density="comfortable">
 
-        <v-menu>
+        <v-menu v-if="page.props.activeAccount">
             <template v-slot:activator="{ props }">
                 <v-btn
                     variant="outlined"

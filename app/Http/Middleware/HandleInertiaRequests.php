@@ -33,7 +33,7 @@ class HandleInertiaRequests extends Middleware
         if (auth()->check()) {
             $companies = \auth()->user()->companies->map->only(['id', 'name']);
 
-            if(!$request->session()->has('selectedCompanyId')) {
+            if (!$request->session()->has('selectedCompanyId')) {
                 $request->session()->put('selectedCompanyId', $companies[0]['id']);
             }
 

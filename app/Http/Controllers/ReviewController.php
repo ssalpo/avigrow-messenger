@@ -20,7 +20,7 @@ class ReviewController extends Controller
     public function index(): \Illuminate\Http\JsonResponse|\Inertia\Response|\Inertia\ResponseFactory
     {
         $page = request()->get('page');
-        $account = \request()->attributes->get('account');
+        $account = \request()->attributes->get('activeAccount');
 
         $reviews = $this->avito->setAccount($account)->reviews(limit: 50, page: $page ?? 1);
 
@@ -36,7 +36,7 @@ class ReviewController extends Controller
         }
 
         return inertia('Reviews', [
-            'accountId' => $account,
+            'accountId' => $account->id,
             'reviews' => $reviews['reviews'],
             'lastPage' => $lastPage,
         ]);
@@ -44,7 +44,7 @@ class ReviewController extends Controller
 
     public function answer(int $reviewId, ReviewAnswerRequest $request): RedirectResponse
     {
-        $account = \request()->attributes->get('account');
+        $account = \request()->attributes->get('activeAccount');
 
         $response = $this->avito
             ->setAccount($account)

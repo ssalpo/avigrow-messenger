@@ -30,7 +30,7 @@ function clear(index, conversation) {
 </script>
 
 <template>
-    <v-menu>
+    <v-menu v-if="conversations.length">
         <template v-slot:activator="{ props }">
             <v-icon
                 v-bind="props"

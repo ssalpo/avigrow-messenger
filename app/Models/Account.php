@@ -89,4 +89,9 @@ class Account extends Model
             $query->where('created_by', \auth()?->id());
         });
     }
+
+    public static function hasAnyRelated()
+    {
+        return self::whereIn('company_id', UserService::relatedCompanyIds(auth()->user()))->exists();
+    }
 }

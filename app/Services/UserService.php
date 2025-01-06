@@ -8,7 +8,7 @@ use function Laravel\Prompts\form;
 
 class UserService
 {
-    public function refreshRelatedCompaniesCache(User $user): void
+    public static function refreshRelatedCompaniesCache(User $user): void
     {
         $companyIds = $user->companies->pluck('id');
         $cacheKey = self::relatedCompaniesCacheKey($user->id);

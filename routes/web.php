@@ -25,16 +25,28 @@ use App\Models\Account;
 use App\Services\Avito;
 use Illuminate\Support\Facades\Route;
 
-Route::get('login', [AuthController::class, 'login'])->name('login');
-Route::post('login', [AuthController::class, 'auth']);
+
+Route::group(['middleware' => 'guest'], function () {
+    Route::get('login', [AuthController::class, 'login'])->name('login');
+    Route::post('login', [AuthController::class, 'auth']);
+
+    Route::get('signup', [AuthController::class, 'signup']);
+    Route::post('register', [AuthController::class, 'register'])->name('register');
+});
 
 Route::middleware(['auth'])->group(function () {
-    Route::group(['prefix' => 'autocomplete', 'as' => 'autocomplete.'], function () {
+    Route::resource('accounts', AccountController::class)->middleware('auth');
 
-    });
+    Route::post('/companies/{company}/toggle', [CompanyController::class, 'toggleCompany'])->name('companies.toggle');
 
     Route::get('active-conversations', [ActiveConversationController::class, 'getLists'])->name('active-conversations.list');
     Route::delete('active-conversations/{id}', [ActiveConversationController::class, 'destroy'])->name('active-conversations.destroy');
+});
+
+Route::middleware(['auth', 'check.accounts'])->group(function () {
+    Route::group(['prefix' => 'autocomplete', 'as' => 'autocomplete.'], function () {
+
+    });
 
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -47,8 +59,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('products', ProductController::class);
 
     Route::resource('/fast-templates', FastTemplateController::class);
-
-    Route::resource('accounts', AccountController::class);
 
     Route::post('/bots/{bot}/update-settings', [BotController::class, 'updateSettings'])->name('bots.update-settings');
     Route::get('/bots/{bot}/connected-add-treeview', [BotController::class, 'connectedAdTreeView'])->name('bots.connected-add-treeview');
@@ -91,8 +101,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('fm-tags', [FmTagController::class, 'index'])->name('fm-tags.index');
-
-    Route::post('/companies/{company}/toggle', [CompanyController::class, 'toggleCompany'])->name('companies.toggle');
 
     Route::get('employees', [EmployeeController::class, 'index'])->name('employees.index');
     Route::post('/employees', [EmployeeController::class, 'sync'])->name('employees.sync');

@@ -1,32 +1,13 @@
 <script setup>
 import {router, usePage} from "@inertiajs/vue3";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import CompanyToggle from "@/Components/CompanyToggle.vue";
 
 const model = defineModel();
 
 const page = usePage()
 const activeAccount = ref(page.props.activeAccount)
-
-const navs = [
-    {
-        title: 'Сообщения',
-        route: 'account.chats',
-        icon: 'mdi-email-outline',
-        params: {account: activeAccount.value.id}
-    },
-    {
-        title: 'Запросы отзывов',
-        route: 'schedule-reviews.index',
-        icon: 'mdi-timer-star',
-        params: {account: activeAccount.value.id}
-    },
-    {
-        title: 'Отзывы',
-        route: 'reviews.index',
-        icon: 'mdi-star-outline',
-        params: {account: activeAccount.value.id}
-    },
+let baseNav = [
     {
         title: 'Ключи',
         route: 'code-keys.index',
@@ -57,25 +38,64 @@ const navs = [
         icon: 'mdi-robot-outline',
         params: null
     }
-];
+]
+
+let navs = ref([]);
 
 function goTo(nav) {
     model.value = false;
 
     router.visit(route(nav.route, nav.params))
 }
+
+watch(() => page.props.activeAccount, (value) => {
+    activeAccount.value = value
+})
+
+watch(() => activeAccount.value, () => {
+    if (activeAccount.value?.id) {
+        navs.value = [
+            {
+                title: 'Сообщения',
+                route: 'account.chats',
+                icon: 'mdi-email-outline',
+                params: {account: activeAccount.value?.id}
+            },
+            {
+                title: 'Запросы отзывов',
+                route: 'schedule-reviews.index',
+                icon: 'mdi-timer-star',
+                params: {account: activeAccount.value?.id}
+            },
+            {
+                title: 'Отзывы',
+                route: 'reviews.index',
+                icon: 'mdi-star-outline',
+                params: {account: activeAccount.value?.id}
+            },
+            ...baseNav
+        ]
+    } else {
+        navs.value = baseNav
+    }
+}, {immediate: true})
 </script>
 
 <template>
-    <v-navigation-drawer v-model="model" location="right" temporary>
+    <v-navigation-drawer v-model="model"
+                         location="right"
+                         temporary>
         <template v-slot:prepend>
 
-            <company-toggle @selected="() => model = false" />
+            <company-toggle
+                v-if="$page.props.navCompanies.length > 1"
+                @selected="() => model = false"/>
 
             <v-sheet class="d-flex align-center px-4 py-3">
                 <v-sheet class="mr-3">
                     <v-avatar color="#bdbdbd">
-                        <v-icon color="white" icon="mdi-account" />
+                        <v-icon color="white"
+                                icon="mdi-account"/>
                     </v-avatar>
                 </v-sheet>
                 <v-sheet>
@@ -112,7 +132,3 @@ function goTo(nav) {
 
     </v-navigation-drawer>
 </template>
-
-<style scoped>
-
-</style>

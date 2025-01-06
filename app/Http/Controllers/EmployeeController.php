@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EmployeeSyncRequest;
 use App\Models\Company;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -35,6 +36,8 @@ class EmployeeController extends Controller
 
         $user->companies()->syncWithoutDetaching(auth()->user()->myCompany);
 
+        UserService::refreshRelatedCompaniesCache($user);
+
         if($user->wasRecentlyCreated){
             return redirect()->back()->with('backData', ['employeeAccountPassword' => $password]);
         }
@@ -47,6 +50,8 @@ class EmployeeController extends Controller
         $user = User::employee()->findOrFail($userId);
 
         $user->companies()->detach(auth()->user()->myCompany);
+
+        UserService::refreshRelatedCompaniesCache($user);
 
         return redirect()->back();
     }
