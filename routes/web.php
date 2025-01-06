@@ -150,3 +150,14 @@ Route::get('meta-code-generator', function () {
         mb_strtoupper(implode('-', $codes))
     );
 });
+
+Route::get('digiseller-sign-generator', function() {
+    $token = request('token');
+    $time = time();
+    $shaToken = hash('sha256', $token . $time);
+    return <<<MSG
+Token: {$shaToken} <br />
+Timestamp: {$time}
+MSG;
+
+});
