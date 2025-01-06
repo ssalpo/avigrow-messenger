@@ -45,6 +45,8 @@ class HandleInertiaRequests extends Middleware
                 ? Account::whereCompanyId($selectedCompany)->findOrFail($request->route()?->parameter('account'))
                 : $accounts->first();
 
+            $request->attributes->set('activeAccount', $activeAccount);
+
             return [
                 ...parent::share($request),
                 'auth' => [

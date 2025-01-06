@@ -1,12 +1,9 @@
 <script setup>
-import {router} from '@inertiajs/vue3'
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {router, useForm, usePage, WhenVisible} from '@inertiajs/vue3'
+import {onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {map, orderBy} from "lodash";
 
 const props = defineProps({
-    currentUserId: {
-        type: Number
-    },
     activeAccountId: {
         type: Number,
         default: 0
@@ -80,22 +77,17 @@ onMounted(() => {
 })
 
 const showMorePage = () => {
-    if (isBusy.value === true) {
-        return;
-    }
-
-    isBusy.value = true;
-
     currentPage.value++;
 
-    axios.get(`/api/chats/${props.activeAccountId}?page=${currentPage.value}`)
-        .then((response) => {
-            chats.value = chats.value.concat(response.data.chats)
-
-            hasMoreChats.value = response.data.has_more
-
-            isBusy.value = false;
-        })
+    router.post(route(route().current(), props.activeAccountId), {page: currentPage.value}, {
+        preserveState: true,
+        preserveScroll: true,
+        only: ['conversations'],
+        onSuccess: () => {
+            chats.value.push(...usePage().props.conversations.chats)
+            hasMoreChats.value = usePage().props.conversations.hasMore
+        }
+    })
 }
 
 function contextType(chat) {
@@ -132,40 +124,49 @@ function contextType(chat) {
 
     return currentType
 }
-
 </script>
 
 <template>
-    <v-list lines="two" class="pt-0">
-        <template
-            v-for="chat in chats"
-            :key="chat.id"
-        >
-            <v-list-item
-                @click="openItem(chat.id)"
-                :title="chat.user.name"
-                :subtitle="contextType(chat)"
-                :prepend-avatar="chat.image"
+    <v-list lines="two"
+            class="pt-0">
+
+            <template
+                v-for="chat in chats"
+                :key="chat.id"
             >
-                <template v-slot:title="{title}">
-                    <div class="v-list-item-title" :class="{'text-red-darken-1': unreadChats.includes(chat.id)}">{{ title }}</div>
-                    <small :class="{'text-red-darken-1': unreadChats.includes(chat.id)}">{{ chat.context }}</small>
-                </template>
+                <v-list-item
+                    @click="openItem(chat.id)"
+                    :title="chat.user.name"
+                    :subtitle="contextType(chat)"
+                    :prepend-avatar="chat.image"
+                >
+                    <template v-slot:title="{title}">
+                        <div class="v-list-item-title"
+                             :class="{'text-red-darken-1': unreadChats.includes(chat.id)}">{{ title }}
+                        </div>
+                        <small :class="{'text-red-darken-1': unreadChats.includes(chat.id)}">{{ chat.context }}</small>
+                    </template>
 
-                <template v-slot:subtitle="{subtitle}">
-                    <small>{{ subtitle }}</small>
-                </template>
+                    <template v-slot:subtitle="{subtitle}">
+                        <small>{{ subtitle }}</small>
+                    </template>
 
-                <template v-slot:prepend>
-                    <v-avatar :image="chat.image" size="45"></v-avatar>
-                </template>
-            </v-list-item>
-            <v-divider />
-        </template>
+                    <template v-slot:prepend>
+                        <v-avatar :image="chat.image"
+                                  size="45"></v-avatar>
+                    </template>
+                </v-list-item>
+                <v-divider/>
+            </template>
     </v-list>
 
     <div class="text-center mt-3 mb-5">
-        <v-btn variant="outlined" size="x-small" :disabled="isBusy" color="blue-darken-1" v-if="hasMoreChats" @click.prevent="showMorePage">
+        <v-btn variant="outlined"
+               size="x-small"
+               :disabled="isBusy"
+               color="blue-darken-1"
+               v-if="hasMoreChats"
+               @click.prevent="showMorePage">
             Показать еще
         </v-btn>
     </div>

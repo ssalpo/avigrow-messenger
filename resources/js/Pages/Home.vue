@@ -1,8 +1,7 @@
 <script setup>
-import {Head, router, usePage} from '@inertiajs/vue3';
+import {Head, usePage} from '@inertiajs/vue3';
 import Conversations from "@/Components/Chats/Conversations.vue";
 import {onMounted} from "vue";
-import ConversationTabs from "@/Components/ConversationTabs.vue";
 
 const props = defineProps({
     accounts: {
@@ -12,7 +11,7 @@ const props = defineProps({
         type: Array,
     },
     conversations: {
-        type: Array,
+        type: Object,
     },
     hasMore: {
         type: Boolean,
@@ -35,7 +34,7 @@ onMounted(() => {
     <conversations
         :unreadChatIds="unreadChatIds"
         :active-account-id="page.props.activeAccount.id"
-        :conversations="conversations"
-        :has-more="hasMore"
+        :conversations="conversations.chats"
+        :has-more="conversations.hasMore"
     />
 </template>

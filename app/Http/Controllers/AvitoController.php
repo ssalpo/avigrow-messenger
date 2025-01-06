@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
-use App\Models\ActiveConversation;
 use App\Services\Avito;
-use App\Services\DTO\Avito\AvitoChatDto;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,20 +24,6 @@ class AvitoController extends Controller
                 'name' => $a->name
             ])
         );
-    }
-
-
-    public function chats(int $accountId): JsonResponse
-    {
-        $account = Account::relatedToMe()->findOrFail($accountId);
-        $response = $this->avito->setAccount($account)->getChats(30, request('page', 1));
-
-        return response()->json([
-            'chats' => collect($response['chats'])->map(
-                fn($chat) => Avito::chatResponse(AvitoChatDto::fromArray($chat), $account)
-            ),
-            'has_more' => $response['meta']['has_more'],
-        ]);
     }
 
     public function chatInfo(int $accountId, string $chatId): JsonResponse

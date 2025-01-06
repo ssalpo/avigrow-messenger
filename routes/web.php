@@ -10,12 +10,12 @@ use App\Http\Controllers\BotQuizController;
 use App\Http\Controllers\BotScheduleController;
 use App\Http\Controllers\BotScheduleSlotController;
 use App\Http\Controllers\BotTriggerController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CodeKeyController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\FmTagController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -40,8 +40,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::post('/send-payment-receipt', [HomeController::class, 'sendPaymentReceipt'])->name('send-payment-receipt');
+    Route::match(array('GET','POST'), '/', [ChatController::class, 'index'])->name('home');
+
+    Route::post('/send-payment-receipt', [ChatController::class, 'sendPaymentReceipt'])->name('send-payment-receipt');
 
     Route::get('transactions/statistics', [TransactionController::class, 'statistics'])->name('transactions.statistics');
     Route::resource('transactions', TransactionController::class);
@@ -81,8 +82,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/reviews/{review}/answer', [ReviewController::class, 'answer'])->name('reviews.answer');
         Route::delete('/reviews/{review}/answer/{answer}', [ReviewController::class, 'answerDestroy'])->name('reviews.answer.destroy');
 
-        Route::get('chats/{chat}', [HomeController::class, 'messages'])->name('account.chat.messages');
-        Route::get('chats', [HomeController::class, 'index'])->name('account.chats');
+        Route::match(array('GET','POST'),'chats/{chat}', [ChatController::class, 'messages'])->name('account.chat.messages');
+        Route::match(array('GET','POST'),'chats', [ChatController::class, 'index'])->name('account.chats');
 
         Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
         Route::resource('orders', OrderController::class);

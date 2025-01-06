@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Enums\CodeKeyType;
 use App\Http\Requests\SendPaymentReceiptRequest;
 use App\Models\Account;
-use App\Models\ActiveConversation;
 use App\Models\CodeKey;
 use App\Models\ReviewSchedule;
 use App\Services\ActiveConversationService;
@@ -17,7 +16,7 @@ use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class HomeController extends Controller
+class ChatController extends Controller
 {
     public function __construct(
         protected Avito $avito
@@ -25,25 +24,27 @@ class HomeController extends Controller
     {
     }
 
-    public function index(string $account = null)
+    public function index(): Response
     {
-        $activeAccount = $account ? Account::currentCompany()->findOrFail($account) : Account::currentCompany()->first();
+        $activeAccount = request()->attributes->get('activeAccount');
 
         $this->avito->setAccount($activeAccount);
 
-        $response = $this->avito->getChats(30);
-
-        $unreadChatIds = $this->avito->getUnreadChatIds();
-
         return Inertia::render('Home', [
             'disableContainer' => true,
-            'unreadChatIds' => $unreadChatIds,
-            'currentUserId' => $activeAccount->external_id,
-            'conversations' => collect($response['chats'])->map(
-                fn($chat) => Avito::chatResponse(AvitoChatDto::fromArray($chat), $activeAccount)
-            ),
-            'hasMore' => $response['meta']['has_more'],
-            'currentPage' => \request('page', 1)
+            'unreadChatIds' => fn() => $this->avito->getUnreadChatIds(),
+            'currentPage' => \request('page', 1),
+
+            'conversations' => function () use ($activeAccount) {
+                $response = $this->avito->getChats(100, request('page', 1));
+
+                return [
+                    'chats' => collect($response['chats'])->map(
+                        fn($chat) => Avito::chatResponse(AvitoChatDto::fromArray($chat), $activeAccount)
+                    ),
+                    'hasMore' => $response['meta']['has_more'],
+                ];
+            },
         ]);
     }
 
