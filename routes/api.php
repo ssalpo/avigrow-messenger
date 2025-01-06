@@ -23,7 +23,7 @@ Route::post('/messages/{account}/{chatId}/send', [AvitoController::class, 'sendM
 
 Route::delete('/messages/{account}/{chatId}/{messageId}', [AvitoController::class, 'deleteMessage']);
 
-Route::post('/webhook/{account}', AvitoWebhookHandler::class);
+Route::post('/webhook/{account}/{token}', AvitoWebhookHandler::class);
 
 Route::post('t-webhook', TelegramWebhookController::class);
 Route::post('d-webhook-order', [DigisellerWebhookController::class, 'order']);
