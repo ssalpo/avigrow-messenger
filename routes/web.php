@@ -41,14 +41,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('active-conversations', [ActiveConversationController::class, 'getLists'])->name('active-conversations.list');
     Route::delete('active-conversations/{id}', [ActiveConversationController::class, 'destroy'])->name('active-conversations.destroy');
-});
 
-Route::middleware(['auth', 'check.accounts'])->group(function () {
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
     Route::group(['prefix' => 'autocomplete', 'as' => 'autocomplete.'], function () {
 
     });
+});
 
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware(['auth', 'check.accounts'])->group(function () {
+
 
     Route::match(array('GET','POST'), '/', [ChatController::class, 'index'])->name('home');
 
