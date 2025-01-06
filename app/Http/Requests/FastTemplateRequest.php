@@ -26,4 +26,11 @@ class FastTemplateRequest extends FormRequest
             'content' => 'required|min:2'
         ];
     }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'company_id' => $this->session()->get('selectedCompanyId'),
+        ]);
+    }
 }

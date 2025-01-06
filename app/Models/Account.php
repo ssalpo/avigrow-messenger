@@ -78,6 +78,11 @@ class Account extends Model
         $builder->whereIn('company_id', UserService::relatedCompanyIds(\auth()?->user()));
     }
 
+    public function scopeCurrentCompany(Builder $builder): void
+    {
+        $builder->where('company_id', session('selectedCompanyId'));
+    }
+
     public function scopeIsOwner(Builder $builder): void
     {
         $builder->whereHas('company', function ($query) {

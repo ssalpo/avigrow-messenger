@@ -16,7 +16,7 @@ const props = defineProps({
 let conversations = ref([])
 
 onMounted(() => {
-    axios.get(`/api/active-conversations`)
+    axios.get(route('active-conversations.list'))
         .then((r) => {
             conversations.value = r.data
         })
@@ -24,7 +24,7 @@ onMounted(() => {
 
 function clear(index, conversation) {
     conversations.value.splice(index, 1)
-    axios.delete(`/api/active-conversations/${conversation.id}`)
+    axios.delete(route('active-conversations.destroy', conversation.id))
 }
 
 </script>
@@ -48,7 +48,9 @@ function clear(index, conversation) {
                 >{{ conversation.avito_item_name }}
                 </v-list-item-title>
                 <template v-slot:prepend>
-                    <v-icon @click.stop="clear(index, conversation)" color="red" icon="mdi-trash-can-outline"/>
+                    <v-icon @click.stop="clear(index, conversation)"
+                            color="red"
+                            icon="mdi-trash-can-outline"/>
                 </template>
             </v-list-item>
         </v-list>

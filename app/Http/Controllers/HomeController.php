@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\CodeKeyType;
 use App\Http\Requests\SendPaymentReceiptRequest;
 use App\Models\Account;
+use App\Models\ActiveConversation;
 use App\Models\CodeKey;
 use App\Models\ReviewSchedule;
 use App\Services\ActiveConversationService;
@@ -14,6 +15,7 @@ use App\Services\Telegram;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class HomeController extends Controller
 {
@@ -25,7 +27,8 @@ class HomeController extends Controller
 
     public function index(string $account = null)
     {
-        $activeAccount = $account ? Account::relatedToMe()->findOrFail($account) : Account::relatedToMe()->first();
+        $activeAccount = $account ? Account::currentCompany()->findOrFail($account) : Account::currentCompany()->first();
+
         $this->avito->setAccount($activeAccount);
 
         $response = $this->avito->getChats(30);
@@ -44,7 +47,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function messages(int $accountId, string $chatId)
+    public function messages(int $accountId, string $chatId): Response
     {
         $account = Account::relatedToMe()->findOrFail($accountId);
 

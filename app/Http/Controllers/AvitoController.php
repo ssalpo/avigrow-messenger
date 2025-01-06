@@ -28,17 +28,6 @@ class AvitoController extends Controller
         );
     }
 
-    public function activeConversations(): JsonResponse
-    {
-        return response()->json(
-            ActiveConversation::orderByDesc('created_at')->get()
-        );
-    }
-
-    public function destroyActiveConversation(int $id): void
-    {
-        ActiveConversation::find($id)?->delete();
-    }
 
     public function chats(int $accountId): JsonResponse
     {

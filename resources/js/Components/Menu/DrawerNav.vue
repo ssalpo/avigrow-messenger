@@ -82,7 +82,7 @@ function goTo(nav) {
     <v-navigation-drawer v-model="model" location="right" temporary>
         <template v-slot:prepend>
 
-            <company-toggle />
+            <company-toggle @selected="() => model = false" />
 
             <v-sheet class="d-flex align-center px-4 py-3">
                 <v-sheet class="mr-3">

@@ -15,7 +15,7 @@ class FastTemplateController extends Controller
     public function index(): JsonResponse
     {
         return response()->json(
-            FmTag::has('fastTemplates')->with('fastTemplates')->get()
+            FmTag::relatedToMe()->has('fastTemplates')->with('fastTemplates')->get()
         );
     }
 
@@ -24,7 +24,7 @@ class FastTemplateController extends Controller
         DB::transaction(function () use ($request) {
             $fastTemplate = FastTemplate::create($request->validated());
 
-            $tag = FmTag::query()->firstOrCreate(['name' => $request->tag]);
+            $tag = FmTag::relatedToMe()->firstOrCreate(['name' => $request->tag]);
 
             $fastTemplate->fmTags()->sync($tag);
         });
@@ -35,11 +35,11 @@ class FastTemplateController extends Controller
     public function update(int $id, FastTemplateRequest $request): void
     {
         DB::transaction(function () use ($id, $request) {
-            $fastTemplate = FastTemplate::findOrFail($id);
+            $fastTemplate = FastTemplate::relatedToMe()->findOrFail($id);
 
             $fastTemplate->update($request->validated());
 
-            $tag = FmTag::query()->firstOrCreate(['name' => $request->tag]);
+            $tag = FmTag::relatedToMe()->firstOrCreate(['name' => $request->tag]);
 
             $fastTemplate->fmTags()->sync($tag);
         });
@@ -47,7 +47,7 @@ class FastTemplateController extends Controller
 
     public function destroy(int $id): void
     {
-        $fastTemplate = FastTemplate::findOrFail($id);
+        $fastTemplate = FastTemplate::relatedToMe()->findOrFail($id);
 
         $fastTemplate->delete();
     }

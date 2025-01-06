@@ -10,7 +10,7 @@ class FmTagController extends Controller
     public function index(): JsonResponse
     {
         return response()->json(
-            FmTag::pluck('name')
+            FmTag::relatedToMe()->pluck('name')
         );
     }
 }

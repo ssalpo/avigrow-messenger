@@ -4,11 +4,18 @@ import {ref} from "vue";
 
 const page = usePage()
 
+const emits = defineEmits(['selected'])
+
 const companies = ref(page.props.navCompanies);
 const selectedCompany = ref(page.props.selectedCompany)
 
 const onChange = (value) => {
-    router.post(route('companies.toggle', value))
+    router.post(route('companies.toggle', value), {}, {
+        preserveState: false,
+        onSuccess: () => {
+            emits('selected', selectedCompany)
+        }
+    })
 }
 </script>
 

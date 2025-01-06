@@ -11,9 +11,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('active-conversations', [AvitoController::class, 'activeConversations']);
-Route::delete('active-conversations/{id}', [AvitoController::class, 'destroyActiveConversation']);
-
 Route::get('/accounts', [AvitoController::class, 'getAccounts']);
 
 Route::get('/chats/{account}', [AvitoController::class, 'chats']);

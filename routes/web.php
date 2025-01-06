@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ActiveConversationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutocompleteController;
 use App\Http\Controllers\BotController;
@@ -30,6 +31,13 @@ Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'auth']);
 
 Route::middleware(['auth'])->group(function () {
+    Route::group(['prefix' => 'autocomplete', 'as' => 'autocomplete.'], function () {
+
+    });
+
+    Route::get('active-conversations', [ActiveConversationController::class, 'getLists'])->name('active-conversations.list');
+    Route::delete('active-conversations/{id}', [ActiveConversationController::class, 'destroy'])->name('active-conversations.destroy');
+
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -151,7 +159,7 @@ Route::get('meta-code-generator', function () {
     );
 });
 
-Route::get('digiseller-sign-generator', function() {
+Route::get('digiseller-sign-generator', function () {
     $token = request('token');
     $time = time();
     $shaToken = hash('sha256', $token . $time);
