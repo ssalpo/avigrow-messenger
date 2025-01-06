@@ -20,7 +20,7 @@ class BotController extends Controller
     public function index(): \Inertia\Response|\Inertia\ResponseFactory
     {
         return inertia('Bots/Index', [
-            'bots' => Bot::all()
+            'bots' => Bot::isOwner()->get()
         ]);
     }
 
@@ -31,13 +31,15 @@ class BotController extends Controller
 
     public function store(BotRequest $request): RedirectResponse
     {
-        $bot = Bot::create($request->validated() + ['type' => 1]);
+        $bot = Bot::create($request->validated());
 
         return to_route('bots.show', $bot->id);
     }
 
-    public function show(Bot $bot): \Inertia\Response|\Inertia\ResponseFactory
+    public function show(int $botId): \Inertia\Response|\Inertia\ResponseFactory
     {
+        $bot = Bot::isOwner()->findOrFail($botId);
+
         $bot->load('accounts', 'schedules.slots');
 
         if ($bot->type->isStandard()) {
@@ -48,18 +50,22 @@ class BotController extends Controller
             $bot->load(['quizzes' => fn($q) => $q->orderBy('sort')]);
         }
 
-        $accounts = Account::all();
+        $accounts = Account::isOwner()->get();
 
         return inertia('Bots/Show', compact('bot', 'accounts'));
     }
 
-    public function edit(Bot $bot): \Inertia\Response|\Inertia\ResponseFactory
+    public function edit(int $botId): \Inertia\Response|\Inertia\ResponseFactory
     {
+        $bot = Bot::isOwner()->findOrFail($botId);
+
         return inertia('Bots/Edit', compact('bot'));
     }
 
-    public function update(Bot $bot, BotRequest $request): RedirectResponse
+    public function update(int $botId, BotRequest $request): RedirectResponse
     {
+        $bot = Bot::isOwner()->findOrFail($botId);
+
         $bot->update($request->validated());
 
         if (in_array('type', $bot->getChanges(), true)) {
@@ -69,20 +75,24 @@ class BotController extends Controller
         return redirect()->back();
     }
 
-    public function destroy(Bot $bot): RedirectResponse
+    public function destroy(int $botId): RedirectResponse
     {
-        $bot->delete();
+        Bot::isOwner()->findOrFail($botId)->delete();
 
         return to_route('bots.index');
     }
 
-    public function changeActivity(Bot $bot): void
+    public function changeActivity(int $botId): void
     {
+        $bot = Bot::isOwner()->findOrFail($botId);
+
         $bot->update(['is_active' => !$bot->is_active]);
     }
 
-    public function changeType(Bot $bot, int $type): RedirectResponse
+    public function changeType(int $botId, int $type): RedirectResponse
     {
+        $bot = Bot::isOwner()->findOrFail($botId);
+
         if (BotTypes::values()->contains($type) && $bot->type->value !== $type) {
             $bot->update(['type' => $type]);
 
@@ -92,9 +102,11 @@ class BotController extends Controller
         return redirect()->back();
     }
 
-    public function attachAccounts(Bot $bot, BotAttachAccountRequest $request): void
+    public function attachAccounts(int $botId, BotAttachAccountRequest $request): void
     {
-        $accounts = Account::whereIn('id', $request->accounts)->get();
+        $bot = Bot::isOwner()->findOrFail($botId);
+
+        $accounts = Account::isOwner()->whereIn('id', $request->accounts)->get();
 
         DB::transaction(static function () use ($bot, $accounts, $request) {
             $bot->accounts
@@ -108,9 +120,11 @@ class BotController extends Controller
         });
     }
 
-    public function connectedAdTreeView(Bot $bot): JsonResponse
+    public function connectedAdTreeView(int $botId): JsonResponse
     {
-        $accounts = Account::whereHas('ads')->with('ads')->get();
+        $bot = Bot::isOwner()->findOrFail($botId);
+
+        $accounts = Account::isOwner()->whereHas('ads')->with('ads')->get();
 
         $selected = $bot->ads()->pluck('external_id');
 
@@ -133,9 +147,10 @@ class BotController extends Controller
         ]);
     }
 
-    public function attachAds(Bot $bot, BotAttachAdRequest $request): RedirectResponse
+    public function attachAds(int $botId, BotAttachAdRequest $request): RedirectResponse
     {
-        $ads = Ad::whereIn('external_id', $request->ads)->get();
+        $bot = Bot::isOwner()->findOrFail($botId);
+        $ads = Ad::relatedToMe()->whereIn('external_id', $request->ads)->get();
 
         DB::transaction(static function () use ($bot, $ads, $request) {
             $bot->ads
@@ -151,8 +166,10 @@ class BotController extends Controller
         return redirect()->back();
     }
 
-    public function updateSettings(Bot $bot, BotSettingRequest $request): RedirectResponse
+    public function updateSettings(int $botId, BotSettingRequest $request): RedirectResponse
     {
+        $bot = Bot::isOwner()->findOrFail($botId);
+
         $bot->update($request->validated('settings'));
 
         return redirect()->back();

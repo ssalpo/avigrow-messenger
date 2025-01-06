@@ -23,8 +23,16 @@ class BotRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'company_id' => 'required|integer',
             'name' => 'required|string|max:255',
             'type' => 'required|numeric|in:' . (BotTypes::values()->implode(',')),
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'company_id' => auth()->user()->myCompany->id,
+        ]);
     }
 }

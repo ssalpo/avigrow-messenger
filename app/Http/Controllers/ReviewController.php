@@ -6,6 +6,7 @@ use App\Http\Requests\ReviewAnswerRequest;
 use App\Models\Account;
 use App\Services\Avito;
 use Carbon\Carbon;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Http\RedirectResponse;
 
 class ReviewController extends Controller
@@ -16,10 +17,12 @@ class ReviewController extends Controller
     {
     }
 
-    public function index(int $account): \Illuminate\Http\JsonResponse|\Inertia\Response|\Inertia\ResponseFactory
+    public function index(): \Illuminate\Http\JsonResponse|\Inertia\Response|\Inertia\ResponseFactory
     {
         $page = request()->get('page');
-        $reviews = $this->avito->setAccount(Account::findOrFail($account))->reviews(limit: 50, page: $page ?? 1);
+        $account = \request()->attributes->get('account');
+
+        $reviews = $this->avito->setAccount($account)->reviews(limit: 50, page: $page ?? 1);
 
         $lastPage = ceil($reviews['total'] / 50) - 1;
 
@@ -39,10 +42,12 @@ class ReviewController extends Controller
         ]);
     }
 
-    public function answer(int $accountId, int $reviewId, ReviewAnswerRequest $request): RedirectResponse
+    public function answer(int $reviewId, ReviewAnswerRequest $request): RedirectResponse
     {
+        $account = \request()->attributes->get('account');
+
         $response = $this->avito
-            ->setAccount(Account::findOrFail($accountId))
+            ->setAccount($account)
             ->sendAnswerToReview($reviewId, $request->message);
 
         return redirect()->back()->with('backData', [
@@ -50,10 +55,10 @@ class ReviewController extends Controller
         ]);
     }
 
-    public function answerDestroy(int $accountId, int $reviewId, int $answerId): RedirectResponse
+    public function answerDestroy(int $reviewId, int $answerId): RedirectResponse
     {
         $this->avito
-            ->setAccount(Account::findOrFail($accountId))
+            ->setAccount(\request()->attributes->get('account'))
             ->deleteReviewAnswer($answerId);
 
         return redirect()->back();

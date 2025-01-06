@@ -61,8 +61,8 @@ onMounted(() => {
 watch(() => props.slot, (slot) => {
     form = useForm({
         id: slot?.id,
-        start_time: slot?.start_time.slice(0, -3),
-        end_time: slot?.end_time.slice(0, -3),
+        start_time: slot?.start_time?.slice(0, -3),
+        end_time: slot?.end_time?.slice(0, -3),
     })
 }, {immediate: true})
 </script>

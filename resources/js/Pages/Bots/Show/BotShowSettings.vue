@@ -17,7 +17,7 @@ const onSave = (setting, value) => {
 <template>
     <v-switch
         @click="() => onSave('mark_chat_as_unread', !bot.mark_chat_as_unread)"
-        label="Оставлять чат непрочитанным"
+        label="Оставлять чат непрочитанным, когда бот отвечает"
         color="primary"
         :model-value="bot.mark_chat_as_unread"
     ></v-switch>

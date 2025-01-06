@@ -24,7 +24,7 @@ class AccountRequest extends FormRequest
         $isEdit = $this->isMethod('patch');
 
         return [
-            'company_id' => 'required|integer|exists:companies,id',
+            'company_id' => 'required|integer',
             'name' => 'required|string|max:255',
             'external_client_id' => ($isEdit ? 'nullable' : 'required') . '|string|max:255',
             'external_client_secret' => ($isEdit ? 'nullable' : 'required') . '|string|max:255',

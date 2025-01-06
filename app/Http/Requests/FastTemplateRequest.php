@@ -22,6 +22,7 @@ class FastTemplateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'company_id' => 'required|integer',
             'tag' => 'required|max:255',
             'content' => 'required|min:2'
         ];

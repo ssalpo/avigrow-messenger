@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Enums\BotTypes;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Bot extends Model
@@ -47,8 +49,25 @@ class Bot extends Model
         return $this->hasMany(Ad::class);
     }
 
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function schedules(): HasMany
     {
         return $this->hasMany(BotSchedule::class);
+    }
+
+    public function scopeRelatedToMe(Builder $builder): void
+    {
+        $builder->where('company_id', session('selectedCompanyId'));
+    }
+
+    public function scopeIsOwner(Builder $builder): void
+    {
+        $builder->whereHas('company', function ($query) {
+            $query->where('created_by', \auth()?->id());
+        });
     }
 }
