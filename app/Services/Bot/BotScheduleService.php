@@ -16,7 +16,7 @@ class BotScheduleService
             ->with(['slots' => fn($q) => $q->active()])
             ->first();
 
-        if (!$schedule || ($schedule && $schedule->slots->count() === 0)) {
+        if (!$schedule || $schedule->slots->count() === 0) {
             return true;
         }
 
