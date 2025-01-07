@@ -24,6 +24,6 @@ class FastTemplate extends Model
 
     public function scopeRelatedToMe(Builder $builder): void
     {
-        $builder->whereIn('company_id', session('selectedCompanyId'));
+        $builder->where('company_id', session('selectedCompanyId'));
     }
 }
