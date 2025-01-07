@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 
 class Telegram
 {
-    public static function sendMessage(string $chatId, string $message): void
+    public static function sendMessage(string $chatId, string $message, bool $disableWebpagePreview = true): void
     {
         $apiToken = config('services.telegram.token');
 
@@ -17,7 +17,8 @@ class Telegram
         $data = [
             'chat_id' => $chatId,
             'text' => $message,
-            'parse_mode' => 'html'
+            'parse_mode' => 'html',
+            'disable_web_page_preview' => $disableWebpagePreview
         ];
 
         file_get_contents("https://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($data));
@@ -36,10 +37,10 @@ class Telegram
         Http::post("https://api.telegram.org/bot$apiToken/sendPhoto", $data);
     }
 
-    public static function sendMessageToExistIds(string $message): void
+    public static function sendMessageToExistIds(string $message, bool $disableWebpagePreview = true): void
     {
         foreach (config('services.telegram.ids') as $telegramId) {
-            self::sendMessage($telegramId, $message);
+            self::sendMessage($telegramId, $message, $disableWebpagePreview);
         }
     }
 
