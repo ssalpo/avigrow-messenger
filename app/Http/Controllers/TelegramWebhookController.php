@@ -23,7 +23,7 @@ class TelegramWebhookController extends Controller
      */
     public function __invoke()
     {
-        logger()?->info(request()->all());
+        logger()?->info(json_encode(request()->all()));
 
         try {
             $mKey = request()->has('message') ? 'message' : 'edited_message';
