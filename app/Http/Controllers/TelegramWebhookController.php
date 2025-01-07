@@ -6,6 +6,7 @@ use App\Models\Account;
 use App\Services\Avito;
 use App\Services\Telegram;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class TelegramWebhookController extends Controller
 {
@@ -74,11 +75,9 @@ class TelegramWebhookController extends Controller
 
     private function isIdCommandSend(array $input): bool
     {
-        if(!isset($input['message']['text'])) {
-            return false;
-        }
+        $text = Arr::get($input, 'message.text') ?? Arr::get($input, 'channel_post.text');
 
-        return $input['message']['text'] === '/id';
+        return $text === '/id';
     }
 
     private function handleIdCommand(array $input): void
@@ -87,7 +86,7 @@ class TelegramWebhookController extends Controller
             return;
         }
 
-        $chatId = $input['message']['chat']['id'];
+        $chatId = Arr::get($input, 'message.chat.id') ?? Arr::get($input, 'channel_post.chat.id');
 
         Telegram::sendMessage($chatId, $chatId);
     }

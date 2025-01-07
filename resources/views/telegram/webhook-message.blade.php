@@ -2,10 +2,12 @@
 -----------
 @isset($itemUrl, $itemTitle)
 📣 <a href="{{$itemUrl}}"><i>{{$itemTitle}}</i></a>
-@endisset
 -----------
+@endisset
+@isset($price)
 💰 <i>{{$price}}</i>
 -----------
+@endisset
 🙋🏻‍ {{$clientName}} отправил:
 
 {!! $message !!}
