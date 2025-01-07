@@ -58,6 +58,6 @@ MSG;
             };
         }
 
-        return Avito::getUserFromChat($chat['users'], $account->external_id)->name;
+        return Avito::getUserFromChat($chat->users, $account->external_id)->name;
     }
 }

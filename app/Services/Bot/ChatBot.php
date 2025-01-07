@@ -11,7 +11,7 @@ use App\Services\Avito;
 
 class ChatBot
 {
-    protected function getCurrentBot(Account $account, string $itemId): ?Bot
+    protected function getCurrentBot(Account $account, ?string $itemId): ?Bot
     {
         $adBot = Ad::where(
             ['account_id' => $account->id, 'external_id' => $itemId]
@@ -20,7 +20,7 @@ class ChatBot
         return !is_null($adBot) ? $adBot : $account->bot;
     }
 
-    public function handleMessage(Account $account, string $chatId, string $itemId, string $message, array $placeholders = []): void
+    public function handleMessage(Account $account, string $chatId, ?string $itemId, string $message, array $placeholders = []): void
     {
         if ($chatId !== 'u2i-1R3VAs3R1anQIg2Quloymw') {
             return;
