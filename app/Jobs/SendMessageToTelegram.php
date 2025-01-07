@@ -16,11 +16,11 @@ class SendMessageToTelegram implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private AvitoChatDto $chat;
+    private ?AvitoChatDto $chat = null;
 
-    private Avito $avito;
+    private ?Avito $avito = null;
 
-    private Account $account;
+    private ?Account $account = null;
 
     /**
      * Create a new job instance.
