@@ -30,6 +30,7 @@ class Account extends Model
         'connection_status',
         'bot_id',
         'company_id',
+        'telegram_chat_id'
     ];
 
     protected $hidden = [

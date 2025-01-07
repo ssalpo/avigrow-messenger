@@ -10,7 +10,8 @@ class AvitoMessageVideoHandler implements AvitoMessageHandler
     {
         $message = 'Видео';
 
-        Telegram::sendMessageToExistIds(
+        Telegram::sendMessage(
+            $params['currentTelegramChatId'],
             view('telegram.webhook-message', $params + ['message' => $message])->render()
         );
     }

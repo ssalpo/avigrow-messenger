@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use App\Services\Avito;
 use App\Services\Telegram;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class TelegramWebhookController extends Controller
@@ -23,42 +22,45 @@ class TelegramWebhookController extends Controller
      *
      * https://api.telegram.org/bot{TokenBot}/deleteWebhook?url=https://{url}/api/t-webhook
      */
-    public function __invoke()
+    public function __invoke(): void
     {
-        logger()?->info(json_encode(request()->all()));
+        $input = request()->all();
 
-        $this->handleIdCommand(request()->all());
+        logger()?->info(json_encode($input));
 
-        try {
-            $mKey = request()->has('message') ? 'message' : 'edited_message';
-
-            $message = request()->input($mKey . '.text');
-
-            if (!$this->canSendMessage($mKey)) {
-                return;
-            }
-
-            $accountInfo = $this->accountInfo(\request()->input($mKey . '.reply_to_message.text'));
-
-            $account = Account::findOrFail($accountInfo['accountId']);
-
-            $this->avito
-                ->setAccount($account)
-                ->sendMessage($accountInfo['chatId'], ['text' => $message]);
-        } catch (\Exception $exception) {
-            logger()?->error($exception->getMessage());
+        if (!$this->isIdCommandSend($input)) {
+            $this->handleIdCommand($input);
+            return;
         }
+
+        $this->handleReply($input);
     }
 
-    private function canSendMessage(string $mKey): bool
+    public function handleReply(array $input): void
     {
-        $isReplyToMessage = \request()->has($mKey . '.reply_to_message');
-        $from = \request()->input($mKey . '.from.id');
+        $text = $this->getMessage($input, 'reply_to_message.text');
 
-        return (
-            $isReplyToMessage &&
-            in_array($from, config('services.telegram.ids'))
-        );
+        if (!$text) {
+            return;
+        }
+
+        $accountInfo = $this->accountInfo($text);
+
+        if (!isset($accountInfo['accountId']) || isset($accountInfo['chatId'])) {
+            return;
+        }
+
+        $account = Account::findOrFail($accountInfo['accountId']);
+
+        $fromId = $this->getMessage($input, 'from.id');
+
+        if ($account->telegram_chat_id !== $fromId) {
+            return;
+        }
+
+        $this->avito
+            ->setAccount($account)
+            ->sendMessage($accountInfo['chatId'], ['text' => $text]);
     }
 
     private function accountInfo(string $text): ?array
@@ -75,19 +77,28 @@ class TelegramWebhookController extends Controller
 
     private function isIdCommandSend(array $input): bool
     {
-        $text = Arr::get($input, 'message.text') ?? Arr::get($input, 'channel_post.text');
-
-        return $text === '/id';
+        return $this->getMessage($input, 'text') === '/id';
     }
 
     private function handleIdCommand(array $input): void
     {
-        if(!$this->isIdCommandSend($input)) {
-            return;
-        }
-
-        $chatId = Arr::get($input, 'message.chat.id') ?? Arr::get($input, 'channel_post.chat.id');
+        $chatId = $this->getMessage($input, 'chat.id');
 
         Telegram::sendMessage($chatId, $chatId);
+    }
+
+    private function getMessage(array $input, string $currentField): ?string
+    {
+        $fields = ['message', 'channel_post', 'edited_channel', 'edited_message'];
+        $message = [];
+
+        foreach ($fields as $field) {
+            if (isset($input[$field])) {
+                $message = $input[$field];
+                break;
+            }
+        }
+
+        Arr::get($message, $currentField);
     }
 }

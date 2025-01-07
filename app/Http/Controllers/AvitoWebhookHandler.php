@@ -32,10 +32,9 @@ class AvitoWebhookHandler extends Controller
 
         $isMe = $payload->authorId === (int) $account->external_id;
 
-        if ((!$isMe && !$payload->isRead) && count(config('services.telegram.ids'))) {
+        if (!$isMe && $account->telegram_chat_id) {
             SendMessageToTelegram::dispatch(
                 $account->id,
-                config('services.telegram.ids'),
                 $payload->chatId,
                 $payload->chatType,
                 $payload

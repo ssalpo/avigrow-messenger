@@ -10,7 +10,8 @@ class AvitoMessageCallHandler implements AvitoMessageHandler
     {
         $message = 'Звонок';
 
-        Telegram::sendMessageToExistIds(
+        Telegram::sendMessage(
+            $params['currentTelegramChatId'],
             view('telegram.webhook-message', $params + ['message' => $message])->render()
         );
     }

@@ -14,7 +14,8 @@ class AvitoMessageLinkHandler implements AvitoMessageHandler
 <a href="{$content['link']['url']}">{$content['link']['text']}</a>
 MSG;
 
-        Telegram::sendMessageToExistIds(
+        Telegram::sendMessage(
+            $params['currentTelegramChatId'],
             view('telegram.webhook-message', $params + ['message' => $message])->render()
         );
     }

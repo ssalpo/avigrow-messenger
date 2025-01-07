@@ -27,7 +27,6 @@ class SendMessageToTelegram implements ShouldQueue
      */
     public function __construct(
         public int                    $accountId,
-        public array                  $telegramIds,
         public string                 $chatId,
         public string                 $chatType,
         public AvitoWebhookPayloadDto $payload,
@@ -70,6 +69,7 @@ class SendMessageToTelegram implements ShouldQueue
         }
 
         return array_merge([
+            'currentTelegramChatId' => $this->account->telegram_chat_id,
             'accountId' => $this->account->id,
             'chatId' => $this->chatId,
             'accountUrl' => $accountUrl,

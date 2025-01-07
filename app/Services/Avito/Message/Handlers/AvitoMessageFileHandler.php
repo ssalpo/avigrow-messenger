@@ -10,7 +10,8 @@ class AvitoMessageFileHandler implements AvitoMessageHandler
     {
         $message = 'Файл';
 
-        Telegram::sendMessageToExistIds(
+        Telegram::sendMessage(
+            $params['currentTelegramChatId'],
             view('telegram.webhook-message', $params + ['message' => $message])->render()
         );
     }

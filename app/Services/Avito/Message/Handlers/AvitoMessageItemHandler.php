@@ -14,7 +14,8 @@ class AvitoMessageItemHandler implements AvitoMessageHandler
             'itemPrice' => $content['item']['price_string']
         ])->render();
 
-        Telegram::sendMessageToExistIds(
+        Telegram::sendMessage(
+            $params['currentTelegramChatId'],
             view('telegram.webhook-message', $params + ['message' => $message])->render()
         );
     }

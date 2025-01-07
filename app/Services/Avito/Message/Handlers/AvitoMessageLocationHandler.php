@@ -10,7 +10,8 @@ class AvitoMessageLocationHandler implements AvitoMessageHandler
     {
         $message = 'Локация: ' . $content['location']['text'];
 
-        Telegram::sendMessageToExistIds(
+        Telegram::sendMessage(
+            $params['currentTelegramChatId'],
             view('telegram.webhook-message', $params + ['message' => $message])->render()
         );
     }

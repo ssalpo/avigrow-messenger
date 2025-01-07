@@ -11,7 +11,8 @@ class AvitoMessageImageHandler implements AvitoMessageHandler
         $message = 'Фото';
         $url = $content['image']['sizes']['1280x960'];
 
-        Telegram::sendMessageToExistIds(
+        Telegram::sendMessage(
+            $params['currentTelegramChatId'],
             view('telegram.webhook-message', $params + ['message' => $message])->render()
         );
 
