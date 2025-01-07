@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AccountRequest;
+use App\Http\Requests\AccountSettingsRequest;
 use App\Models\Account;
 use App\Services\AccountService;
 use Illuminate\Http\RedirectResponse;
@@ -53,5 +54,14 @@ class AccountController extends Controller
         $this->accountService->update($accountId, $request->validated());
 
         return to_route('accounts.show', $accountId);
+    }
+
+    public function saveSettings(int $accountId, AccountSettingsRequest $request): RedirectResponse
+    {
+        $account = Account::isOwner()->findOrFail($accountId);
+
+        $account->update($request->validated());
+
+        return redirect()->back();
     }
 }

@@ -36,6 +36,7 @@ Route::group(['middleware' => 'guest'], function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+    Route::post('accounts/{account}/save-settings', [AccountController::class, 'saveSettings'])->name('accounts.save-settings');
     Route::resource('accounts', AccountController::class)->middleware('auth');
 
     Route::post('/companies/{company}/toggle', [CompanyController::class, 'toggleCompany'])->name('companies.toggle');
@@ -51,7 +52,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth', 'check.accounts'])->group(function () {
-
 
     Route::match(array('GET', 'POST'), '/', [ChatController::class, 'index'])->name('home');
 
