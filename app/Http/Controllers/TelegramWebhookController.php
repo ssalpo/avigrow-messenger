@@ -28,7 +28,7 @@ class TelegramWebhookController extends Controller
 
         logger()?->info(json_encode($input));
 
-        if (!$this->isIdCommandSend($input)) {
+        if ($this->isIdCommandSend($input)) {
             $this->handleIdCommand($input);
             return;
         }
@@ -46,13 +46,15 @@ class TelegramWebhookController extends Controller
 
         $accountInfo = $this->accountInfo($text);
 
-        if (!isset($accountInfo['accountId']) || isset($accountInfo['chatId'])) {
+        if (!isset($accountInfo['accountId']) || !isset($accountInfo['chatId'])) {
             return;
         }
 
         $account = Account::findOrFail($accountInfo['accountId']);
 
-        $fromId = $this->getMessage($input, 'from.id');
+        $message = $this->getMessage($input);
+
+        $fromId = (string) (Arr::get($message, 'from.id') ?? Arr::get($message, 'sender_chat.id'));
 
         if ($account->telegram_chat_id !== $fromId) {
             return;
@@ -87,7 +89,7 @@ class TelegramWebhookController extends Controller
         Telegram::sendMessage($chatId, $chatId);
     }
 
-    private function getMessage(array $input, string $currentField): ?string
+    private function getMessage(array $input, ?string $currentField = null)
     {
         $fields = ['message', 'channel_post', 'edited_channel', 'edited_message'];
         $message = [];
@@ -99,6 +101,6 @@ class TelegramWebhookController extends Controller
             }
         }
 
-        return Arr::get($message, $currentField);
+        return $currentField ? Arr::get($message, $currentField) : $message;
     }
 }
