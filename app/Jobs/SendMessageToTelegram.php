@@ -41,13 +41,15 @@ class SendMessageToTelegram implements ShouldQueue
      */
     public function handle(Avito $avito, Avito\Message\AvitoMessageHandlerRegistry $registry): void
     {
+        if (!$this->payload->isSupportedContentType()) {
+            return;
+        }
+
         $this->account = Account::findOrFail($this->accountId);
 
         $this->avito = $avito->setAccount($this->account);
 
-        if (!$this->payload->isSupportedContentType()) {
-            return;
-        }
+        $this->chat = $avito->getChatInfoById($this->chatId);
 
         $registry->getHandler($this->payload->type)->handle(
             $this->payload->content,
