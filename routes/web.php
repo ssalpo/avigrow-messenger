@@ -25,7 +25,6 @@ use App\Http\Controllers\ReviewScheduleController;
 use App\Models\Account;
 use App\Services\Avito;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
 
 Route::group(['middleware' => 'guest'], function () {

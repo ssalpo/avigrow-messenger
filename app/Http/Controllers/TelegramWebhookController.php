@@ -68,4 +68,13 @@ class TelegramWebhookController extends Controller
 
         return null;
     }
+
+    private function isCommandHandle(array $input): bool
+    {
+        if(!isset($input['message']['text'])) {
+            return false;
+        }
+
+        return $input['message']['text'] === '/id';
+    }
 }
