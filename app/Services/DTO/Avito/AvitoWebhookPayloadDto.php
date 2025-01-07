@@ -6,18 +6,20 @@ use Carbon\Carbon;
 
 class AvitoWebhookPayloadDto extends AvitoBaseDto
 {
+    public static array $supportedTypes = ['text', 'call', 'image', 'item', 'link', 'location', 'video', 'file'];
+
     public function __construct(
         public readonly string $id,
         public readonly string $chatId,
-        public readonly int $userId,
-        public readonly int $authorId,
-        public readonly int $created,
+        public readonly int    $userId,
+        public readonly int    $authorId,
+        public readonly int    $created,
         public readonly string $type,
         public readonly string $chatType,
-        public readonly array $content,
-        public readonly ?int $itemId,
+        public readonly array  $content,
+        public readonly ?int   $itemId,
         public readonly string $publishedAt,
-        public readonly bool $isRead
+        public readonly bool   $isRead
     )
     {
     }
@@ -42,5 +44,20 @@ class AvitoWebhookPayloadDto extends AvitoBaseDto
     public function createdAtFormated(string $format = 'Y.m.d, H:i'): string
     {
         return Carbon::createFromTimestamp($this->created)->format($format);
+    }
+
+    public function isAds(): bool
+    {
+        return $this->chatType === 'u2i';
+    }
+
+    public function isImage(): bool
+    {
+        return $this->type === 'image';
+    }
+
+    public function isSupportedContentType(): bool
+    {
+        return in_array($this->type, self::$supportedTypes, true);
     }
 }

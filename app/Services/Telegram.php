@@ -42,4 +42,11 @@ class Telegram
             self::sendMessage($telegramId, $message);
         }
     }
+
+    public static function sendImageToExistIds(string $url, string $caption = ''): void
+    {
+        foreach (config('services.telegram.ids') as $telegramId) {
+            self::sendImage($telegramId, $url, $caption);
+        }
+    }
 }

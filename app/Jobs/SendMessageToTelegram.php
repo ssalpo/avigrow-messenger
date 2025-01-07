@@ -4,8 +4,8 @@ namespace App\Jobs;
 
 use App\Models\Account;
 use App\Services\Avito;
+use App\Services\DTO\Avito\AvitoChatDto;
 use App\Services\DTO\Avito\AvitoWebhookPayloadDto;
-use App\Services\Telegram;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,48 +16,66 @@ class SendMessageToTelegram implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private AvitoChatDto $chat;
+
+    private Avito $avito;
+
+    private Account $account;
+
     /**
      * Create a new job instance.
      */
     public function __construct(
-        public int    $account,
-        public array  $telegramIds,
-        public string $chatId,
-        public string $chatType,
-        public AvitoWebhookPayloadDto  $payload,
+        public int                    $accountId,
+        public array                  $telegramIds,
+        public string                 $chatId,
+        public string                 $chatType,
+        public AvitoWebhookPayloadDto $payload,
     )
     {
         //
     }
 
-    public function handle(): void
+    /**
+     * @throws \Exception
+     */
+    public function handle(Avito $avito, Avito\Message\AvitoMessageHandlerRegistry $registry): void
     {
-        $account = Account::findOrFail($this->account);
-        $contextMessage = Avito::getMessageBasedOnType($this->payload->type, $this->payload->content);
-        $accountUrl = url("/accounts/{$account->id}/chats");
+        $this->account = Account::findOrFail($this->accountId);
 
-        $message = <<<MSG
-<b>Аккаунт:</b> <a href="$accountUrl">{$account->name}</a> [{$account->id},{$this->chatId}]
-<b>Контекст:</b> {$this->getContext($account)}
-{$contextMessage}
-MSG;
+        $this->avito = $avito->setAccount($this->account);
 
-        Telegram::sendMessageToExistIds($message);
-    }
-
-    public function getContext(Account $account): string
-    {
-        $avito = (new Avito)->setAccount($account);
-
-        $chat = $avito->getChatInfoById($this->chatId);
-
-        if ($this->chatType === 'u2i') {
-            return match ($chat->type) {
-                'item' => $chat->item->title,
-                default => '---'
-            };
+        if (!$this->payload->isSupportedContentType()) {
+            return;
         }
 
-        return Avito::getUserFromChat($chat->users, $account->external_id)->name;
+        $registry->getHandler($this->payload->type)->handle(
+            $this->payload->content,
+            $this->messageParams()
+        );
+    }
+
+    private function messageParams(): array
+    {
+        $accountUrl = url("/accounts/{$this->account->id}/chats");
+        $clientName = Avito::getUserFromChat($this->chat->users, $this->account->external_id)->name;
+        $message = Avito::getMessageBasedOnType($this->payload);
+
+        $params = [];
+
+        if ($this->payload->isAds()) {
+            $params['itemUrl'] = $this->chat->item->url;
+            $params['itemTitle'] = $this->chat->item->title;
+        }
+
+        return array_merge([
+            'accountId' => $this->account->id,
+            'chatId' => $this->chatId,
+            'accountUrl' => $accountUrl,
+            'accountName' => $this->account->name,
+            'price' => $this->chat->item->price,
+            'clientName' => $clientName,
+            'message' => $message,
+        ], $params);
     }
 }

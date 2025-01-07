@@ -6,6 +6,7 @@ use App\Models\Account;
 use App\Services\DTO\Avito\AvitoAuthUserDto;
 use App\Services\DTO\Avito\AvitoChatDto;
 use App\Services\DTO\Avito\AvitoChatUserDto;
+use App\Services\DTO\Avito\AvitoWebhookPayloadDto;
 use GuzzleHttp\Client;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
@@ -234,10 +235,12 @@ class Avito
         );
     }
 
-    public static function getMessageBasedOnType(string $type, array $data)
+    public static function getMessageBasedOnType(AvitoWebhookPayloadDto $payloadDto)
     {
-        return match ($type) {
-            'text', 'system' => $data['text'],
+
+
+        return match ($payloadDto->type) {
+            'text', 'system' => $payloadDto->content['text'],
             'call' => 'Звонок',
             'image' => 'Фото',
             'item' => 'Объявление',
@@ -245,6 +248,8 @@ class Avito
             'location' => 'Локация',
             'video' => 'Видео',
             'file' => 'Файл',
+            'voice' => 'Голосовое сообщение',
+            default => 'Не поддерживаемый тип контента: ' . $payloadDto->type
         };
     }
 

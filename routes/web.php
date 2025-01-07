@@ -54,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'check.accounts'])->group(function () {
 
 
-    Route::match(array('GET','POST'), '/', [ChatController::class, 'index'])->name('home');
+    Route::match(array('GET', 'POST'), '/', [ChatController::class, 'index'])->name('home');
 
     Route::post('/send-payment-receipt', [ChatController::class, 'sendPaymentReceipt'])->name('send-payment-receipt');
 
@@ -97,8 +97,8 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
 
         Route::get('/messages/{chatId}', [AvitoController::class, 'getMessages'])->name('messages.getPaginated');
 
-        Route::match(array('GET','POST'),'chats/{chat}', [ChatController::class, 'messages'])->name('account.chat.messages');
-        Route::match(array('GET','POST'),'chats', [ChatController::class, 'index'])->name('account.chats');
+        Route::match(array('GET', 'POST'), 'chats/{chat}', [ChatController::class, 'messages'])->name('account.chat.messages');
+        Route::match(array('GET', 'POST'), 'chats', [ChatController::class, 'index'])->name('account.chats');
 
     });
 
