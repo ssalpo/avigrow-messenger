@@ -61,7 +61,6 @@ class SendMessageToTelegram implements ShouldQueue
     {
         $accountUrl = url("/accounts/{$this->account->id}/chats");
         $clientName = Avito::getUserFromChat($this->chat->users, $this->account->external_id)->name;
-        $message = Avito::getMessageBasedOnType($this->payload);
 
         $params = [];
 
@@ -77,7 +76,6 @@ class SendMessageToTelegram implements ShouldQueue
             'accountName' => $this->account->name,
             'price' => $this->chat->item->price,
             'clientName' => $clientName,
-            'message' => $message,
         ], $params);
     }
 }
