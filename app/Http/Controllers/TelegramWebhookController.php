@@ -99,6 +99,6 @@ class TelegramWebhookController extends Controller
             }
         }
 
-        Arr::get($message, $currentField);
+        return Arr::get($message, $currentField);
     }
 }
