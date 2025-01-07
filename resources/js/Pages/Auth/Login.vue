@@ -1,10 +1,11 @@
 <script setup>
-import {Head, useForm} from '@inertiajs/vue3';
+import {Head, useForm, Link, usePage} from '@inertiajs/vue3';
 import AuthLayout from "@/Layouts/AuthLayout.vue";
+import {ref} from "vue";
 
 defineOptions({layout: AuthLayout})
 
-const props = defineProps(['users', 'errors'])
+const visible = ref(false)
 
 const form = useForm({
     email: null,
@@ -19,43 +20,74 @@ function auth() {
 <template>
     <Head title="Авторизация"/>
 
-    <form @submit.prevent="auth">
-        <div>
-            <select style="width: 188px" v-model="form.email">
-                <option :value="null">Выберите пользователя</option>
-                <option v-for="user in users" :value="user.email">{{user.name}}</option>
-            </select>
-        </div>
+    <div class="mt-15 px-5 px-sm-0">
+        <v-card
+            class="mx-auto pa-5 pa-sm-12 pb-8"
+            elevation="8"
+            max-width="448"
+            rounded="lg"
+        >
+            <div class="text-subtitle-1 text-medium-emphasis">Email</div>
 
-        <div>
-            <input type="password" v-model="form.password" placeholder="Пароль" style="width: 180px">
-        </div>
+            <v-text-field
+                v-model="form.email"
+                :error-messages="form.errors.email"
+                density="compact"
+                placeholder="Введите email"
+                prepend-inner-icon="mdi-email-outline"
+                variant="outlined"
+            ></v-text-field>
 
-        <div class="error-message" v-if="errors.email || errors.password">
-            {{errors.email || errors.password}}
-        </div>
+            <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+                Пароль
 
-        <div>
-            <button type="submit">Войти</button>
-        </div>
-    </form>
+                <a
+                    class="text-caption text-decoration-none text-blue"
+                    href="#"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                >
+                    Забыли пароль?
+                </a>
+            </div>
 
+            <v-text-field
+                :error-messages="form.errors.password"
+                :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+                :type="visible ? 'text' : 'password'"
+                density="compact"
+                placeholder="Введите пароль"
+                prepend-inner-icon="mdi-lock-outline"
+                variant="outlined"
+                v-model="form.password"
+                class="mb-2"
+                @click:append-inner="visible = !visible"
+            ></v-text-field>
+
+            <v-btn
+                type="submit"
+                class="mb-8"
+                color="blue"
+                size="large"
+                variant="tonal"
+                block
+                @click="auth"
+            >
+                Войти
+            </v-btn>
+
+            <v-card-text class="text-center">
+                <Link
+                    class="text-blue text-decoration-none"
+                    :href="route('signup')"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                >
+                    Регистрация
+                    <v-icon icon="mdi-chevron-right"></v-icon>
+                </Link>
+            </v-card-text>
+        </v-card>
+    </div>
 
 </template>
-
-<style scoped>
-form {
-    text-align: center;
-    width: 180px;
-    margin: 50px auto;
-}
-
-div {
-    margin: 10px 0;
-}
-
-.error-message {
-    color: red;
-    font-size: 12px;
-}
-</style>

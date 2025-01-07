@@ -15,9 +15,7 @@ class AuthController extends Controller
 {
     public function login(): \Inertia\Response|\Inertia\ResponseFactory
     {
-        $users = User::all();
-
-        return inertia('Auth/Login', compact('users'));
+        return inertia('Auth/Login');
     }
 
     public function auth(AuthRequest $request): RedirectResponse

@@ -1,6 +1,6 @@
 <script setup>
 import AuthLayout from "@/Layouts/AuthLayout.vue";
-import {Head, useForm} from "@inertiajs/vue3";
+import {Head, useForm, Link} from "@inertiajs/vue3";
 import {ref} from "vue";
 
 defineOptions({layout: AuthLayout})
@@ -92,15 +92,15 @@ const send = () => {
                 </v-btn>
 
                 <v-card-text class="text-center">
-                    <a
+                    <Link
                         class="text-blue text-decoration-none"
-                        href="#"
+                        :href="route('login')"
                         rel="noopener noreferrer"
                         target="_blank"
                     >
                         Авторизироваться
                         <v-icon icon="mdi-chevron-right"></v-icon>
-                    </a>
+                    </Link>
                 </v-card-text>
             </v-card>
         </form>
