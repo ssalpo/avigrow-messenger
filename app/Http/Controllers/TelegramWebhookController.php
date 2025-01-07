@@ -38,21 +38,19 @@ class TelegramWebhookController extends Controller
 
     public function handleReply(array $input): void
     {
-        $text = $this->getMessage($input, 'reply_to_message.text');
+        $message = $this->getMessage($input);
 
-        if (!$text) {
+        if (!isset($message['reply_to_message'])) {
             return;
         }
 
-        $accountInfo = $this->accountInfo($text);
+        $accountInfo = $this->accountInfo($message['reply_to_message']);
 
         if (!isset($accountInfo['accountId']) || !isset($accountInfo['chatId'])) {
             return;
         }
 
         $account = Account::findOrFail($accountInfo['accountId']);
-
-        $message = $this->getMessage($input);
 
         $fromId = (string) (Arr::get($message, 'from.id') ?? Arr::get($message, 'sender_chat.id'));
 
@@ -62,7 +60,7 @@ class TelegramWebhookController extends Controller
 
         $this->avito
             ->setAccount($account)
-            ->sendMessage($accountInfo['chatId'], ['text' => $text]);
+            ->sendMessage($accountInfo['chatId'], ['text' => $message['text']]);
     }
 
     private function accountInfo(string $text): ?array
