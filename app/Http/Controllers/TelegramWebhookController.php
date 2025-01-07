@@ -44,7 +44,7 @@ class TelegramWebhookController extends Controller
             return;
         }
 
-        $accountInfo = $this->accountInfo($message['reply_to_message']);
+        $accountInfo = $this->accountInfo($message['reply_to_message']['text']);
 
         if (!isset($accountInfo['accountId']) || !isset($accountInfo['chatId'])) {
             return;
