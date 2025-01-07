@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Services\Avito;
+use App\Services\Telegram;
 use Illuminate\Http\Request;
 
 class TelegramWebhookController extends Controller
@@ -24,6 +25,8 @@ class TelegramWebhookController extends Controller
     public function __invoke()
     {
         logger()?->info(json_encode(request()->all()));
+
+        $this->handleIdCommand(request()->all());
 
         try {
             $mKey = request()->has('message') ? 'message' : 'edited_message';
@@ -69,12 +72,23 @@ class TelegramWebhookController extends Controller
         return null;
     }
 
-    private function isCommandHandle(array $input): bool
+    private function isIdCommandSend(array $input): bool
     {
         if(!isset($input['message']['text'])) {
             return false;
         }
 
         return $input['message']['text'] === '/id';
+    }
+
+    private function handleIdCommand(array $input): void
+    {
+        if(!$this->isIdCommandSend($input)) {
+            return;
+        }
+
+        $chatId = $input['message']['chat']['id'];
+
+        Telegram::sendMessage($chatId, $chatId);
     }
 }
