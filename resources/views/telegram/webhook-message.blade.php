@@ -1,13 +1,13 @@
 👥 <a href="{{$accountUrl}}"><i>{{$accountName}}</i></a>
 -----------
-@isset($itemUrl, $itemTitle)
+@if(!$itemUrl || !$itemTitle)
 📣 <a href="{{$itemUrl}}"><i>{{$itemTitle}}</i></a>
 -----------
-@endisset
-@isset($price)
+@endif
+@if($price)
 💰 <i>{{$price}}</i>
 -----------
-@endisset
+@endif
 🙋🏻‍ {{$clientName}} отправил:
 
 {!! $message !!}
