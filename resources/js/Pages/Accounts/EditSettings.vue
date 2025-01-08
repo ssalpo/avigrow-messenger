@@ -24,7 +24,7 @@ const save = () => {
             density="comfortable"
             :error-messages="form.errors.telegram_chat_id"
             v-model="form.telegram_chat_id"
-            label="ID группы или канала"
+            label="ID группы или канала в телеграм"
         ></v-text-field>
 
         <v-btn
