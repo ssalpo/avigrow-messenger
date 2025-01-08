@@ -1,6 +1,6 @@
 👥 <a href="{{$accountUrl}}"><i>{{$accountName}}</i></a>
 -----------
-@if(!$itemUrl || !$itemTitle)
+@if($itemUrl || $itemTitle)
 📣 <a href="{{$itemUrl}}"><i>{{$itemTitle}}</i></a>
 -----------
 @endif
