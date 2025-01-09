@@ -27,6 +27,7 @@
     },
     "dependencies": {
         "@mdi/font": "^7.4.47",
+        "@vuepic/vue-datepicker": "^11.0.0",
         "@vueuse/components": "^11.0.0",
         "@vueuse/core": "^11.0.0",
         "apexcharts": "^4.3.0",

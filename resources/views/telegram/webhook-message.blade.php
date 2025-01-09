@@ -1,10 +1,10 @@
 👥 <a href="{{$accountUrl}}"><i>{{$accountName}}</i></a>
 -----------
-@if($itemUrl || $itemTitle)
+@if(isset($itemUrl, $itemTitle) && $itemUrl && $itemTitle)
 📣 <a href="{{$itemUrl}}"><i>{{$itemTitle}}</i></a>
 -----------
 @endif
-@if($price)
+@if(isset($price))
 💰 <i>{{$price}}</i>
 -----------
 @endif

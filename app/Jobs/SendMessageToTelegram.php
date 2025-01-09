@@ -66,6 +66,7 @@ class SendMessageToTelegram implements ShouldQueue
         if ($this->payload->isAds()) {
             $params['itemUrl'] = $this->chat->item->url;
             $params['itemTitle'] = $this->chat->item->title;
+            $params['price'] = $this->chat->item->price;
         }
 
         return array_merge([
@@ -74,7 +75,6 @@ class SendMessageToTelegram implements ShouldQueue
             'chatId' => $this->chatId,
             'accountUrl' => $accountUrl,
             'accountName' => $this->account->name,
-            'price' => $this->chat->item->price,
             'clientName' => $clientName,
         ], $params);
     }
