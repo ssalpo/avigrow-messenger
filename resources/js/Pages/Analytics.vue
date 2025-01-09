@@ -3,7 +3,7 @@ import PageTitle from "@/Components/PageTitle.vue";
 import {ref, watch} from "vue";
 import VueApexCharts from "vue3-apexcharts"
 
-const props = defineProps(['accounts', 'analytics'])
+const props = defineProps(['accountList', 'analytics'])
 
 
 const generateMonthDates = (month, year) => {
@@ -91,7 +91,7 @@ watch(() => props.analytics, (analytics) => {
 
     for (let [accountId, items] of Object.entries(analytics)) {
         series.value.push({
-            name: props.accounts[accountId],
+            name: props.accountList[accountId],
             data: generateChartData(1, 2024, items)
         })
     }

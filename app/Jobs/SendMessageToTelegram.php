@@ -58,7 +58,7 @@ class SendMessageToTelegram implements ShouldQueue
 
     private function messageParams(): array
     {
-        $accountUrl = url("/accounts/{$this->account->id}/chats");
+        $accountUrl = url("/accounts/{$this->account->id}/chats") . '?selectedCompanyId=' . $this->account->company_id;
         $clientName = Avito::getUserFromChat($this->chat->users, $this->account->external_id)->name;
 
         $params = [];

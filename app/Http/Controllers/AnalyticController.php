@@ -9,14 +9,21 @@ class AnalyticController extends Controller
 {
     public function index(): \Inertia\Response|\Inertia\ResponseFactory
     {
-        $accounts = Account::pluck('name', 'id');
+        $accountList = Account::isOwner()->pluck('name', 'id');
+        $selectedAccounts = array_map('intval', (array)request('accounts', []));
+
+        if(count($selectedAccounts) > 0) {
+            $selectedAccounts = $accountList->keys()->filter(fn($a) => in_array($a, $selectedAccounts, true));
+        } else {
+            $selectedAccounts = $accountList->keys();
+        }
 
         $analytics = Analytic::getDailyAnalyticsForAccounts(
-            \request('accounts', [1, 2, 3]),
+            $selectedAccounts->toArray(),
             \request('month'),
             \request('year'),
         );
 
-        return inertia('Analytics', compact('analytics', 'accounts'));
+        return inertia('Analytics', compact('analytics', 'accountList'));
     }
 }
