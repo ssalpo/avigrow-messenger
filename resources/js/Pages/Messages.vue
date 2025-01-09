@@ -166,7 +166,7 @@ function onBlurTextarea() {
 function reloadPage() {
     reloadIsHide.value = true
 
-    router.get(route('account.chat.messages', {account: props.activeAccount.id, chat: props.chat.id}), {
+    router.get(route('account.chat.messages', {account: props.activeAccount.id, chat: props.chat.id}),{}, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
