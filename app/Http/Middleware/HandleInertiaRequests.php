@@ -32,12 +32,11 @@ class HandleInertiaRequests extends Middleware
     {
         if (auth()->check()) {
             $companies = \auth()->user()->companies->map->only(['id', 'name']);
+            $selectedCompany = (int) ($request->get('selectedCompanyId') ?? $request->session()->get('selectedCompanyId') ?? $companies[0]['id']);
 
-            if (!$request->session()->has('selectedCompanyId')) {
-                $request->session()->put('selectedCompanyId', $companies[0]['id']);
+            if($request->session()->get('selectedCompanyId') !== $selectedCompany) {
+                $request->session()->put('selectedCompanyId', $selectedCompany);
             }
-
-            $selectedCompany = $request->session()->get('selectedCompanyId') ?? $companies[0]['id'];
 
             $accounts = Account::whereCompanyId($selectedCompany)->get();
 

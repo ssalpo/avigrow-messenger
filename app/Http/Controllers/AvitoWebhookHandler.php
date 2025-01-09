@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewMessage;
+use App\Jobs\AddChatToAnalytics;
 use App\Jobs\AddToAnalyzeReviews;
 use App\Jobs\HandleChatBotMessage;
 use App\Jobs\SendMessageToTelegram;
@@ -10,6 +11,7 @@ use App\Models\Account;
 use App\Services\Avito;
 use App\Services\DTO\Avito\AvitoWebhookPayloadDto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AvitoWebhookHandler extends Controller
 {
@@ -30,7 +32,7 @@ class AvitoWebhookHandler extends Controller
 
         $payload = AvitoWebhookPayloadDto::fromArray($request->post('payload', []));
 
-        $isMe = $payload->authorId === (int) $account->external_id;
+        $isMe = $payload->authorId === (int)$account->external_id;
 
         if (!$isMe && $account->telegram_chat_id) {
             SendMessageToTelegram::dispatch(
@@ -41,7 +43,7 @@ class AvitoWebhookHandler extends Controller
             );
         }
 
-        if(!$isMe) {
+        if (!$isMe) {
             HandleChatBotMessage::dispatch($payload, $account);
         }
 
@@ -60,5 +62,18 @@ class AvitoWebhookHandler extends Controller
         ]);
 
         AddToAnalyzeReviews::dispatch($account->id, $payload->chatId);
+
+        $this->addToAnalytics($account->id, $payload->chatId);
+    }
+
+    private function addToAnalytics(int $accountId, string $chatId): void
+    {
+        $key = 'analytics:' . $chatId;
+
+        if (!Cache::has($key)) {
+            Cache::put($key, '1', now()->addDays(2));
+
+            AddChatToAnalytics::dispatch($accountId, $chatId);
+        }
     }
 }
