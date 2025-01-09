@@ -27,6 +27,12 @@ let baseNav = [
         params: null
     },
     {
+        title: 'Аналитика',
+        route: 'analytics',
+        icon: 'mdi-chart-areaspline',
+        params: null
+    },
+    {
         title: 'Аккаунты',
         route: 'accounts.index',
         icon: 'mdi-account-cog-outline',
