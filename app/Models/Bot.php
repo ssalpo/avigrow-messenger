@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\BotTypes;
+use App\Services\UserService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -61,7 +62,7 @@ class Bot extends Model
 
     public function scopeRelatedToMe(Builder $builder): void
     {
-        $builder->where('company_id', session('selectedCompanyId'));
+        $builder->whereIn('company_id', UserService::relatedCompanyIds(\auth()?->user()));
     }
 
     public function scopeIsOwner(Builder $builder): void

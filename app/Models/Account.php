@@ -79,9 +79,9 @@ class Account extends Model
         $builder->whereIn('company_id', UserService::relatedCompanyIds(\auth()?->user()));
     }
 
-    public function scopeCurrentCompany(Builder $builder): void
+    public function scopeCurrentCompany(Builder $builder, ?int $companyId = null): void
     {
-        $builder->where('company_id', session('selectedCompanyId'));
+        $builder->where('company_id', $companyId ?? request()->attributes->get('currentCompanyId'));
     }
 
     public function scopeIsOwner(Builder $builder): void

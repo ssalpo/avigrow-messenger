@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\UserService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,7 +26,7 @@ class FastTemplate extends Model
 
     public function scopeRelatedToMe(Builder $builder): void
     {
-        $builder->where('company_id', session('selectedCompanyId'));
+        $builder->whereIn('company_id', UserService::relatedCompanyIds(\auth()?->user()));
     }
 
     public function scopeCurrentCompany(Builder $builder, ?int $companyId = null): void
