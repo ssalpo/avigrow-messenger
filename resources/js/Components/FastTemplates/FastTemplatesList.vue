@@ -1,6 +1,6 @@
 <script setup>
 import {ref, watch} from "vue";
-import {chain, cloneDeep, debounce, find} from "lodash";
+import {chain, cloneDeep, debounce, find, keyBy} from "lodash";
 
 const emits = defineEmits(['itemSelected', 'edit'])
 
@@ -93,19 +93,19 @@ const onEdit = (id) => {
 const swipe = (direction) => {
     let index = tab.value;
 
-    if(direction === 'l' && index === 'all') {
+    if (direction === 'l' && index === 'all') {
         tab.value = 0
     }
 
-    if(direction === 'r' && index <= 0) {
+    if (direction === 'r' && index <= 0) {
         tab.value = 'all'
     }
 
-    if(direction === 'l' && filteredFastTemplates.value[index + 1] !== undefined) {
+    if (direction === 'l' && filteredFastTemplates.value[index + 1] !== undefined) {
         tab.value = index + 1
     }
 
-    if(direction === 'r' && filteredFastTemplates.value[index - 1] !== undefined) {
+    if (direction === 'r' && filteredFastTemplates.value[index - 1] !== undefined) {
         tab.value = index - 1
     }
 }
@@ -120,12 +120,18 @@ watch(
 </script>
 
 <template>
-    <v-tabs v-model="tab" height="35" class="mt-4 mb-2">
-        <v-tab min-width="auto" class="px-3 text-capitalize" value="all">Все</v-tab>
+    <v-tabs v-model="tab"
+            height="35"
+            class="mt-4 mb-2">
+        <v-tab min-width="auto"
+               class="px-3 text-capitalize"
+               value="all">Все
+        </v-tab>
         <v-tab
             v-for="(tag, i) in props.items"
             :value="i"
-            min-width="auto" class="px-3  text-capitalize">{{ tag.name }}
+            min-width="auto"
+            class="px-3  text-capitalize">{{ tag.name }}
         </v-tab>
     </v-tabs>
 
@@ -139,12 +145,21 @@ watch(
                 :key="i"
             >
                 <v-sheet class="py-3 ps-3 text-body-2 d-flex">
-                    <div style="word-break: break-word; width: 100%"
-                             @click="() => onSelect(fastTemplate.id)"
-                             v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')"/>
-                    <v-spacer v-if="startManage" />
-                    <div v-if="startManage" class="ml-4">
-                        <v-icon @click="() => onEdit(fastTemplate.id)" icon="mdi-playlist-edit"
+
+                    <div style="word-break: break-word; width: 100%">
+                        <div class="font-weight-bold text-capitalize"
+                             style="color: #292929; font-size: 13px">
+                            {{ fastTemplate.tag }}
+                        </div>
+                        <div
+                            @click="() => onSelect(fastTemplate.id)"
+                            v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')"></div>
+                    </div>
+                    <v-spacer v-if="startManage"/>
+                    <div v-if="startManage"
+                         class="ml-4">
+                        <v-icon @click="() => onEdit(fastTemplate.id)"
+                                icon="mdi-playlist-edit"
                                 color="#808080"></v-icon>
                     </div>
                 </v-sheet>
@@ -166,9 +181,11 @@ watch(
                              @click="() => onSelect(fastTemplate.id)"
                              v-html="fastTemplate.content.replace(/\r?\n/g, '<br />')"/>
 
-                    <v-spacer v-show="startManage" />
-                    <v-sheet v-show="startManage" class="ml-4">
-                        <v-icon @click="() => onEdit(fastTemplate.id)" icon="mdi-playlist-edit"
+                    <v-spacer v-show="startManage"/>
+                    <v-sheet v-show="startManage"
+                             class="ml-4">
+                        <v-icon @click="() => onEdit(fastTemplate.id)"
+                                icon="mdi-playlist-edit"
                                 color="#808080"></v-icon>
                     </v-sheet>
                 </v-sheet>
