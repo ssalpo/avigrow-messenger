@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FastTemplateRequest;
+use App\Jobs\IncrementUsingFastTemplate;
 use App\Models\FastTemplate;
 use App\Models\FmTag;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +16,10 @@ class FastTemplateController extends Controller
     public function index(): JsonResponse
     {
         return response()->json(
-            FmTag::relatedToMe()->has('fastTemplates')->with('fastTemplates')->get()
+            FmTag::relatedToMe()
+                ->has('fastTemplates')
+                ->with('fastTemplates')
+                ->get()
         );
     }
 
@@ -50,5 +54,10 @@ class FastTemplateController extends Controller
         $fastTemplate = FastTemplate::relatedToMe()->findOrFail($id);
 
         $fastTemplate->delete();
+    }
+
+    public function incrementUses(int $id): void
+    {
+        IncrementUsingFastTemplate::dispatch($id);
     }
 }

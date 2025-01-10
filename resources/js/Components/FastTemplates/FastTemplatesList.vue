@@ -1,6 +1,6 @@
 <script setup>
 import {ref, watch} from "vue";
-import {chain, cloneDeep, debounce, find, keyBy} from "lodash";
+import {chain, cloneDeep, debounce, find, keyBy, orderBy} from "lodash";
 
 const emits = defineEmits(['itemSelected', 'edit'])
 
@@ -49,7 +49,7 @@ function searchAndHighlight(searchText) {
 
     // Если отправлен пустой инпут
     if (!input) {
-        filteredAllFastTemplates.value = cloneDeep(allFastTemplates.value);
+        filteredAllFastTemplates.value = cloneDeep(orderBy(allFastTemplates.value, 'number_of_uses', 'desc'));
         filteredFastTemplates.value = cloneDeep(props.items);
         return
     }
@@ -79,11 +79,13 @@ const onItemsChanged = (items) => {
         .flatten() // Разворачиваем вложенные массивы
         .value(); // Получаем результат
 
-    filteredAllFastTemplates.value = allFastTemplates.value
+    filteredAllFastTemplates.value = orderBy(allFastTemplates.value, 'number_of_uses', 'desc')
 }
 
 const onSelect = (id) => {
     emits('itemSelected', find(allFastTemplates.value, {id}));
+
+    axios.post(route('fast-templates.increment-uses', id))
 }
 
 const onEdit = (id) => {

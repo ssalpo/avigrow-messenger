@@ -24,6 +24,7 @@ use App\Http\Controllers\PwaController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewScheduleController;
 use App\Models\Account;
+use App\Models\FastTemplate;
 use App\Services\Avito;
 use Illuminate\Support\Facades\Route;
 
@@ -64,6 +65,7 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
     Route::post('products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore');
     Route::resource('products', ProductController::class);
 
+    Route::post('fast-templates/{id}/increment-uses', [FastTemplateController::class, 'incrementUses'])->name('fast-templates.increment-uses');
     Route::resource('/fast-templates', FastTemplateController::class);
 
     Route::post('/bots/{bot}/update-settings', [BotController::class, 'updateSettings'])->name('bots.update-settings');
@@ -182,4 +184,10 @@ Token: {$shaToken} <br />
 Timestamp: {$time}
 MSG;
 
+});
+
+Route::get('test', function() {
+    FastTemplate::relatedToMe()
+        ->findOrFail(20)
+        ->increment('number_of_uses');
 });
