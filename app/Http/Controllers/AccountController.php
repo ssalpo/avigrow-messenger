@@ -30,7 +30,9 @@ class AccountController extends Controller
 
     public function store(AccountRequest $request): RedirectResponse
     {
-        $account = $this->accountService->store($request->validated());
+        $companyId = auth()->user()->myCompany->id;
+
+        $account = $this->accountService->store($request->validated() + ['company_id' => $companyId]);
 
         return to_route('accounts.show', $account->id);
     }
