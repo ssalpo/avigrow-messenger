@@ -18,7 +18,7 @@ class FastTemplateController extends Controller
         return response()->json(
             FmTag::relatedToMe()
                 ->has('fastTemplates')
-                ->with('fastTemplates')
+                ->with(['fastTemplates' => fn ($q) => $q->orderByDesc('number_of_uses')])
                 ->get()
         );
     }
