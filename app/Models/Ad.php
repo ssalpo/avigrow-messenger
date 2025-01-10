@@ -26,10 +26,14 @@ class Ad extends Model
         return $this->belongsTo(Bot::class);
     }
 
-    public function scopeRelatedToMe(Builder $builder): void
+    public function scopeRelatedToMe(Builder $builder, ?int $companyId = null): void
     {
-        $builder->whereHas('bot', function (Builder $builder) {
-            $builder->where('company_id', auth()->user()->myCompany->id);
+        $builder->whereHas('bot', function (Builder $builder) use ($companyId) {
+            $currentCompanyId = $companyId
+                ?? request()->attributes->get('currentCompanyId')
+                ?? auth()->user()->myCompany->id;
+
+            $builder->where('company_id', $currentCompanyId);
         });
     }
 }

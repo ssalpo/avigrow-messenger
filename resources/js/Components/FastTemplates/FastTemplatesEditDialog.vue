@@ -9,6 +9,10 @@ const props = defineProps({
     selected: {
         type: Object,
         required: true
+    },
+    activeAccount: {
+        type: Object,
+        required: true
     }
 })
 
@@ -35,11 +39,11 @@ function onSave() {
     }
 
     if (form.id) {
-        form.patch(route('fast-templates.update', form.id), options)
+        form.patch(route('fast-templates.update', {account: props.activeAccount.id, fast_template: form.id}), options)
         return
     }
 
-    form.post(route('fast-templates.store'), options)
+    form.post(route('fast-templates.store', {account: props.activeAccount.id}), options)
 }
 
 const onDelete = () => {
@@ -47,7 +51,7 @@ const onDelete = () => {
         return
     }
 
-    axios.delete(`/fast-templates/${form.id}`).then(() => {
+    axios.delete(route('fast-templates.destroy', {account: props.activeAccount.id, fast_template: form.id})).then(() => {
         emits('deleted', form.id)
     })
 }
@@ -81,7 +85,7 @@ watch(() => model.value, (state) => {
     form.reset()
 
     if (state === true) {
-        axios.get(route('fm-tags.index')).then((response) => {
+        axios.get(route('fm-tags.index', props.activeAccount.id)).then((response) => {
             searchTagIndex = null
             tags.value = response.data;
         })

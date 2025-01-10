@@ -38,12 +38,9 @@ Route::group(['middleware' => 'guest'], function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('analytics', [AnalyticController::class, 'index'])->name('analytics');
 
     Route::post('accounts/{account}/save-settings', [AccountController::class, 'saveSettings'])->name('accounts.save-settings');
     Route::resource('accounts', AccountController::class)->middleware('auth');
-
-    Route::post('/companies/{company}/toggle', [CompanyController::class, 'toggleCompany'])->name('companies.toggle');
 
     Route::get('active-conversations', [ActiveConversationController::class, 'getLists'])->name('active-conversations.list');
     Route::delete('active-conversations/{id}', [ActiveConversationController::class, 'destroy'])->name('active-conversations.destroy');
@@ -56,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth', 'check.accounts'])->group(function () {
+    Route::get('analytics', [AnalyticController::class, 'index'])->name('analytics');
 
     Route::match(array('GET', 'POST'), '/', [ChatController::class, 'index'])->name('home');
 
@@ -64,9 +62,6 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
     Route::get('products/trash', [ProductController::class, 'trash'])->name('products.trash');
     Route::post('products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore');
     Route::resource('products', ProductController::class);
-
-    Route::post('fast-templates/{id}/increment-uses', [FastTemplateController::class, 'incrementUses'])->name('fast-templates.increment-uses');
-    Route::resource('/fast-templates', FastTemplateController::class);
 
     Route::post('/bots/{bot}/update-settings', [BotController::class, 'updateSettings'])->name('bots.update-settings');
     Route::get('/bots/{bot}/connected-add-treeview', [BotController::class, 'connectedAdTreeView'])->name('bots.connected-add-treeview');
@@ -104,6 +99,10 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
         Route::match(array('GET', 'POST'), 'chats/{chat}', [ChatController::class, 'messages'])->name('account.chat.messages');
         Route::match(array('GET', 'POST'), 'chats', [ChatController::class, 'index'])->name('account.chats');
 
+        Route::post('fast-templates/{id}/increment-uses', [FastTemplateController::class, 'incrementUses'])->name('fast-templates.increment-uses');
+        Route::resource('fast-templates', FastTemplateController::class);
+
+        Route::get('fm-tags', [FmTagController::class, 'index'])->name('fm-tags.index');
     });
 
     Route::get('code-keys/histories', [CodeKeyController::class, 'histories'])->name('code-keys.histories');
@@ -114,8 +113,6 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
     Route::group(['prefix' => 'autocomplete', 'as' => 'autocomplete.'], function () {
         Route::get('products', [AutocompleteController::class, 'products'])->name('products');
     });
-
-    Route::get('fm-tags', [FmTagController::class, 'index'])->name('fm-tags.index');
 
     Route::get('employees', [EmployeeController::class, 'index'])->name('employees.index');
     Route::post('/employees', [EmployeeController::class, 'sync'])->name('employees.sync');

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('fast_templates', function (Blueprint $table) {
-            $table->integer('number_of_uses');
+            $table->integer('number_of_uses')->default(0);
         });
     }
 

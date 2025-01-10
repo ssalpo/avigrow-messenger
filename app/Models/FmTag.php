@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\UserService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -20,6 +21,11 @@ class FmTag extends Model
 
     public function scopeRelatedToMe(Builder $builder): void
     {
-        $builder->where('company_id', session('selectedCompanyId'));
+        $builder->whereIn('company_id', UserService::relatedCompanyIds(\auth()?->user()));
+    }
+
+    public function scopeCurrentCompany(Builder $builder, ?int $companyId = null): void
+    {
+        $builder->where('company_id', $companyId ?? request()->attributes->get('currentCompanyId'));
     }
 }

@@ -22,16 +22,8 @@ class FastTemplateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_id' => 'required|integer',
             'tag' => 'required|max:255',
             'content' => 'required|min:2'
         ];
-    }
-
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'company_id' => $this->session()->get('selectedCompanyId'),
-        ]);
     }
 }

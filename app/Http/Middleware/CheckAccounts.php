@@ -16,10 +16,7 @@ class CheckAccounts
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (
-            session('selectedCompanyId') === auth()->user()->myCompany->id &&
-            !Account::isOwner()->exists()
-        ) {
+        if (!Account::relatedToMe()->exists()) {
             return to_route('accounts.index');
         }
 

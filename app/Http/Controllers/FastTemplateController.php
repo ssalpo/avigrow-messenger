@@ -16,19 +16,21 @@ class FastTemplateController extends Controller
     public function index(): JsonResponse
     {
         return response()->json(
-            FmTag::relatedToMe()
+            FmTag::currentCompany()
                 ->has('fastTemplates')
                 ->with(['fastTemplates' => fn ($q) => $q->orderByDesc('number_of_uses')])
                 ->get()
         );
     }
 
-    public function store(FastTemplateRequest $request): RedirectResponse
+    public function store(int $accountId, FastTemplateRequest $request): RedirectResponse
     {
         DB::transaction(function () use ($request) {
-            $fastTemplate = FastTemplate::create($request->validated());
+            $companyParams = ['company_id' => request()->attributes->get('currentCompanyId')];
 
-            $tag = FmTag::relatedToMe()->firstOrCreate(['name' => $request->tag]);
+            $fastTemplate = FastTemplate::create($request->validated() + $companyParams);
+
+            $tag = FmTag::currentCompany()->firstOrCreate(['name' => $request->tag] + $companyParams);
 
             $fastTemplate->fmTags()->sync($tag);
         });
@@ -36,28 +38,30 @@ class FastTemplateController extends Controller
         return redirect()->back();
     }
 
-    public function update(int $id, FastTemplateRequest $request): void
+    public function update(int $accountId, int $id, FastTemplateRequest $request): void
     {
         DB::transaction(function () use ($id, $request) {
-            $fastTemplate = FastTemplate::relatedToMe()->findOrFail($id);
+            $fastTemplate = FastTemplate::currentCompany()->findOrFail($id);
 
             $fastTemplate->update($request->validated());
 
-            $tag = FmTag::relatedToMe()->firstOrCreate(['name' => $request->tag]);
+            $tag = FmTag::currentCompany()->firstOrCreate(['name' => $request->tag]);
 
             $fastTemplate->fmTags()->sync($tag);
         });
     }
 
-    public function destroy(int $id): void
+    public function destroy(int $accountId, int $id): void
     {
-        $fastTemplate = FastTemplate::relatedToMe()->findOrFail($id);
+        $fastTemplate = FastTemplate::currentCompany()->findOrFail($id);
 
         $fastTemplate->delete();
     }
 
-    public function incrementUses(int $id): void
+    public function incrementUses(int $accountId, int $id): void
     {
-        IncrementUsingFastTemplate::dispatch($id);
+        $currentCompanyId = request()->attributes->get('currentCompanyId');
+
+        IncrementUsingFastTemplate::dispatch($currentCompanyId, $id);
     }
 }

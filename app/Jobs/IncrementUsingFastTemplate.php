@@ -14,6 +14,7 @@ class IncrementUsingFastTemplate implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
+        public int $currentCompanyId,
         public int $fastTemplateId,
     )
     {
@@ -25,7 +26,7 @@ class IncrementUsingFastTemplate implements ShouldQueue
      */
     public function handle(): void
     {
-        FastTemplate::relatedToMe()
+        FastTemplate::currentCompany($this->currentCompanyId)
             ->whereId($this->fastTemplateId)
             ->increment('number_of_uses');
     }

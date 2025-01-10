@@ -1,6 +1,6 @@
 <script setup>
 import {ref, watch} from "vue";
-import {chain, cloneDeep, debounce, find, keyBy, orderBy} from "lodash";
+import {chain, cloneDeep, debounce, find, orderBy} from "lodash";
 
 const emits = defineEmits(['itemSelected', 'edit'])
 
@@ -16,6 +16,10 @@ const props = defineProps({
     startManage: {
         type: Boolean,
         default: false
+    },
+    activeAccount: {
+        type: Object,
+        required: true
     }
 })
 
@@ -85,7 +89,7 @@ const onItemsChanged = (items) => {
 const onSelect = (id) => {
     emits('itemSelected', find(allFastTemplates.value, {id}));
 
-    axios.post(route('fast-templates.increment-uses', id))
+    axios.post(route('fast-templates.increment-uses', {account: props.activeAccount.id, id}))
 }
 
 const onEdit = (id) => {

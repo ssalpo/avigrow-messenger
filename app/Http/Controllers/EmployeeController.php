@@ -27,7 +27,7 @@ class EmployeeController extends Controller
 
         if (is_null($user)) {
 
-            if($request->alreadyHasAccount) {
+            if ($request->alreadyHasAccount) {
                 throw ValidationException::withMessages(['email' => 'User does not exist.']);
             }
 
@@ -38,7 +38,7 @@ class EmployeeController extends Controller
 
         UserService::refreshRelatedCompaniesCache($user);
 
-        if($user->wasRecentlyCreated){
+        if ($user->wasRecentlyCreated) {
             return redirect()->back()->with('backData', ['employeeAccountPassword' => $password]);
         }
 
@@ -48,8 +48,9 @@ class EmployeeController extends Controller
     public function destroy(int $userId): RedirectResponse
     {
         $user = User::employee()->findOrFail($userId);
+        $myCompany = auth()->user()->myCompany;
 
-        $user->companies()->detach(auth()->user()->myCompany);
+        $user->companies()->detach($myCompany);
 
         UserService::refreshRelatedCompaniesCache($user);
 

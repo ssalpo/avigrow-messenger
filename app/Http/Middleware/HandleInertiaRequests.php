@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Account;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -31,20 +32,19 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         if (auth()->check()) {
-            $companies = \auth()->user()->companies->map->only(['id', 'name']);
-            $selectedCompany = (int) ($request->get('selectedCompanyId') ?? $request->session()->get('selectedCompanyId') ?? $companies[0]['id']);
+            $accounts = Account::relatedToMe()->get();
 
-            if($request->session()->get('selectedCompanyId') !== $selectedCompany) {
-                $request->session()->put('selectedCompanyId', $selectedCompany);
+            if ($accounts->count()) {
+                if ($account = (int)$request->route('account')) {
+                    $activeAccount = $accounts->where('id', $account)->firstOrFail();
+                } else {
+                    $activeAccount = $accounts->first();
+                }
+
+                $request->attributes->set('activeAccount', $activeAccount);
+                $request->attributes->set('currentCompany', $activeAccount->company);
+                $request->attributes->set('currentCompanyId', $activeAccount->company->id);
             }
-
-            $accounts = Account::whereCompanyId($selectedCompany)->get();
-
-            $activeAccount = $request->route()?->hasParameter('account')
-                ? Account::whereCompanyId($selectedCompany)->findOrFail($request->route()?->parameter('account'))
-                : $accounts->first();
-
-            $request->attributes->set('activeAccount', $activeAccount);
 
             return [
                 ...parent::share($request),
@@ -52,9 +52,7 @@ class HandleInertiaRequests extends Middleware
                     'user' => $request->user(),
                 ],
                 'navAccounts' => $accounts,
-                'navCompanies' => $companies,
-                'selectedCompany' => $selectedCompany,
-                'activeAccount' => $activeAccount,
+                'activeAccount' => $activeAccount ?? null,
                 'backData' => $request->session()->get('backData'),
             ];
         }

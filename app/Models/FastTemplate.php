@@ -27,4 +27,9 @@ class FastTemplate extends Model
     {
         $builder->where('company_id', session('selectedCompanyId'));
     }
+
+    public function scopeCurrentCompany(Builder $builder, ?int $companyId = null): void
+    {
+        $builder->where('company_id', $companyId ?? request()->attributes->get('currentCompanyId'));
+    }
 }

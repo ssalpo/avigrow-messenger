@@ -336,6 +336,7 @@ const uploadFile = (event) => {
     </div>
 
     <fast-messages
+        :activeAccount="activeAccount"
         v-model="fastMessagesDialog"
         @sendFastly="(text) => sendMessage(text)"
         @selected="(e) => input = e"

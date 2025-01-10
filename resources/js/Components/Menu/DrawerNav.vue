@@ -1,7 +1,6 @@
 <script setup>
 import {router, usePage} from "@inertiajs/vue3";
 import {ref, watch} from "vue";
-import CompanyToggle from "@/Components/CompanyToggle.vue";
 
 const model = defineModel();
 
@@ -24,12 +23,6 @@ let baseNav = [
         title: 'Операторы',
         route: 'employees.index',
         icon: 'mdi-account-group-outline',
-        params: null
-    },
-    {
-        title: 'Аналитика',
-        route: 'analytics',
-        icon: 'mdi-chart-areaspline',
         params: null
     },
     {
@@ -79,6 +72,13 @@ watch(() => activeAccount.value, () => {
                 icon: 'mdi-star-outline',
                 params: {account: activeAccount.value?.id}
             },
+
+            {
+                title: 'Аналитика',
+                route: 'analytics',
+                icon: 'mdi-chart-areaspline',
+                params: null
+            },
             ...baseNav
         ]
     } else {
@@ -92,11 +92,6 @@ watch(() => activeAccount.value, () => {
                          location="right"
                          temporary>
         <template v-slot:prepend>
-
-            <company-toggle
-                v-if="$page.props.navCompanies.length > 1"
-                @selected="() => model = false"/>
-
             <v-sheet class="d-flex align-center px-4 py-3">
                 <v-sheet class="mr-3">
                     <v-avatar color="#bdbdbd">

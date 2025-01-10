@@ -10,6 +10,13 @@ defineOptions({
 })
 
 const emit = defineEmits(['selected', 'sendFastly']);
+const props = defineProps({
+    activeAccount: {
+        type: Object,
+        required: true
+    }
+})
+
 const fastTemplates = ref([])
 
 let selected = ref({});
@@ -20,7 +27,7 @@ onMounted(fetchList);
 
 function fetchList() {
     axios
-        .get('/fast-templates')
+        .get(route('fast-templates.index', props.activeAccount.id))
         .then((response) => {
             fastTemplates.value = response.data
         })
@@ -80,6 +87,7 @@ const searchText = ref("")
                 </v-sheet>
 
                 <fast-templates-list
+                    :activeAccount="activeAccount"
                     :startManage="startManage"
                     @itemSelected="onSelect"
                     @edit="onEdit"
@@ -91,6 +99,7 @@ const searchText = ref("")
     </v-bottom-sheet>
 
     <fast-templates-edit-dialog
+        :active-account="activeAccount"
         v-model="editDialog"
         :selected="selected"
         @deleted="onDeleted"

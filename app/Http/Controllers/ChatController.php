@@ -51,7 +51,7 @@ class ChatController extends Controller
 
     public function messages(int $accountId, string $chatId): Response
     {
-        $account = Account::relatedToMe()->findOrFail($accountId);
+        $account = request()->attributes->get('activeAccount');
 
         ActiveConversationService::sync($account, $chatId);
 
@@ -69,7 +69,6 @@ class ChatController extends Controller
         return Inertia::render('Messages', [
             'tabs' => $tabs,
             'keys' => $keys,
-            'activeAccount' => $account,
             'chat' => Avito::chatResponse($chat, $account),
             'hasReviewSchedules' => ReviewSchedule::hasAnyForChatAndAccount($chatId, $account->id),
             'has_more' => $response['meta']['has_more'],
@@ -95,7 +94,7 @@ class ChatController extends Controller
 
     public function chatInfo(int $accountId, string $chatId): JsonResponse
     {
-        $account = Account::relatedToMe()->findOrFail($accountId);
+        $account = request()->attributes->get('activeAccount');
 
         $chat = $this->avito->setAccount($account)->getChatInfoById($chatId);
 
