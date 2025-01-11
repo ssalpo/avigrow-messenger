@@ -7,7 +7,7 @@
 📣 <a href="{{$itemUrl}}"><i>{{$itemTitle}}</i></a>
 -----------
 @endif
-@if(isset($price))
+@if(isset($price) && $price)
 💰 <i>{{$price}}</i>
 -----------
 @endif
