@@ -8,6 +8,7 @@ import ScheduleReviewRequest from "@/Components/ScheduleReviewRequest.vue";
 import CodeKeysSheet from "@/Components/CodeKeysSheet.vue";
 import ConversationTabs from "@/Components/ConversationTabs.vue";
 import BaseLayoutWithoutNav from "@/Layouts/BaseLayoutWithoutNav.vue";
+import AdBottomSheetList from "@/Components/Ads/AdBottomSheetList.vue";
 
 defineOptions({layout: BaseLayoutWithoutNav})
 
@@ -37,6 +38,7 @@ const {textarea, input} = useTextareaAutosize({input: ''});
 const sendFromOtherText = ref('');
 const sendFromOther = ref(false);
 const fastMessagesDialog = ref(false);
+const adListDialog = ref(true);
 const messagesAll = ref(props.messages);
 const hasMoreMessages = ref(props.has_more);
 const currentPage = ref(1);
@@ -259,7 +261,7 @@ const uploadFile = (event) => {
                     :disabled="isBusy || sendFromOther"
                     @keydown.meta.enter="sendMessage"
                     v-model="input"
-                    :placeholder="sendFromOtherText || `Введите сообщение...`">
+                    :placeholder="sendFromOtherText || `Cообщение`">
                 </textarea>
 
 
@@ -307,12 +309,29 @@ const uploadFile = (event) => {
                     style="display: none;"
                 />
 
-                <button v-show="!input"
-                        :disabled="isBusy"
-                        @click="selectFile"
-                        class="left-btn message-icon"
-                        type="button">📎
-                </button>
+                <v-menu v-if="!input">
+                    <template v-slot:activator="{ props }">
+                        <button class="left-btn message-icon"
+                                type="button"
+                                v-bind="props">📎
+                        </button>
+                    </template>
+
+                    <v-list density="compact">
+                        <v-list-item
+                            @click="() => adListDialog = true"
+                            prepend-icon="mdi-advertisements"
+                            title="Список объявлений"
+                        />
+
+                        <v-list-item
+                            :disabled="isBusy"
+                            @click="selectFile"
+                            prepend-icon="mdi-image"
+                            title="Прикрепить фото"
+                        />
+                    </v-list>
+                </v-menu>
 
                 <button v-show="!input && !reloadIsHide"
                         :disabled="isBusy"
@@ -341,4 +360,9 @@ const uploadFile = (event) => {
         @sendFastly="(text) => sendMessage(text)"
         @selected="(e) => input = e"
     />
+
+    <ad-bottom-sheet-list
+        @selected="(url) => input = url"
+        :account-id="activeAccount.id"
+                          v-model="adListDialog"/>
 </template>

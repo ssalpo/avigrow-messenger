@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ActiveConversationController;
+use App\Http\Controllers\AdController;
 use App\Http\Controllers\AnalyticController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AutocompleteController;
@@ -103,6 +104,8 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
         Route::resource('fast-templates', FastTemplateController::class);
 
         Route::get('fm-tags', [FmTagController::class, 'index'])->name('fm-tags.index');
+
+        Route::get('ads', [AdController::class, 'index'])->name('ads.index');
     });
 
     Route::get('code-keys/histories', [CodeKeyController::class, 'histories'])->name('code-keys.histories');
