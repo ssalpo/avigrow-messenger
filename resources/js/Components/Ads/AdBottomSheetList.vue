@@ -75,7 +75,7 @@ watch(() => model.value, (status) => {
                         />
 
                         <input
-                            v-model="searchText"
+                            @input="event => searchText = event.target.value"
                             type="text"
                             placeholder="Поиск по названию, цене и ID"
                             style="font-size: 15px; outline: none; width: 100%"/>
