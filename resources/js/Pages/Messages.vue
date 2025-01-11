@@ -102,6 +102,8 @@ onMounted(() => {
             return
         }
 
+        console.log(messageAllIds, messagesAll);
+
         messagesAll.value.push({
             id: data.id,
             is_me: data.is_me,
@@ -147,7 +149,7 @@ const sendMessage = (text) => {
     axios
         .post(route('messages.send', {account: props.activeAccount.id, chatId: props.chat.id}), {message: {text: input.value || text}})
         .then((response) => {
-            // messagesAll.value.push(response.data);
+            messagesAll.value.push(response.data);
 
             input.value = '';
 
