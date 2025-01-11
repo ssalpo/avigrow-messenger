@@ -1,6 +1,4 @@
-🙋🏻‍ {{$clientName}} отправил:
-
-{!! $message !!}
+🙋🏻‍ {{$clientName}}: {!! $message !!}
 
 -----------
 👥 <a href="{{$accountUrl}}"><i>{{$accountName}}</i></a>
