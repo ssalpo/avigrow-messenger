@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NewMessage implements ShouldBroadcast
+class MarkedAsReadChat implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,7 +19,7 @@ class NewMessage implements ShouldBroadcast
      */
     public function __construct(
         public readonly int $account,
-        public readonly array $data,
+        public readonly string $chatId,
     )
     {
         //

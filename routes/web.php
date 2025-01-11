@@ -15,7 +15,6 @@ use App\Http\Controllers\BotScheduleSlotController;
 use App\Http\Controllers\BotTriggerController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CodeKeyController;
-use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\FmTagController;
@@ -25,7 +24,6 @@ use App\Http\Controllers\PwaController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewScheduleController;
 use App\Models\Account;
-use App\Models\FastTemplate;
 use App\Services\Avito;
 use Illuminate\Support\Facades\Route;
 
@@ -184,10 +182,4 @@ Token: {$shaToken} <br />
 Timestamp: {$time}
 MSG;
 
-});
-
-Route::get('test', function() {
-    FastTemplate::relatedToMe()
-        ->findOrFail(20)
-        ->increment('number_of_uses');
 });

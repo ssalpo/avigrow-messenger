@@ -1,7 +1,7 @@
 <script setup>
 import {router, useForm, usePage, WhenVisible} from '@inertiajs/vue3'
 import {onBeforeUnmount, onMounted, ref, watch} from "vue";
-import {map, orderBy} from "lodash";
+import {map, orderBy, pull} from "lodash";
 
 const props = defineProps({
     activeAccountId: {
@@ -37,7 +37,11 @@ let newMessageChannel = null;
 onMounted(() => {
     chatIds.value = map(chats.value, 'id');
 
-    newMessageChannel = Echo.private(`avito.${props.activeAccountId}.new.message`);
+    newMessageChannel = Echo.private(`avito.${props.activeAccountId}.message`);
+
+    newMessageChannel.listen('MarkedAsReadChat', (e) => {
+        pull(unreadChats.value, e.chatId)
+    })
 
     newMessageChannel.listen('NewMessage', (e) => {
         if (e.account !== props.activeAccountId) {
@@ -143,7 +147,8 @@ function contextType(chat) {
                 >
                     <template v-slot:title="{title}">
                         <div class="v-list-item-title"
-                             :class="{'text-red-darken-1': unreadChats.includes(chat.id)}">{{ title }}
+                             :class="{'text-red-darken-1': unreadChats.includes(chat.id)}">
+                            {{ title }}
                         </div>
                         <small :class="{'text-red-darken-1': unreadChats.includes(chat.id)}">{{ chat.context }}</small>
                     </template>

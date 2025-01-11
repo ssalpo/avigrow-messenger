@@ -1,6 +1,6 @@
 <script setup>
 import {Head, router, useForm, usePage} from '@inertiajs/vue3';
-import {computed, onBeforeUnmount, onMounted, onUnmounted, ref, watch} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import MessageItem from "@/Components/Chats/MessageItem.vue";
 import FastMessages from "@/Components/FastTemplates/FastMessages.vue";
 import {useTextareaAutosize} from "@vueuse/core";
@@ -86,14 +86,14 @@ onMounted(() => {
     });
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
     window.removeEventListener('resize')
 })
 
 let newMessageChannel = null;
 
 onMounted(() => {
-    newMessageChannel = Echo.private(`avito.${props.activeAccount.id}.new.message`)
+    newMessageChannel = Echo.private(`avito.${props.activeAccount.id}.message`)
 
     newMessageChannel.listen('NewMessage', (e) => {
         const data = e.data.message;
