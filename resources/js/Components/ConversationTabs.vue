@@ -20,9 +20,10 @@ function goToItem(url) {
     <v-sheet color="blue-darken-1" class="px-3 py-2 d-flex align-center justify-between" style="z-index: 1">
         <v-icon icon="mdi-arrow-left" @click="() => router.visit(`/accounts/${activeAccount.id}/chats/`)"/>
 
-        <v-sheet v-if="chat" color="blue-darken-1" class="ml-3" max-width="220" style="font-size: 12px">
-            <v-sheet color="blue-darken-1" class="mb-2 text-truncate pr-3">{{ chat.user.name }}</v-sheet>
+        <v-sheet v-if="chat" color="blue-darken-1" class="ml-3" max-width="220" :style="{fontSize: chat.context ? '12' : '15'}" >
+            <v-sheet color="blue-darken-1" :class="{'mb-2': chat.price}" class="text-truncate pr-3">{{ chat.user.name }}</v-sheet>
             <v-sheet
+                v-if="chat.context !== ''"
                 @click="goToItem(chat.url)"
                 color="blue-darken-1" class="pr-3 text-truncate d-flex">
                 <v-sheet color="blue-darken-1" class="pr-3 text-truncate">{{ chat.context }}</v-sheet>
