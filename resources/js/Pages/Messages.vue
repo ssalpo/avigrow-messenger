@@ -78,16 +78,18 @@ const scrollToEnd = () => {
 
 }
 
+const onResize = () => {
+    setTimeout(scrollToEnd, 0)
+}
+
 onMounted(() => {
     setTimeout(scrollToEnd, 100)
 
-    window.addEventListener('resize', () => {
-        setTimeout(scrollToEnd, 0)
-    });
+    window.addEventListener('resize', onResize);
 })
 
 onBeforeUnmount(() => {
-    window.removeEventListener('resize')
+    window.removeEventListener('resize', onResize)
 })
 
 let newMessageChannel = null;
