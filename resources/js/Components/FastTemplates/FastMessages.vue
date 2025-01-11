@@ -74,7 +74,7 @@ const searchText = ref("")
                         />
 
                         <input
-                            v-model="searchText"
+                            @input="event => searchText = event.target.value"
                             type="text" placeholder="Поиск" style="font-size: 15px; outline: none; width: 100%"/>
                     </v-sheet>
                     <v-sheet class="d-flex align-center">

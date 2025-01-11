@@ -2,7 +2,7 @@
 import {Head, router, useForm, usePage} from '@inertiajs/vue3';
 import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import MessageItem from "@/Components/Chats/MessageItem.vue";
-import FastMessages from "@/Components/FastMessages.vue";
+import FastMessages from "@/Components/FastTemplates/FastMessages.vue";
 import {useTextareaAutosize} from "@vueuse/core";
 import ScheduleReviewRequest from "@/Components/ScheduleReviewRequest.vue";
 import CodeKeysSheet from "@/Components/CodeKeysSheet.vue";
