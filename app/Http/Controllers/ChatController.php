@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CodeKeyType;
+use App\Events\MarkedAsReadChat;
 use App\Http\Requests\SendPaymentReceiptRequest;
 use App\Models\Account;
 use App\Models\CodeKey;
@@ -57,9 +58,10 @@ class ChatController extends Controller
 
         $this->avito->setAccount($account);
 
-        $this->avito->markChatAsRead($chatId);
-
         $chat = $this->avito->getChatInfoById($chatId);
+
+        $this->avito->markChatAsRead($chatId);
+        MarkedAsReadChat::dispatch($account->id, $chatId);
 
         $response = $this->avito->setAccount($account)->getChatMessages($chatId, 30, request('page', 1));
 
@@ -105,9 +107,11 @@ class ChatController extends Controller
 
     public function markAsRead(int $accountId, string $chatId): void
     {
-        $this->avito->setAccount(
-            request()->attributes->get('activeAccount')
-        )->markChatAsRead($chatId);
+        $account = request()->attributes->get('activeAccount');
+
+        $this->avito->setAccount($account)->markChatAsRead($chatId);
+
+        MarkedAsReadChat::dispatch($account->id, $chatId);
     }
 
     public function sendPaymentReceipt(SendPaymentReceiptRequest $request): RedirectResponse
