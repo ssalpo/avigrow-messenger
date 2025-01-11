@@ -268,12 +268,13 @@ const onTemplateSelected = (e, isExternal) => {
                     v-model="input" :account-id="activeAccount.id">
                     <div class="main-input">
                         <textarea
+                            :value="input"
                             @keyup="() => isExternalSelect = false"
                             ref="textarea"
                             @blur="onBlurTextarea"
                             :disabled="isBusy || sendFromOther"
                             @keydown.meta.enter="sendMessage"
-                            v-model="input"
+                            @input="event => input = event.target.value"
                             :placeholder="sendFromOtherText || `Cообщение`">
                     </textarea>
 
