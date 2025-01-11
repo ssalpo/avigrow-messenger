@@ -36,9 +36,13 @@ class HandleInertiaRequests extends Middleware
 
             if ($accounts->count()) {
                 if ($account = (int)$request->route('account')) {
-                    $activeAccount = $accounts->where('id', $account)->firstOrFail();
+                    $activeAccount = $accounts->where('id', $account)->first();
                 } else {
                     $activeAccount = $accounts->first();
+                }
+
+                if (!$activeAccount) {
+                    abort(404);
                 }
 
                 $request->attributes->set('activeAccount', $activeAccount);

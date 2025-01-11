@@ -43,20 +43,18 @@ const onSelected = (ad) => {
     model.value = false
 }
 
-onMounted(() => {
-    if(!ads.value.length) {
-        loadAds()
-    }
-})
-
 watch(
     () => searchText.value,
     debounce((text) => search(text), 500)
 )
 
 watch(() => model.value, (status) => {
-    if(status === false) {
+    if (status === false) {
         searchText.value = ''
+    }
+
+    if (status === true && !ads.value.length) {
+        loadAds()
     }
 })
 </script>
@@ -84,7 +82,8 @@ watch(() => model.value, (status) => {
                     </v-sheet>
                 </v-sheet>
 
-                <v-sheet v-for="ad in filteredAds" @click="() => onSelected(ad)">
+                <v-sheet v-for="ad in filteredAds"
+                         @click="() => onSelected(ad)">
                     <div class="py-2 px-1 text-body-2"
                          style="word-break: break-word;">
                         <div class="font-weight-bold">
