@@ -37,23 +37,6 @@ class Avito
             ->withToken($this->account->external_access_token);
     }
 
-    protected function safeRequest(callable $callback): array
-    {
-        try {
-            $response = $callback();
-
-            if ($response->successful()) {
-                return $response->json() ?? [];
-            }
-
-            throw new \Exception("HTTP Error: " . $response->status() . " - " . $response->body());
-        } catch (\Exception $e) {
-            logger()?->error("HTTP Request failed: " . $e->getMessage());
-
-            return [];
-        }
-    }
-
     public static function validateTelegramWebAppData(string $queryString, string $botToken): bool
     {
         // Преобразуем строку запроса в массив
@@ -161,9 +144,7 @@ class Avito
         $offset = ceil(($page - 1) * $limit);
         $url = "/messenger/v2/accounts/{$this->account->external_id}/chats?limit=$limit&offset=$offset&chat_types=u2i,u2u";
 
-        return $this->safeRequest(
-            fn() => $this->clientWithToken()->get($url)
-        );
+        return $this->clientWithToken()->get($url)->json();
     }
 
     public function getUnreadChats(): array
@@ -183,10 +164,9 @@ class Avito
     public function getChatInfoById(string $chatId): AvitoChatDto
     {
         return AvitoChatDto::fromArray(
-            $this->safeRequest(
-                fn() => $this->clientWithToken()
-                    ->get("/messenger/v2/accounts/{$this->account->external_id}/chats/$chatId")
-            )
+            $this->clientWithToken()
+                ->get("/messenger/v2/accounts/{$this->account->external_id}/chats/$chatId")
+                ->json()
         );
     }
 
@@ -229,9 +209,7 @@ class Avito
     public function me(): AvitoAuthUserDto
     {
         return AvitoAuthUserDto::fromArray(
-            $this->safeRequest(
-                fn() => $this->clientWithToken()->get("/core/v1/accounts/self")
-            )
+            $this->clientWithToken()->get("/core/v1/accounts/self")->json()
         );
     }
 
@@ -313,13 +291,12 @@ class Avito
 
     public function getItems(int $perPage = 100, int $page = 1): array
     {
-        return $this->safeRequest(
-            fn() => $this->clientWithToken()
-                ->get("/core/v1/items", [
-                    'per_page' => $perPage,
-                    'page' => $page
-                ])
-        );
+        return $this->clientWithToken()
+            ->get("/core/v1/items", [
+                'per_page' => $perPage,
+                'page' => $page
+            ])
+            ->json();
     }
 
     public function uploadImage(string $filePath, string $fileName): array
@@ -334,7 +311,7 @@ class Avito
         $imageId = key($response->json());
 
         return [
-            'id' =>  $imageId,
+            'id' => $imageId,
             $response->json($imageId)
         ];
     }

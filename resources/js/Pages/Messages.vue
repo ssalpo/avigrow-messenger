@@ -80,7 +80,13 @@ const scrollToEnd = () => {
 
 onMounted(() => {
     setTimeout(scrollToEnd, 100)
+
+    window.addEventListener('resize', () => {
+        setTimeout(scrollToEnd, 100)
+    });
 })
+
+
 
 let newMessageChannel = null;
 
@@ -158,7 +164,6 @@ function onDeleteMessage(message) {
 function onCodeKeysSelect(text) {
     input.value = text;
 }
-
 function onBlurTextarea() {
     if (input.value) return;
 
