@@ -9,6 +9,7 @@ import CodeKeysSheet from "@/Components/CodeKeysSheet.vue";
 import ConversationTabs from "@/Components/ConversationTabs.vue";
 import BaseLayoutWithoutNav from "@/Layouts/BaseLayoutWithoutNav.vue";
 import AdBottomSheetList from "@/Components/Ads/AdBottomSheetList.vue";
+import FastTemplateInline from "@/Components/FastTemplateInline.vue";
 
 defineOptions({layout: BaseLayoutWithoutNav})
 
@@ -45,6 +46,7 @@ const currentPage = ref(1);
 const isBusy = ref(false);
 const reloadIsHide = ref(false);
 const fileInput = ref(null)
+const isExternalSelect = ref(false)
 
 const imageForm = useForm({
     image: null
@@ -75,7 +77,6 @@ const showMorePage = () => {
 const scrollToEnd = () => {
     let messages = document.querySelector('.messages');
     messages.scrollTop = messages.scrollHeight;
-
 }
 
 const onResize = () => {
@@ -221,6 +222,11 @@ const uploadFile = (event) => {
     })
 }
 
+const onTemplateSelected = (e, isExternal) => {
+    input.value = e
+    isExternalSelect.value = isExternal
+}
+
 </script>
 
 <template>
@@ -256,101 +262,109 @@ const uploadFile = (event) => {
                 {{imageForm.errors.image}}
             </div>
             <div class="message-input">
-                <textarea
-                    ref="textarea"
-                    @blur="onBlurTextarea"
-                    :disabled="isBusy || sendFromOther"
-                    @keydown.meta.enter="sendMessage"
-                    v-model="input"
-                    :placeholder="sendFromOtherText || `Cообщение`">
-                </textarea>
+                <fast-template-inline
+                    :is-external-select="isExternalSelect"
+                    @selected="(e) => onTemplateSelected(e, true)"
+                    v-model="input" :account-id="activeAccount.id">
+                    <div class="main-input">
+                        <textarea
+                            @keyup="() => isExternalSelect = false"
+                            ref="textarea"
+                            @blur="onBlurTextarea"
+                            :disabled="isBusy || sendFromOther"
+                            @keydown.meta.enter="sendMessage"
+                            v-model="input"
+                            :placeholder="sendFromOtherText || `Cообщение`">
+                    </textarea>
 
 
-                <v-menu v-if="!input">
-                    <template v-slot:activator="{ props }">
-                        <button class="left-btn message-icon"
-                                type="button"
-                                v-bind="props">⋮
-                        </button>
-                    </template>
-
-                    <v-list density="compact">
-                        <schedule-review-request
-                            :chat-id="chat.id"
-                            :account-id="activeAccount.id"
-                            v-if="!hasReviewSchedules"
-                        >
-                            <template v-slot:default="{props}">
-                                <v-list-item
-                                    v-bind="props"
-                                    prepend-icon="mdi-alarm"
-                                    title="Запросить отзыв позже"
-                                />
+                        <v-menu v-if="!input">
+                            <template v-slot:activator="{ props }">
+                                <button class="left-btn message-icon"
+                                        type="button"
+                                        v-bind="props">⋮
+                                </button>
                             </template>
-                        </schedule-review-request>
 
-                        <code-keys-sheet :tabs="tabs"
-                                         :keys="keys"
-                                         @selected="onCodeKeysSelect">
-                            <template v-slot:default="{props}">
-                                <v-list-item
-                                    v-bind="props"
-                                    prepend-icon="mdi-key-chain"
-                                    title="Ключи и аккаунты"
-                                />
-                            </template>
-                        </code-keys-sheet>
-                    </v-list>
-                </v-menu>
+                            <v-list density="compact">
+                                <schedule-review-request
+                                    :chat-id="chat.id"
+                                    :account-id="activeAccount.id"
+                                    v-if="!hasReviewSchedules"
+                                >
+                                    <template v-slot:default="{props}">
+                                        <v-list-item
+                                            v-bind="props"
+                                            prepend-icon="mdi-alarm"
+                                            title="Запросить отзыв позже"
+                                        />
+                                    </template>
+                                </schedule-review-request>
 
-                <input
-                    ref="fileInput"
-                    type="file"
-                    @change="uploadFile"
-                    style="display: none;"
-                />
+                                <code-keys-sheet :tabs="tabs"
+                                                 :keys="keys"
+                                                 @selected="onCodeKeysSelect">
+                                    <template v-slot:default="{props}">
+                                        <v-list-item
+                                            v-bind="props"
+                                            prepend-icon="mdi-key-chain"
+                                            title="Ключи и аккаунты"
+                                        />
+                                    </template>
+                                </code-keys-sheet>
+                            </v-list>
+                        </v-menu>
 
-                <v-menu v-if="!input">
-                    <template v-slot:activator="{ props }">
-                        <button class="left-btn message-icon"
-                                type="button"
-                                v-bind="props">📎
-                        </button>
-                    </template>
-
-                    <v-list density="compact">
-                        <v-list-item
-                            @click="() => adListDialog = true"
-                            prepend-icon="mdi-advertisements"
-                            title="Список объявлений"
+                        <input
+                            ref="fileInput"
+                            type="file"
+                            @change="uploadFile"
+                            style="display: none;"
                         />
 
-                        <v-list-item
-                            :disabled="isBusy"
-                            @click="selectFile"
-                            prepend-icon="mdi-image"
-                            title="Прикрепить фото"
-                        />
-                    </v-list>
-                </v-menu>
+                        <v-menu v-if="!input">
+                            <template v-slot:activator="{ props }">
+                                <button class="left-btn message-icon"
+                                        type="button"
+                                        v-bind="props">📎
+                                </button>
+                            </template>
 
-                <button v-show="!input && !reloadIsHide"
-                        :disabled="isBusy"
-                        @click="reloadPage"
-                        class="left-btn message-icon"
-                        type="button">🔄
-                </button>
+                            <v-list density="compact">
+                                <v-list-item
+                                    @click="() => adListDialog = true"
+                                    prepend-icon="mdi-advertisements"
+                                    title="Список объявлений"
+                                />
 
-                <button @click="() => fastMessagesDialog = true"
-                        class="left-btn message-icon"
-                        type="button">
-                    📝
-                </button>
+                                <v-list-item
+                                    :disabled="isBusy"
+                                    @click="selectFile"
+                                    prepend-icon="mdi-image"
+                                    title="Прикрепить фото"
+                                />
+                            </v-list>
+                        </v-menu>
 
-                <button :disabled="isBusy"
-                        type="button"
-                        @click="sendMessage"> ➤
-                </button>
+                        <button v-show="!input && !reloadIsHide"
+                                :disabled="isBusy"
+                                @click="reloadPage"
+                                class="left-btn message-icon"
+                                type="button">🔄
+                        </button>
+
+                        <button @click="() => fastMessagesDialog = true"
+                                class="left-btn message-icon"
+                                type="button">
+                            📝
+                        </button>
+
+                        <button :disabled="isBusy"
+                                type="button"
+                                @click="sendMessage"> ➤
+                        </button>
+                    </div>
+                </fast-template-inline>
             </div>
         </div>
     </div>
@@ -359,11 +373,11 @@ const uploadFile = (event) => {
         :activeAccount="activeAccount"
         v-model="fastMessagesDialog"
         @sendFastly="(text) => sendMessage(text)"
-        @selected="(e) => input = e"
+        @selected="(e) => onTemplateSelected(e, true)"
     />
 
     <ad-bottom-sheet-list
-        @selected="(url) => input = url"
+        @selected="(e) => onTemplateSelected(e, true)"
         :account-id="activeAccount.id"
                           v-model="adListDialog"/>
 </template>

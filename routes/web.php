@@ -98,6 +98,7 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
         Route::match(array('GET', 'POST'), 'chats/{chat}', [ChatController::class, 'messages'])->name('account.chat.messages');
         Route::match(array('GET', 'POST'), 'chats', [ChatController::class, 'index'])->name('account.chats');
 
+        Route::get('fast-templates/all', [FastTemplateController::class, 'all'])->name('fast-templates.all');
         Route::post('fast-templates/{id}/increment-uses', [FastTemplateController::class, 'incrementUses'])->name('fast-templates.increment-uses');
         Route::resource('fast-templates', FastTemplateController::class);
 

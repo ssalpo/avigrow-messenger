@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import FastTemplatesEditDialog from "@/Components/FastTemplates/FastTemplatesEditDialog.vue";
 import FastTemplatesList from "@/Components/FastTemplates/FastTemplatesList.vue";
 
@@ -23,7 +23,6 @@ let selected = ref({});
 let startManage = ref(false);
 let editDialog = ref(false);
 
-onMounted(fetchList);
 
 function fetchList() {
     axios
@@ -58,6 +57,16 @@ function onSaved() {
 }
 
 const searchText = ref("")
+
+watch(() => model.value, (status) => {
+    if (status === false) {
+        searchText.value = ''
+    }
+
+    if (status === true && !fastTemplates.value.length) {
+        fetchList()
+    }
+})
 </script>
 
 <template>

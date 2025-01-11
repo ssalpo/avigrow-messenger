@@ -23,6 +23,13 @@ class FastTemplateController extends Controller
         );
     }
 
+    public function all(int $accountId): JsonResponse
+    {
+        return response()->json(
+            FastTemplate::currentCompany()->orderBy('number_of_uses')->get()
+        );
+    }
+
     public function store(int $accountId, FastTemplateRequest $request): RedirectResponse
     {
         DB::transaction(function () use ($request) {
