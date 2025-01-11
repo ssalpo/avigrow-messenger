@@ -38,7 +38,7 @@ const {textarea, input} = useTextareaAutosize({input: ''});
 const sendFromOtherText = ref('');
 const sendFromOther = ref(false);
 const fastMessagesDialog = ref(false);
-const adListDialog = ref(true);
+const adListDialog = ref(false);
 const messagesAll = ref(props.messages);
 const hasMoreMessages = ref(props.has_more);
 const currentPage = ref(1);
@@ -166,17 +166,7 @@ function onBlurTextarea() {
 }
 
 function reloadPage() {
-    reloadIsHide.value = true
-
-    router.get(route('account.chat.messages', {account: props.activeAccount.id, chat: props.chat.id}),{}, {
-        preserveState: true,
-        preserveScroll: true,
-        onSuccess: () => {
-            setTimeout(() => {
-                reloadIsHide.value = false
-            }, 5000)
-        }
-    })
+    router.get(route('account.chat.messages', {account: props.activeAccount.id, chat: props.chat.id}))
 }
 
 const selectFile = () => {
