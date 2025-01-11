@@ -82,7 +82,7 @@ onMounted(() => {
     setTimeout(scrollToEnd, 100)
 
     window.addEventListener('resize', () => {
-        setTimeout(scrollToEnd, 100)
+        setTimeout(scrollToEnd, 0)
     });
 })
 
