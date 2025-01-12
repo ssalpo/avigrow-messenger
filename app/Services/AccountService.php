@@ -32,7 +32,7 @@ class AccountService
         $data = [
             'external_access_token' => $token['access_token'],
             'external_access_token_expire_in' => $token['expires_in'],
-            'external_access_token_expire_date' => now()->addSeconds($token['expires_in']),
+            'external_access_token_expire_date' => now()->addSeconds($token['expires_in'])->subHours(4),
             'token_refreshed_at' => now()
         ];
 
