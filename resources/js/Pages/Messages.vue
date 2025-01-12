@@ -76,7 +76,7 @@ const showMorePage = () => {
 
 const scrollToEnd = () => {
     let messages = document.querySelector('.messages');
-    messages.scrollTop = messages.scrollHeight;
+    messages.scrollTop = messages.scrollHeight + 60;
 }
 
 const onResize = () => {
