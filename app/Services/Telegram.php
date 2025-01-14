@@ -21,7 +21,7 @@ class Telegram
             'disable_web_page_preview' => $disableWebpagePreview
         ];
 
-        file_get_contents("https://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($data));
+        Http::post("https://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($data));
     }
 
     public static function sendImage(string $chatId, string $url, string $caption = ''): void
