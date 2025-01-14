@@ -42,7 +42,7 @@ class ReviewController extends Controller
         ]);
     }
 
-    public function answer(int $reviewId, ReviewAnswerRequest $request): RedirectResponse
+    public function answer(int $accountId, int $reviewId, ReviewAnswerRequest $request): RedirectResponse
     {
         $account = \request()->attributes->get('activeAccount');
 
@@ -55,10 +55,10 @@ class ReviewController extends Controller
         ]);
     }
 
-    public function answerDestroy(int $reviewId, int $answerId): RedirectResponse
+    public function answerDestroy(int $accountId, int $reviewId, int $answerId): RedirectResponse
     {
         $this->avito
-            ->setAccount(\request()->attributes->get('account'))
+            ->setAccount(\request()->attributes->get('activeAccount'))
             ->deleteReviewAnswer($answerId);
 
         return redirect()->back();
