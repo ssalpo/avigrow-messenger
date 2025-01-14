@@ -8,6 +8,7 @@ use App\Services\Avito;
 use App\Services\GeminiService;
 use App\Services\Telegram;
 use Illuminate\Console\Command;
+use Mockery\Exception;
 
 class ProcessReviewAnswers extends Command
 {
@@ -65,6 +66,8 @@ class ProcessReviewAnswers extends Command
 MSG;
 
                 Telegram::sendMessageToExistIds($msg);
+
+                $review->delete();
             }
         }
     }
