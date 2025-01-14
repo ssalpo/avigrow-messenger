@@ -26,11 +26,18 @@ class AvitoWebhookHandler extends Controller
      */
     public function __invoke(int $accountId, string $webhookHandleToken, Request $request): void
     {
-        logger()->info(json_encode($request->post('payload', [])));
+        $input = $request->post('payload', []);
+        $encoded = json_encode($input, JSON_THROW_ON_ERROR);
+
+        logger()->info($encoded);
+
+        if ($this->isDuplicateRequest($encoded)) {
+            return;
+        }
 
         $account = Account::where(['id' => $accountId, 'webhook_handle_token' => $webhookHandleToken])->firstOrFail();
 
-        $payload = AvitoWebhookPayloadDto::fromArray($request->post('payload', []));
+        $payload = AvitoWebhookPayloadDto::fromArray($input);
 
         $isMe = $payload->authorId === (int)$account->external_id;
 
@@ -75,5 +82,19 @@ class AvitoWebhookHandler extends Controller
 
             AddChatToAnalytics::dispatch($accountId, $chatId);
         }
+    }
+
+    private function isDuplicateRequest(string $encodedRequest): bool
+    {
+        // Авито по какой-то причине иногда дублирует запросы, поэтому через кеш предотвращаем проблему
+        $hash = hash('sha256', $encodedRequest);
+
+        if (Cache::has($hash)) {
+            return true;
+        }
+
+        Cache::put($hash, '-', now()->addHour());
+
+        return false;
     }
 }
