@@ -53,6 +53,8 @@ class ProcessReviewAnswers extends Command
                 // Отправить отзыв на авито
                 $avito->sendAnswerToReview($review->external_id, $answer);
 
+                $review->delete();
+
                 // Отправить уведомление в телеграм
                 $msg = <<<MSG
 📤 Отправлен ответ на отзыв
@@ -66,8 +68,6 @@ class ProcessReviewAnswers extends Command
 MSG;
 
                 Telegram::sendMessageToExistIds($msg);
-
-                $review->delete();
             }
         }
     }
