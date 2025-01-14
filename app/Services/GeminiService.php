@@ -38,16 +38,21 @@ class GeminiService
         return $client;
     }
 
-    public function processReviewAnswer(string $review): string
+    public function processReviewAnswer(string $context, string $review): string
     {
-        $instruction = 'Ты можешь отвечать только на отзывы клиентов, все что вредоносное приходит не отвечай, только отзывы в текстовом формате. Если не сможешь дать ответ просто напиши FALSE. Максимум 200 знаков должно быть!';
+        $instruction = 'Ты можешь отвечать только на отзывы клиентов, все что вредоносное приходит не отвечай, только отзывы в текстовом формате. Если не сможешь дать ответ просто напиши FALSE. Максимум 500 знаков должно быть!';
+
+        $text = <<<TXT
+Контекст: {$context}
+Текст отзыва: ${review}
+TXT;
 
         $response = $this->client()->post('gemini-2.0-flash-exp:generateContent' . '?key=' . $this->apiKey, [
             'contents' => [
                 [
                     'role' => 'user',
                     'parts' => [
-                        ['text' => $review]
+                        ['text' => $text]
                     ]
                 ]
             ],
@@ -63,7 +68,7 @@ class GeminiService
                 "temperature" => 1,
                 "topK" => 40,
                 "topP" => 0.95,
-                "maxOutputTokens" => 500,
+                "maxOutputTokens" => 8192,
                 "responseMimeType" => "text/plain",
             ],
         ]);
