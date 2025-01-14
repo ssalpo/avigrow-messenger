@@ -44,13 +44,13 @@ class ProcessReviewAnswers extends Command
                 $answer = $geminiService->processReviewAnswer($review->item_title, $review->content);
 
                 if ($answer === 'FALSE') {
+                    $review->delete();
+
                     continue;
                 }
 
                 // Отправить отзыв на авито
                 $avito->sendAnswerToReview($review->external_id, $answer);
-
-                $review->delete();
 
                 // Отправить уведомление в телеграм
                 $msg = <<<MSG

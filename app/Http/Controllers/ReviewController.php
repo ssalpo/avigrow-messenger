@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReviewAnswerRequest;
-use App\Models\Account;
 use App\Services\Avito;
+use App\Services\GeminiService;
 use Carbon\Carbon;
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
@@ -26,13 +26,13 @@ class ReviewController extends Controller
 
         $lastPage = ceil($reviews['total'] / 50) - 1;
 
-        $reviews['reviews'] = array_map(function($item) {
+        $reviews['reviews'] = array_map(function ($item) {
             $item['createdAt'] = Carbon::createFromTimestamp($item['createdAt'])->format('d-m-Y H:i');
             return $item;
         }, $reviews['reviews']);
 
-        if($page) {
-           return response()->json($reviews['reviews']);
+        if ($page) {
+            return response()->json($reviews['reviews']);
         }
 
         return inertia('Reviews', [
@@ -62,5 +62,16 @@ class ReviewController extends Controller
             ->deleteReviewAnswer($answerId);
 
         return redirect()->back();
+    }
+
+    public function aiAnswerGenerator(Request $request)
+    {
+        if (!$request->text || !$request->context) {
+            return;
+        }
+
+        return response()->json(
+            (new GeminiService)->processReviewAnswer($request->context, $request->text)
+        );
     }
 }

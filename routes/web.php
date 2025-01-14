@@ -88,6 +88,7 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
         Route::resource('schedule-reviews', ReviewScheduleController::class)->only(['index', 'store', 'destroy']);
 
         Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
+        Route::post('/reviews/ai-answer-generator', [ReviewController::class, 'aiAnswerGenerator'])->name('reviews.ai-answer-generator');
         Route::post('/reviews/{review}/answer', [ReviewController::class, 'answer'])->name('reviews.answer');
         Route::delete('/reviews/{review}/answer/{answer}', [ReviewController::class, 'answerDestroy'])->name('reviews.answer.destroy');
         Route::get('/chats/{chatId}/info', [ChatController::class, 'chatInfo'])->name('chats.info');

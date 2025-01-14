@@ -1,5 +1,6 @@
 <script setup>
 import {useForm, usePage} from "@inertiajs/vue3";
+import {ref} from "vue";
 
 const model = defineModel()
 
@@ -9,7 +10,6 @@ const props = defineProps({
         required: true
     },
     review: {
-        type: Object,
         required: true
     }
 })
@@ -36,6 +36,18 @@ const send = () => {
             form.reset()
         }
     })
+}
+
+const aiGenerateStart = ref(false)
+
+const aiGenerator = async () => {
+    aiGenerateStart.value = true;
+
+    const url = route('reviews.ai-answer-generator', {account: props.accountId});
+    const response = await axios.post(url, {text: props.review?.text, context: props.review?.item.title})
+
+    form.message = response.data
+    aiGenerateStart.value = false;
 }
 </script>
 
@@ -80,7 +92,19 @@ const send = () => {
                     <span v-else>{{ form.message.length }} из 2000 символов</span>
                 </div>
 
-                <div class="text-right">
+                <div class="mt-5 d-flex">
+                    <v-btn
+                        :loading="aiGenerateStart"
+                        @click="aiGenerator"
+                        variant="outlined"
+                        prepend-icon="mdi-robot-outline"
+                        color="warning"
+                        text="AI Ответ"
+                        class="mr-2"
+                    />
+
+                    <v-spacer />
+
                     <v-btn
                         @click="send"
                         prepend-icon="mdi-content-save-all-outline"

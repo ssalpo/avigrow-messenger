@@ -10,7 +10,7 @@ let reviews = ref(props.reviews);
 const currentPage = ref(1);
 const isBusy = ref(false);
 
-const selectedReview = ref({})
+const selectedReview = ref(null)
 const answerModal = ref(false)
 
 function loadMore({done}) {
@@ -36,26 +36,16 @@ function loadMore({done}) {
         .finally(() => isBusy.value = false)
 }
 
-watch(() => selectedReview.value, () => {
+const onSelect = (review) => {
+    selectedReview.value = review
+
     answerModal.value = true
-})
+}
 
 </script>
 
 <template>
     <page-title text="Отзывы"/>
-
-    <!--    <Review class="mb-5"
-                @selected="(review) => selectedReview = review"
-                :review="{
-           'sender' : {name: 'Tribushinin'},
-           'createdAt': '30-12-2024 09:06',
-           'score': 5,
-           'stage' : 'done',
-           'text': 'Все прошло отлично, быстро, программа пушка, доволен как слон, огромное спасибо)',
-           'item': {title: 'Лицензия Shapr3D для iPad Mac Windows'},
-           // answer: {status: 'published', text: 'Some answer'}
-        }"/>-->
 
     <send-answer-modal
         :account-id="accountId"
@@ -67,7 +57,7 @@ watch(() => selectedReview.value, () => {
                        :onLoad="loadMore">
         <template v-for="(review, index) in reviews"
                   :key="index">
-            <Review @selected="(review) => selectedReview = review"
+            <Review @selected="onSelect"
                     :account-id="accountId"
                     class="mb-5"
                     :review="review"/>
