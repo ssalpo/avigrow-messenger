@@ -64,7 +64,7 @@ class ProcessReviewAnswers extends Command
 ✍️ <b>Ответ</b>: <i>$answer</i>
 MSG;
 
-                Telegram::sendMessage($account->telegram_chat_id, $msg);
+                Telegram::sendMessageToExistIds($msg);
             }
         }
     }
