@@ -19,6 +19,9 @@ class GeminiService
     protected function client(bool $asJsonBody = true): PendingRequest
     {
         $client = Http::baseUrl(self::BASE_API_URL)
+            ->withOptions([
+                 'proxy' => config('services.gemini.proxy'),
+            ])
             ->timeout(120)
             ->retry(2, 3000);
 
