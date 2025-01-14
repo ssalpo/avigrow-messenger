@@ -46,6 +46,9 @@ return [
             'clientId' => env('AVITO_OAUTH_CLIENT_ID'),
             'clientSecret' => env('AVITO_OAUTH_CLIENT_SECRET'),
         ]
+    ],
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
     ]
 
 ];

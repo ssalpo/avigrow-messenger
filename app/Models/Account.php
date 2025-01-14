@@ -30,7 +30,8 @@ class Account extends Model
         'connection_status',
         'bot_id',
         'company_id',
-        'telegram_chat_id'
+        'telegram_chat_id',
+        'can_answer_to_review'
     ];
 
     protected $hidden = [
