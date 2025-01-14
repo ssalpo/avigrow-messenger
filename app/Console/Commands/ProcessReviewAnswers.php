@@ -41,7 +41,7 @@ class ProcessReviewAnswers extends Command
 
             if ($review) {
                 // Получить ответ на отзыв из нейронки
-                $answer = $geminiService->processReviewAnswer($review->content);
+                $answer = $geminiService->processReviewAnswer($review->item_title, $review->content);
 
                 if ($answer === 'FALSE') {
                     continue;
