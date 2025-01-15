@@ -34,6 +34,10 @@ class ProcessReviewAnswers extends Command
     {
         $accounts = Account::where('can_answer_to_review', true)->get()->keyBy('id');
 
+        if($accounts->count() === 0) {
+            $this->info('Not have matched accounts');
+        }
+
         $reviews = Review::query()
             ->select('reviews.*')
             ->joinSub(
@@ -50,6 +54,10 @@ class ProcessReviewAnswers extends Command
 
 
         foreach ($reviews as $review) {
+            if(!isset($accounts[$review->account_id])) {
+                continue;
+            }
+
             $account = $accounts[$review->account_id];
 
             $avito->setAccount($account);
@@ -70,6 +78,7 @@ class ProcessReviewAnswers extends Command
                 $review->delete();
             } catch (RequestException $e) {
                 if ($e->response->json('error.code') === 'answer_already_exists') {
+                    logger()?->info($e->response->json());
                     logger()?->info(json_encode(['deleted review', $review], JSON_THROW_ON_ERROR));
 
                     $review->delete();
@@ -92,7 +101,9 @@ class ProcessReviewAnswers extends Command
 ✍️ <b>Ответ</b>: <i>$answer</i>
 MSG;
 
-            Telegram::sendMessageToExistIds($msg);
+            $this->info($msg);
+
+            // Telegram::sendMessageToExistIds($msg);
         }
     }
 }

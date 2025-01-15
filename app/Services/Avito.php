@@ -7,7 +7,9 @@ use App\Services\DTO\Avito\AvitoAuthUserDto;
 use App\Services\DTO\Avito\AvitoChatDto;
 use App\Services\DTO\Avito\AvitoChatUserDto;
 use App\Services\DTO\Avito\AvitoWebhookPayloadDto;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 
 class Avito
@@ -16,6 +18,10 @@ class Avito
 
     public const BASE_API_URL = 'https://api.avito.ru';
 
+    /**
+     * @param bool $asJsonBody
+     * @return PendingRequest
+     */
     protected function client(bool $asJsonBody = true): PendingRequest
     {
         $client = Http::baseUrl(self::BASE_API_URL)
@@ -236,6 +242,9 @@ class Avito
         return $this->clientWithToken()->get("/ratings/v1/reviews?offset=$offset&limit=$limit")->json() ?? [];
     }
 
+    /**
+     * @throws ConnectionException
+     */
     public function sendAnswerToReview(int $reviewId, string $message): array
     {
         return $this->clientWithToken()->post("/ratings/v1/answers", [
