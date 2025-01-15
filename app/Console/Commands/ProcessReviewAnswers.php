@@ -61,9 +61,11 @@ class ProcessReviewAnswers extends Command
                         logger()?->info(json_encode(['deleted review', $review], JSON_THROW_ON_ERROR));
 
                         $review->delete();
-                    } else {
-                        throw new RequestException($e->response);
+
+                        return;
                     }
+
+                    throw new RequestException($e->response);
                 }
 
                 // Отправить уведомление в телеграм
