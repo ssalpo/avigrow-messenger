@@ -9,7 +9,7 @@ use App\Services\GeminiService;
 use App\Services\Telegram;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\RequestException;
-use Mockery\Exception;
+use Illuminate\Support\Facades\DB;
 
 class ProcessReviewAnswers extends Command
 {
@@ -32,44 +32,54 @@ class ProcessReviewAnswers extends Command
      */
     public function handle(GeminiService $geminiService, Avito $avito)
     {
-        $accounts = Account::where('can_answer_to_review', true)->get();
+        $accounts = Account::where('can_answer_to_review', true)->get()->keyBy('id');
 
-        foreach ($accounts as $account) {
-            $avito->setAccount($account);
+        $reviews = Review::query()
+            ->select('reviews.*')
+            ->joinSub(
+                Review::query()
+                    ->select('account_id', DB::raw('MAX(external_created_at) as latest_created_at'))
+                    ->groupBy('account_id'),
+                'latest_reviews',
+                function ($join) {
+                    $join->on('reviews.account_id', '=', 'latest_reviews.account_id')
+                        ->on('reviews.external_created_at', '=', 'latest_reviews.latest_created_at');
+                }
+            )
+            ->get();
 
-            $review = Review::where('account_id', $account->id)
-                ->orderByDesc('external_created_at')
-                ->first();
 
-            if ($review) {
-                // Получить ответ на отзыв из нейронки
-                $answer = $geminiService->processReviewAnswer($review->item_title, $review->content);
+        foreach ($reviews as $review) {
+            $account = $accounts[$review->account_id];
 
-                if ($answer === 'FALSE') {
+            // Получить ответ на отзыв из нейронки
+            $answer = $geminiService->processReviewAnswer($review->item_title, $review->content);
+
+            if ($answer === 'FALSE') {
+                $review->delete();
+
+                continue;
+            }
+
+            try {
+                // Отправить отзыв на авито
+                $avito->sendAnswerToReview($review->external_id, $answer);
+
+                $review->delete();
+            } catch (RequestException $e) {
+                if ($e->response->json('error.code') === 'answer_already_exists') {
+                    logger()?->info(json_encode(['deleted review', $review], JSON_THROW_ON_ERROR));
+
                     $review->delete();
 
                     continue;
                 }
 
-                try {
-                    // Отправить отзыв на авито
-                    $avito->sendAnswerToReview($review->external_id, $answer);
+                throw new RequestException($e->response);
+            }
 
-                    $review->delete();
-                } catch (RequestException $e) {
-                    if ($e->response->json('error.code') === 'answer_already_exists') {
-                        logger()?->info(json_encode(['deleted review', $review], JSON_THROW_ON_ERROR));
-
-                        $review->delete();
-
-                        return;
-                    }
-
-                    throw new RequestException($e->response);
-                }
-
-                // Отправить уведомление в телеграм
-                $msg = <<<MSG
+            // Отправить уведомление в телеграм
+            $msg = <<<MSG
 📤 Отправлен ответ на отзыв
 
 —————————————————
@@ -80,8 +90,7 @@ class ProcessReviewAnswers extends Command
 ✍️ <b>Ответ</b>: <i>$answer</i>
 MSG;
 
-                Telegram::sendMessageToExistIds($msg);
-            }
+            Telegram::sendMessageToExistIds($msg);
         }
     }
 }
