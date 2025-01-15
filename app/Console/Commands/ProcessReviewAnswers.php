@@ -52,6 +52,8 @@ class ProcessReviewAnswers extends Command
         foreach ($reviews as $review) {
             $account = $accounts[$review->account_id];
 
+            $avito->setAccount($account);
+
             // Получить ответ на отзыв из нейронки
             $answer = $geminiService->processReviewAnswer($review->item_title, $review->content);
 
