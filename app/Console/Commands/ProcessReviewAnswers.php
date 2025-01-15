@@ -8,6 +8,7 @@ use App\Services\Avito;
 use App\Services\GeminiService;
 use App\Services\Telegram;
 use Illuminate\Console\Command;
+use Illuminate\Http\Client\RequestException;
 use Mockery\Exception;
 
 class ProcessReviewAnswers extends Command
@@ -50,10 +51,20 @@ class ProcessReviewAnswers extends Command
                     continue;
                 }
 
-                // Отправить отзыв на авито
-                $avito->sendAnswerToReview($review->external_id, $answer);
+                try {
+                    // Отправить отзыв на авито
+                    $avito->sendAnswerToReview($review->external_id, $answer);
 
-                $review->delete();
+                    $review->delete();
+                } catch (RequestException $e) {
+                    if ($e->response->json('error.code') === 'answer_already_exists') {
+                        logger()?->info(json_encode(['deleted review', $review], JSON_THROW_ON_ERROR));
+
+                        $review->delete();
+                    } else {
+                        throw new RequestException($e->response);
+                    }
+                }
 
                 // Отправить уведомление в телеграм
                 $msg = <<<MSG

@@ -7,10 +7,8 @@ use App\Services\DTO\Avito\AvitoAuthUserDto;
 use App\Services\DTO\Avito\AvitoChatDto;
 use App\Services\DTO\Avito\AvitoChatUserDto;
 use App\Services\DTO\Avito\AvitoWebhookPayloadDto;
-use GuzzleHttp\Client;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 
 class Avito
 {
