@@ -58,7 +58,7 @@ class ImportReviews extends Command
                 $total = $response['total'];
             }
 
-            $existsReviewIds = Review::pluck('id')->toArray();
+            $existsReviewIds = Review::pluck('external_id')->toArray();
 
             $filteredReviews = array_filter($response['reviews'], fn($r) => !in_array($r['id'], $existsReviewIds, true));
 
