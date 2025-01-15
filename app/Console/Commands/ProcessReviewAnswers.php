@@ -34,7 +34,7 @@ class ProcessReviewAnswers extends Command
     {
         $accounts = Account::where('can_answer_to_review', true)->get()->keyBy('id');
 
-        if($accounts->count() === 0) {
+        if ($accounts->count() === 0) {
             $this->info('Not have matched accounts');
         }
 
@@ -54,7 +54,7 @@ class ProcessReviewAnswers extends Command
 
 
         foreach ($reviews as $review) {
-            if(!isset($accounts[$review->account_id])) {
+            if (!isset($accounts[$review->account_id])) {
                 continue;
             }
 
@@ -101,9 +101,7 @@ class ProcessReviewAnswers extends Command
 ✍️ <b>Ответ</b>: <i>$answer</i>
 MSG;
 
-            $this->info($msg);
-
-            // Telegram::sendMessageToExistIds($msg);
+            Telegram::sendMessageToExistIds($msg);
         }
     }
 }
