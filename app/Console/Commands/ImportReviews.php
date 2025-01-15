@@ -58,7 +58,11 @@ class ImportReviews extends Command
                 $total = $response['total'];
             }
 
-            foreach ($response['reviews'] as $review) {
+            $existsReviewIds = Review::pluck('id')->toArray();
+
+            $filteredReviews = array_filter($response['reviews'], fn($r) => !in_array($r['id'], $existsReviewIds, true));
+
+            foreach ($filteredReviews as $review) {
                 if ($this->canInsert($review)) {
                     Review::insert([
                         'account_id' => $account->id,
