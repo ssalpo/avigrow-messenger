@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Account;
 use App\Models\Review;
 use App\Services\Avito;
-use App\Services\GeminiService;
+use App\Services\DeepSeekService;
 use App\Services\Telegram;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\RequestException;
@@ -30,7 +30,7 @@ class ProcessReviewAnswers extends Command
     /**
      * Execute the console command.
      */
-    public function handle(GeminiService $geminiService, Avito $avito)
+    public function handle(DeepSeekService $service, Avito $avito)
     {
         $accounts = Account::where('can_answer_to_review', true)->get()->keyBy('id');
 
@@ -63,7 +63,7 @@ class ProcessReviewAnswers extends Command
             $avito->setAccount($account);
 
             // Получить ответ на отзыв из нейронки
-            $answer = $geminiService->processReviewAnswer($review->item_title, $review->content);
+            $answer = $service->processReviewAnswer($review->item_title, $review->content);
 
             if ($answer === 'FALSE') {
                 $review->delete();

@@ -50,6 +50,9 @@ return [
     'gemini' => [
         'api_key' => env('GEMINI_API_KEY'),
         'proxy' => env('GEMINI_API_PROXY'),
+    ],
+    'deep_seek' => [
+        'api_key' => env('DEEP_SEEK_API_KEY'),
     ]
 
 ];
