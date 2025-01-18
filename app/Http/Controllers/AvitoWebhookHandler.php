@@ -27,7 +27,7 @@ class AvitoWebhookHandler extends Controller
     public function __invoke(int $accountId, string $webhookHandleToken, Request $request): void
     {
         $input = $request->post('payload', []);
-        $encoded = json_encode($input, JSON_THROW_ON_ERROR);
+        $encoded = json_encode($input, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
         logger()->info($encoded);
 
