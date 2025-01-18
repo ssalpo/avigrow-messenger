@@ -1,4 +1,4 @@
-🙋🏻‍ {{$clientName}}: {!! $message !!}
+🙋🏻‍ <a href="">{{$chatUrl}}</a> : {!! $message !!}
 
 -----------
 👥 <a href="{{$accountUrl}}"><i>{{$accountName}}</i></a>

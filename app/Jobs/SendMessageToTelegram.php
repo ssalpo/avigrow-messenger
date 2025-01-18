@@ -60,7 +60,7 @@ class SendMessageToTelegram implements ShouldQueue
     {
         $accountUrl = url("/accounts/{$this->account->id}/chats");
         $clientName = Avito::getUserFromChat($this->chat->users, $this->account->external_id)->name;
-
+        $chatUrl = url("/accounts/{$this->account->id}/chats/{$this->chat->id}");
         $params = [];
 
         if ($this->payload->isAds()) {
@@ -70,6 +70,7 @@ class SendMessageToTelegram implements ShouldQueue
         }
 
         return array_merge([
+            'chatUrl' => $chatUrl,
             'currentTelegramChatId' => $this->account->telegram_chat_id,
             'accountId' => $this->account->id,
             'chatId' => $this->chatId,
