@@ -62,6 +62,7 @@ function auth() {
                 v-model="form.password"
                 class="mb-2"
                 @click:append-inner="visible = !visible"
+                @keydown.enter="auth"
             ></v-text-field>
 
             <v-btn

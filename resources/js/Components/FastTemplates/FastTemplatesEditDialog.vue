@@ -1,5 +1,5 @@
 <script setup>
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {includes} from "lodash";
 import {useForm} from "@inertiajs/vue3";
 
@@ -32,9 +32,13 @@ function onSave() {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
+            if(!form.id) {
+                localStorage.setItem('lastSelectedTag', form.tag)
+            }
+
+            emits(form.id ? 'updated' : 'created', form)
             form.reset()
             model.value = false
-            emits(form.id ? 'updated' : 'created', form)
         }
     }
 
@@ -85,6 +89,10 @@ watch(() => model.value, (state) => {
     form.reset()
 
     if (state === true) {
+        if(!form.id) {
+            form.tag = localStorage.getItem('lastSelectedTag')
+        }
+
         axios.get(route('fm-tags.index', props.activeAccount.id)).then((response) => {
             searchTagIndex = null
             tags.value = response.data;
