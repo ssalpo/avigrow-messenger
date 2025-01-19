@@ -67,12 +67,27 @@ const stageTypes = {
                 <v-col cols="3" sm="2" md="1" lg="1" v-for="image in review.images">
                     <a :href="image.sizes[1]['url']" target="_blank">
                         <v-img
+                            :lazy-src="image.sizes[0]['url']"
                             rounded
                             :max-width="90"
                             :max-height="120"
                             cover
+                            class="bg-grey-lighten-2"
                             :src="image.sizes[0]['url']"
-                        />
+                        >
+                            <template v-slot:placeholder>
+                                <v-row
+                                    align="center"
+                                    class="fill-height ma-0"
+                                    justify="center"
+                                >
+                                    <v-progress-circular
+                                        color="grey-lighten-5"
+                                        indeterminate
+                                    ></v-progress-circular>
+                                </v-row>
+                            </template>
+                        </v-img>
                     </a>
                 </v-col>
             </v-row>
