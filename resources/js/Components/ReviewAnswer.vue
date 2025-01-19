@@ -38,7 +38,7 @@ const onDelete = () => {
 </script>
 
 <template>
-    <v-sheet class="ml-10 mt-4 text-body-2 border pa-3 rounded">
+    <div class="ml-10 mt-4 text-body-2 border pa-3 rounded">
         <v-chip v-if="review.answer.status !== 'published'"
                 color="red"
                 class="mb-3">
@@ -57,5 +57,5 @@ const onDelete = () => {
                     @click="onDelete"
                     color="error"/>
         </div>
-    </v-sheet>
+    </div>
 </template>

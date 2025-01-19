@@ -38,7 +38,7 @@ const stageTypes = {
             </v-list-item>
         </v-list>
 
-        <v-sheet class="d-flex flex-row align-center">
+        <div class="d-flex flex-row align-center">
             <v-rating
                 hover
                 color="yellow-darken-3"
@@ -52,15 +52,31 @@ const stageTypes = {
             <span class="text-disabled text-body-2">
                 {{ stageTypes[review.stage] }}
             </span>
-        </v-sheet>
+        </div>
 
-        <v-sheet class="mb-3 text-disabled text-body-2">
+        <div class="mb-3 text-disabled text-body-2">
             {{ review.item.title }}
-        </v-sheet>
+        </div>
 
-        <v-sheet class="text-body-2">
+        <div class="text-body-2 d-block mb-2">
             {{ review.text }}
-        </v-sheet>
+        </div>
+
+        <div v-if="review.images !== undefined">
+            <v-row>
+                <v-col cols="3" sm="2" md="1" lg="1" v-for="image in review.images">
+                    <a :href="image.sizes[1]['url']" target="_blank">
+                        <v-img
+                            rounded
+                            :max-width="90"
+                            :max-height="120"
+                            cover
+                            :src="image.sizes[0]['url']"
+                        />
+                    </a>
+                </v-col>
+            </v-row>
+        </div>
 
         <ReviewAnswer v-if="review.answer"
                       @deleted="() => review.answer = null"
