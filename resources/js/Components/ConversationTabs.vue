@@ -37,9 +37,11 @@ function goToItem(url) {
             v-if="chat.context !== ''"
             @click="goToItem(chat.url)"
             color="blue-darken-1" class="pr-3 px-4 py-2 text-truncate d-flex" style="border-top: 1px solid #ffffff8f; font-size: 12px">
-            <v-sheet color="blue-darken-1" class="pr-3 text-truncate">{{ chat.context }}</v-sheet>
+            <div class="pr-3 text-truncate">{{ chat.context }}</div>
             <v-spacer/>
-            <v-sheet color="blue-darken-1" class="pr-3">{{ chat.price }}</v-sheet>
+            <div class="pr-3">
+                {{ chat.price }}
+            </div>
         </v-sheet>
     </div>
 </template>
