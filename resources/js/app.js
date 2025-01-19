@@ -18,11 +18,14 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
 const vuetify = createVuetify({
+    theme: {
+        defaultTheme: 'light',
+    },
     components,
     directives
 })
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'AviGrow';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
