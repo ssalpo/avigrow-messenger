@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
         <meta name="color-scheme" content="light">
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'AviGrow') }}</title>
 
         <!-- Scripts -->
         <link rel="manifest" href="/pwa/manifest">
