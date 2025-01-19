@@ -34,7 +34,7 @@ class AdImporter
                     "account_id" => $account->id,
                     "external_id" => $resource['id']
                 ], [
-                    "price" => $resource['price'],
+                    "price" => $resource['price'] ?? 0,
                     "title" => $resource['title'],
                     "url" => $resource['url'],
                     'created_at' => now()
