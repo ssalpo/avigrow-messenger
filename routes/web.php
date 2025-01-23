@@ -29,7 +29,7 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('login', [AuthController::class, 'auth']);
 
     Route::get('signup', [AuthController::class, 'signup'])->name('signup');
-//    Route::post('register', [AuthController::class, 'register'])->name('register');
+    Route::post('register', [AuthController::class, 'register'])->name('register');
 });
 
 Route::middleware(['auth'])->group(function () {
