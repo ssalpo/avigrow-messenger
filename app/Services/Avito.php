@@ -345,6 +345,8 @@ class Avito
             'job:write',
             'messenger:read',
             'messenger:write',
+            'ratings:read',
+            'ratings:write',
             'short_term_rent:read',
             'short_term_rent:write',
             'stats:read',
