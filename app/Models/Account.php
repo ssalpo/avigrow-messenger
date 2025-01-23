@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\AccountConnectStatus;
+use App\Enums\AccountType;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,7 +32,10 @@ class Account extends Model
         'bot_id',
         'company_id',
         'telegram_chat_id',
-        'can_answer_to_review'
+        'can_answer_to_review',
+        'type',
+        'oauth_check_key',
+        'is_active'
     ];
 
     protected $hidden = [
@@ -47,12 +51,15 @@ class Account extends Model
         'connection_errors',
         'connection_status',
         'bot_id',
+        'oauth_check_key'
     ];
 
     protected $casts = [
         'token_refreshed_at' => 'datetime',
         'external_access_token_expire_date' => 'datetime',
-        'connection_status' => AccountConnectStatus::class
+        'connection_status' => AccountConnectStatus::class,
+        'type' => AccountType::class,
+        'is_active' => 'boolean'
     ];
 
     public function bot(): BelongsTo
@@ -90,5 +97,10 @@ class Account extends Model
     public static function hasAnyRelated()
     {
         return self::whereIn('company_id', UserService::relatedCompanyIds(auth()->user()))->exists();
+    }
+
+    public static function findByOAuthKey(string $key): self
+    {
+        return self::where(['oauth_check_key' => $key])->firstOrFail();
     }
 }

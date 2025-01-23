@@ -6,7 +6,10 @@ use App\Http\Requests\AccountRequest;
 use App\Http\Requests\AccountSettingsRequest;
 use App\Models\Account;
 use App\Services\AccountService;
+use App\Services\Avito;
 use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response;
 
 class AccountController extends Controller
 {
@@ -28,11 +31,17 @@ class AccountController extends Controller
         return inertia('Accounts/Edit');
     }
 
-    public function store(AccountRequest $request): RedirectResponse
+    public function store(AccountRequest $request): RedirectResponse|Response
     {
         $companyId = auth()->user()->myCompany->id;
 
         $account = $this->accountService->store($request->validated() + ['company_id' => $companyId]);
+
+        if ($account->type->isFree()) {
+            return Inertia::location(
+                Avito::buildOAuthLink($account->oauth_check_key)
+            );
+        }
 
         return to_route('accounts.show', $account->id);
     }
@@ -51,9 +60,13 @@ class AccountController extends Controller
         ]);
     }
 
-    public function update(int $accountId, AccountRequest $request): RedirectResponse
+    public function update(int $accountId, AccountRequest $request): RedirectResponse|Response
     {
-        $this->accountService->update($accountId, $request->validated());
+        $account = $this->accountService->update($accountId, $request->validated());
+
+        if (is_string($account)) {
+            return Inertia::location($account);
+        }
 
         return to_route('accounts.show', $accountId);
     }
@@ -65,5 +78,10 @@ class AccountController extends Controller
         $account->update($request->validated());
 
         return redirect()->back();
+    }
+
+    public function toggleActivity(int $accountId): void
+    {
+        $this->accountService->toggleActivity($accountId);
     }
 }

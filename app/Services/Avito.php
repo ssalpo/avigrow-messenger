@@ -332,4 +332,32 @@ class Avito
             ]
         )->json();
     }
+
+    public static function buildOAuthLink(string $state = ''): string
+    {
+        $permissions = [
+            'autoload:reports',
+            'items:apply_vas',
+            'items:info',
+            'job:cv',
+            'job:applications',
+            'job:vacancy',
+            'job:write',
+            'messenger:read',
+            'messenger:write',
+            'short_term_rent:read',
+            'short_term_rent:write',
+            'stats:read',
+            'user:read',
+            'user_balance:read',
+            'user_operations:read',
+        ];
+
+        return 'https://avito.ru/oauth?' . http_build_query([
+                'response_type' => 'code',
+                'client_id' => config('services.avito.oauth.clientId'),
+                'state' => $state,
+                'scope' => implode(',', $permissions),
+            ]);
+    }
 }

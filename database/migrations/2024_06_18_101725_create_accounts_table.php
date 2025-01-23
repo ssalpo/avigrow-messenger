@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('external_id');
-            $table->string('external_client_id');
-            $table->string('external_client_secret');
+            $table->string('external_client_id')->nullable();
+            $table->string('external_client_secret')->nullable();
             $table->string('external_access_token')->nullable();
             $table->string('external_refresh_token')->nullable();
             $table->integer('external_access_token_expire_in')->nullable();

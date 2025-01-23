@@ -6,6 +6,7 @@ use App\Http\Controllers\AdController;
 use App\Http\Controllers\AnalyticController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AvitoController;
+use App\Http\Controllers\AvitoOAuthConnectController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\BotGreetingController;
 use App\Http\Controllers\BotQuizController;
@@ -19,8 +20,6 @@ use App\Http\Controllers\FmTagController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PwaController;
 use App\Http\Controllers\ReviewController;
-use App\Models\Account;
-use App\Services\Avito;
 use Illuminate\Support\Facades\Route;
 
 
@@ -34,6 +33,7 @@ Route::group(['middleware' => 'guest'], function () {
 
 Route::middleware(['auth'])->group(function () {
 
+    Route::post('accounts/{account}/toggle-activity', [AccountController::class, 'toggleActivity'])->name('accounts.toggle-activity');
     Route::post('accounts/{account}/save-settings', [AccountController::class, 'saveSettings'])->name('accounts.save-settings');
     Route::resource('accounts', AccountController::class)->middleware('auth');
 
@@ -101,37 +101,9 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
     Route::get('employees', [EmployeeController::class, 'index'])->name('employees.index');
     Route::post('/employees', [EmployeeController::class, 'sync'])->name('employees.sync');
     Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+
+    Route::get('redirect', AvitoOAuthConnectController::class);
 });
-
-Route::get('redirect', function () {
-    $code = request('code');
-    $account = request('state');
-
-    if (!$code) {
-        echo 'Code not found!';
-
-        return '';
-    }
-
-    if (!$account) {
-        echo 'Account not found!';
-
-        return '';
-    }
-
-    $account = Account::findOrFail($account);
-
-    $response = (new Avito)->getTokenByCode($code);
-
-    $account->update([
-        'external_access_token' => $response['access_token'],
-        'external_refresh_token' => $response['refresh_token'],
-        'external_access_token_expire_in' => $response['expires_in'],
-    ]);
-
-    return redirect('/');
-});
-
 
 Route::group(['prefix' => 'pwa', 'as' => 'pwa.'], static function () {
     Route::get('manifest', [PwaController::class, 'manifest'])->name('manifest');
