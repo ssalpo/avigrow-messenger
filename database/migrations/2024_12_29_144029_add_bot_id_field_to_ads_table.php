@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('ads', function (Blueprint $table) {
-            $table->dropForeign('bot_id');
+            $table->dropConstrainedForeignId('bot_id');
         });
     }
 };

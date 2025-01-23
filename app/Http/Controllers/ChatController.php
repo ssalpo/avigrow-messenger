@@ -2,18 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CodeKeyType;
 use App\Events\MarkedAsReadChat;
-use App\Http\Requests\SendPaymentReceiptRequest;
-use App\Models\Account;
-use App\Models\CodeKey;
-use App\Models\ReviewSchedule;
 use App\Services\ActiveConversationService;
 use App\Services\Avito;
 use App\Services\DTO\Avito\AvitoChatDto;
-use App\Services\Telegram;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -65,14 +58,8 @@ class ChatController extends Controller
 
         $response = $this->avito->setAccount($account)->getChatMessages($chatId, 30, request('page', 1));
 
-        $tabs = CodeKeyType::labels();
-        $keys = CodeKey::whereNull('receipt_at')->orderByDesc('created_at')->get()->groupBy('product_type');
-
         return Inertia::render('Messages', [
-            'tabs' => $tabs,
-            'keys' => $keys,
             'chat' => Avito::chatResponse($chat, $account),
-            'hasReviewSchedules' => ReviewSchedule::hasAnyForChatAndAccount($chatId, $account->id),
             'has_more' => $response['meta']['has_more'],
             'messages' => collect($response['messages'])
                 ->map(function ($message) use ($account) {
@@ -112,16 +99,5 @@ class ChatController extends Controller
         $this->avito->setAccount($account)->markChatAsRead($chatId);
 
         MarkedAsReadChat::dispatch($account->id, $chatId);
-    }
-
-    public function sendPaymentReceipt(SendPaymentReceiptRequest $request): RedirectResponse
-    {
-        Telegram::sendImage(
-            config('services.telegram.reportGroup'),
-            $request->url,
-            $request->caption
-        );
-
-        return redirect()->back();
     }
 }

@@ -4,8 +4,6 @@ import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import MessageItem from "@/Components/Chats/MessageItem.vue";
 import FastMessages from "@/Components/FastTemplates/FastMessages.vue";
 import {useTextareaAutosize} from "@vueuse/core";
-import ScheduleReviewRequest from "@/Components/ScheduleReviewRequest.vue";
-import CodeKeysSheet from "@/Components/CodeKeysSheet.vue";
 import ConversationTabs from "@/Components/ConversationTabs.vue";
 import BaseLayoutWithoutNav from "@/Layouts/BaseLayoutWithoutNav.vue";
 import AdBottomSheetList from "@/Components/Ads/AdBottomSheetList.vue";
@@ -15,16 +13,11 @@ defineOptions({layout: BaseLayoutWithoutNav})
 
 const props = defineProps({
     errors: Object,
-    tabs: Object,
-    keys: Object,
     activeAccount: {
         type: Object
     },
     chat: {
         type: Object
-    },
-    hasReviewSchedules: {
-        type: Boolean
     },
     has_more: {
         type: Boolean
@@ -168,9 +161,6 @@ function onDeleteMessage(message) {
 }
 
 
-function onCodeKeysSelect(text) {
-    input.value = text;
-}
 function onBlurTextarea() {
     if (input.value) return;
 
@@ -277,44 +267,6 @@ const onTemplateSelected = (e, isExternal) => {
                             @input="event => input = event.target.value"
                             :placeholder="sendFromOtherText || `Cообщение`">
                     </textarea>
-
-
-                        <v-menu v-if="!input">
-                            <template v-slot:activator="{ props }">
-                                <button class="left-btn message-icon"
-                                        type="button"
-                                        v-bind="props">⋮
-                                </button>
-                            </template>
-
-                            <v-list density="compact">
-                                <schedule-review-request
-                                    :chat-id="chat.id"
-                                    :account-id="activeAccount.id"
-                                    v-if="!hasReviewSchedules"
-                                >
-                                    <template v-slot:default="{props}">
-                                        <v-list-item
-                                            v-bind="props"
-                                            prepend-icon="mdi-alarm"
-                                            title="Запросить отзыв позже"
-                                        />
-                                    </template>
-                                </schedule-review-request>
-
-                                <code-keys-sheet :tabs="tabs"
-                                                 :keys="keys"
-                                                 @selected="onCodeKeysSelect">
-                                    <template v-slot:default="{props}">
-                                        <v-list-item
-                                            v-bind="props"
-                                            prepend-icon="mdi-key-chain"
-                                            title="Ключи и аккаунты"
-                                        />
-                                    </template>
-                                </code-keys-sheet>
-                            </v-list>
-                        </v-menu>
 
                         <input
                             ref="fileInput"

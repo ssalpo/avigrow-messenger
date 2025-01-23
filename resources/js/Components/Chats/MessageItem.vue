@@ -1,7 +1,6 @@
 <script setup>
 import {ref} from "vue";
 import { vOnLongPress } from '@vueuse/components'
-import SendPaymentReceipt from "@/Components/SendPaymentReceipt.vue";
 
 const props = defineProps({
     accountId: Number,
@@ -104,15 +103,6 @@ function onLongPressCopyText(e) {
         <div style="display: flex">
             <div class="message__delete-btn" v-if="message.content_type !== 'deleted' && message.is_me && diffInHours(message.created_at) < 1" @click="deleteMessage">удалить,</div>
             <div class="message__read-status" v-if="message.is_me" :class="{read: message.is_read}">{{message.is_read ? 'прочтен' : 'доставлено'}},</div>
-
-            <send-payment-receipt
-                :image-url="message.content.image.sizes['1280x960']"
-                v-if="!message.is_me && message.content_type === 'image'"
-            >
-                <template v-slot:default="{props}">
-                    <div class="message__delete-btn text-info" v-bind="props">отправить в отчет,</div>
-                </template>
-            </send-payment-receipt>
 
             <div class="message__time">{{ message.created_at }}</div>
         </div>

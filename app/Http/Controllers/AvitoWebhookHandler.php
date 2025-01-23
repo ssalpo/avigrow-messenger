@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Events\NewMessage;
 use App\Jobs\AddChatToAnalytics;
-use App\Jobs\AddToAnalyzeReviews;
 use App\Jobs\HandleChatBotMessage;
 use App\Jobs\SendMessageToTelegram;
 use App\Models\Account;
@@ -67,8 +66,6 @@ class AvitoWebhookHandler extends Controller
                 'type' => $payload->type,
             ]
         ]);
-
-        AddToAnalyzeReviews::dispatch($account->id, $payload->chatId);
 
         $this->addToAnalytics($account->id, $payload->chatId);
     }

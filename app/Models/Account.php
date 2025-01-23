@@ -55,11 +55,6 @@ class Account extends Model
         'connection_status' => AccountConnectStatus::class
     ];
 
-    public function analyzeReviews(): HasMany
-    {
-        return $this->hasMany(AnalyzeReview::class);
-    }
-
     public function bot(): BelongsTo
     {
         return $this->belongsTo(Bot::class);

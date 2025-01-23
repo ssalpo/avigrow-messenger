@@ -1,45 +1,60 @@
 <script setup>
 import {router, usePage} from "@inertiajs/vue3";
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 
 const model = defineModel();
 
 const page = usePage()
 const activeAccount = ref(page.props.activeAccount)
-let baseNav = [
+console.log(activeAccount.value?.id)
+let navs = ref([
     {
-        title: 'Ключи',
-        route: 'code-keys.index',
-        icon: 'mdi-key-variant',
-        params: null
+        title: 'Сообщения',
+        route: 'account.chats',
+        icon: 'mdi-email-outline',
+        params: {account: activeAccount.value?.id},
+        shown: activeAccount.value?.id !== undefined,
     },
     {
-        title: 'Продукты',
-        route: 'products.index',
-        icon: 'mdi-cart-outline',
-        params: null
+        title: 'Отзывы',
+        route: 'reviews.index',
+        icon: 'mdi-star-outline',
+        params: {account: activeAccount.value?.id},
+        shown: activeAccount.value?.id !== undefined,
+    },
+    {
+        title: 'Аналитика',
+        route: 'analytics',
+        icon: 'mdi-chart-areaspline',
+        params: null,
+        shown: true,
     },
     {
         title: 'Операторы',
         route: 'employees.index',
         icon: 'mdi-account-group-outline',
-        params: null
+        params: null,
+        shown: true,
     },
     {
         title: 'Аккаунты',
         route: 'accounts.index',
         icon: 'mdi-account-cog-outline',
-        params: null
+        params: null,
+        shown: true,
     },
     {
         title: 'Чаты Боты',
         route: 'bots.index',
         icon: 'mdi-robot-outline',
-        params: null
+        params: null,
+        shown: true,
     }
-]
+])
 
-let navs = ref([]);
+const filteredNavs = computed(() => {
+    return navs.value.filter(e => e.shown === true)
+})
 
 function goTo(nav) {
     model.value = false;
@@ -50,41 +65,6 @@ function goTo(nav) {
 watch(() => page.props.activeAccount, (value) => {
     activeAccount.value = value
 })
-
-watch(() => activeAccount.value, () => {
-    if (activeAccount.value?.id) {
-        navs.value = [
-            {
-                title: 'Сообщения',
-                route: 'account.chats',
-                icon: 'mdi-email-outline',
-                params: {account: activeAccount.value?.id}
-            },
-            {
-                title: 'Запросы отзывов',
-                route: 'schedule-reviews.index',
-                icon: 'mdi-timer-star',
-                params: {account: activeAccount.value?.id}
-            },
-            {
-                title: 'Отзывы',
-                route: 'reviews.index',
-                icon: 'mdi-star-outline',
-                params: {account: activeAccount.value?.id}
-            },
-
-            {
-                title: 'Аналитика',
-                route: 'analytics',
-                icon: 'mdi-chart-areaspline',
-                params: null
-            },
-            ...baseNav
-        ]
-    } else {
-        navs.value = baseNav
-    }
-}, {immediate: true})
 </script>
 
 <template>
@@ -111,7 +91,7 @@ watch(() => activeAccount.value, () => {
         <v-list>
             <v-list-item
                 :prepend-icon="nav.icon"
-                v-for="nav in navs"
+                v-for="nav in filteredNavs"
                 color="blue-darken-1"
                 :title="nav.title"
                 @click="() => goTo(nav)"

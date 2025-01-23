@@ -13,8 +13,7 @@ const drawer = ref(false);
 
 function selectActive(account) {
     const exceptRoutes = [
-        'home', 'code-keys.histories', 'code-keys.index',
-        'products.index'
+        'home'
     ]
 
     activeAccount.value = account

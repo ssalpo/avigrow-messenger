@@ -5,7 +5,6 @@ use App\Http\Controllers\ActiveConversationController;
 use App\Http\Controllers\AdController;
 use App\Http\Controllers\AnalyticController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AutocompleteController;
 use App\Http\Controllers\AvitoController;
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\BotGreetingController;
@@ -14,15 +13,12 @@ use App\Http\Controllers\BotScheduleController;
 use App\Http\Controllers\BotScheduleSlotController;
 use App\Http\Controllers\BotTriggerController;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\CodeKeyController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FastTemplateController;
 use App\Http\Controllers\FmTagController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PwaController;
 use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\ReviewScheduleController;
 use App\Models\Account;
 use App\Services\Avito;
 use Illuminate\Support\Facades\Route;
@@ -58,10 +54,6 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
 
     Route::post('/send-payment-receipt', [ChatController::class, 'sendPaymentReceipt'])->name('send-payment-receipt');
 
-    Route::get('products/trash', [ProductController::class, 'trash'])->name('products.trash');
-    Route::post('products/{product}/restore', [ProductController::class, 'restore'])->name('products.restore');
-    Route::resource('products', ProductController::class);
-
     Route::post('/bots/{bot}/update-settings', [BotController::class, 'updateSettings'])->name('bots.update-settings');
     Route::get('/bots/{bot}/connected-add-treeview', [BotController::class, 'connectedAdTreeView'])->name('bots.connected-add-treeview');
     Route::post('/bots/{bot}/change-activity', [BotController::class, 'changeActivity'])->name('bots.change-activity');
@@ -85,8 +77,6 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
         Route::post('/messages/{chatId}/send', [AvitoController::class, 'sendMessage'])->name('messages.send');
         Route::delete('/messages/{chatId}/{messageId}', [AvitoController::class, 'deleteMessage'])->name('messages.destroy');
 
-        Route::resource('schedule-reviews', ReviewScheduleController::class)->only(['index', 'store', 'destroy']);
-
         Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
         Route::post('/reviews/ai-answer-generator', [ReviewController::class, 'aiAnswerGenerator'])->name('reviews.ai-answer-generator');
         Route::post('/reviews/{review}/answer', [ReviewController::class, 'answer'])->name('reviews.answer');
@@ -106,15 +96,6 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
         Route::get('fm-tags', [FmTagController::class, 'index'])->name('fm-tags.index');
 
         Route::get('ads', [AdController::class, 'index'])->name('ads.index');
-    });
-
-    Route::get('code-keys/histories', [CodeKeyController::class, 'histories'])->name('code-keys.histories');
-    Route::post('code-keys/{code_key}/mark-as-receipt', [CodeKeyController::class, 'markAsReceipt'])->name('code-keys.mark-as-receipt');
-    Route::post('code-keys/{code_key}/restore', [CodeKeyController::class, 'restore'])->name('code-keys.restore');
-    Route::resource('code-keys', CodeKeyController::class)->only(['index', 'store', 'destroy']);
-
-    Route::group(['prefix' => 'autocomplete', 'as' => 'autocomplete.'], function () {
-        Route::get('products', [AutocompleteController::class, 'products'])->name('products');
     });
 
     Route::get('employees', [EmployeeController::class, 'index'])->name('employees.index');
@@ -154,34 +135,4 @@ Route::get('redirect', function () {
 
 Route::group(['prefix' => 'pwa', 'as' => 'pwa.'], static function () {
     Route::get('manifest', [PwaController::class, 'manifest'])->name('manifest');
-});
-
-
-Route::get('meta-code-generator', function () {
-
-    $codes = [];
-
-    for ($i = 0; $i < 5; $i++) {
-        $code = mt_rand(0, 9);
-        $textCode = \Illuminate\Support\Str::random(5);
-
-        $textCode[mt_rand(0, 4)] = $code;
-
-        $codes[] = $textCode;
-    }
-
-    return response(
-        mb_strtoupper(implode('-', $codes))
-    );
-});
-
-Route::get('digiseller-sign-generator', function () {
-    $token = request('token');
-    $time = time();
-    $shaToken = hash('sha256', $token . $time);
-    return <<<MSG
-Token: {$shaToken} <br />
-Timestamp: {$time}
-MSG;
-
 });

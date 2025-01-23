@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -26,8 +27,17 @@ class UsersTableSeeder extends Seeder
             ],
         ];
 
+        $companies = [
+            'ssalpo@ya.ru' => 'Компания Санжара',
+            'sh@ya.ru' => 'Компания Шахбоза',
+        ];
+
         foreach ($users as $user) {
-            User::create($user);
+            $user = User::create($user);
+
+            $company = Company::create(['name' => $companies[$user->email], 'created_by' => $user->id]);
+
+            $company->users()->attach($user->id);
         }
     }
 }
