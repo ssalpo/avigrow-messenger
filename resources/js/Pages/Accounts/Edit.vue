@@ -17,7 +17,7 @@ function send() {
         return
     }
 
-    form.post(route('accounts.store')
+    form.post(route('accounts.store'))
 }
 </script>
 
