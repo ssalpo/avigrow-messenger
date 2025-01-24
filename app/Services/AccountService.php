@@ -122,6 +122,7 @@ class AccountService
                 'external_access_token' => $response['access_token'],
                 'external_refresh_token' => $response['refresh_token'],
                 'external_access_token_expire_in' => $response['expires_in'],
+                'external_access_token_expire_date' => now()->addSeconds($response['expires_in']),
                 'oauth_check_key' => Str::random(32),
             ]);
 
