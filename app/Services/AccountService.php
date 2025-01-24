@@ -156,8 +156,6 @@ class AccountService
             return Avito::buildOAuthLink($account->oauth_check_key);
         }
 
-        dd($data['type'] === AccountType::FREE,$data['type'], $account->type->isPro());
-
         $account->update($data);
 
         $fieldChangeToDetect = [
