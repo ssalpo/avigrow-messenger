@@ -5,14 +5,14 @@ on:
     branches: [ "dev" ]
 
 jobs:
-  production_deploy:
+  dev_deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: executing remote ssh commands
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ vars.HOST }}
+          host: ${{ vars.DEV_HOST }}
           username: deployer
-          key: ${{ secrets.SSH_PRIV_KEY }}
-          script: "cd ${{vars.PROJECT_PATH}} && dep deploy"
+          key: ${{ secrets.DEV_SSH_PRIV_KEY }}
+          script: "cd ${{vars.DEV_PROJECT_PATH}} && dep deploy"
