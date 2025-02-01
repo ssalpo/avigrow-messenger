@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa'
-import path from 'path'
+import vuetify from 'vite-plugin-vuetify'
 
 export default defineConfig({
     build: {
@@ -30,5 +30,6 @@ export default defineConfig({
                 },
             },
         }),
+        vuetify()
     ],
 });
