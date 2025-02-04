@@ -20,11 +20,11 @@ function auth() {
 <template>
     <Head title="Авторизация"/>
 
-    <div class="mt-15 px-5 px-sm-0">
+    <div class="px-5 px-sm-0 h-screen d-flex align-center full-width">
         <v-card
-            class="mx-auto pa-5 pa-sm-12 pb-8"
+            class="mx-auto pa-5 pa-sm-12 pb-4 pb-sm-8"
             elevation="8"
-            max-width="448"
+            width="450"
             rounded="lg"
         >
             <div class="text-subtitle-1 text-medium-emphasis">Email</div>
@@ -67,7 +67,7 @@ function auth() {
 
             <v-btn
                 type="submit"
-                class="mb-8"
+                class="mb-3 mb-sm-5"
                 color="blue"
                 size="large"
                 variant="tonal"

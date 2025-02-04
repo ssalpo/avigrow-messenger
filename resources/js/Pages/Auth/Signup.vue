@@ -22,12 +22,11 @@ const send = () => {
 <template>
     <Head title="Регистрация"/>
 
-    <div class="mt-15">
-        <form @submit.prevent="send">
+    <form @submit.prevent="send" class="px-5 px-sm-0 h-screen d-flex align-center full-width">
             <v-card
-                class="mx-auto pa-12 pb-8"
+                class="mx-auto pa-8 pb-5 pa-sm-12 pb-sm-12"
                 elevation="8"
-                max-width="448"
+                width="450"
                 rounded="lg"
             >
                 <div class="text-subtitle-1 text-medium-emphasis">Название компании</div>
@@ -104,5 +103,4 @@ const send = () => {
                 </v-card-text>
             </v-card>
         </form>
-    </div>
 </template>
