@@ -2,6 +2,7 @@
 import AuthLayout from "@/Layouts/AuthLayout.vue";
 import {Head, useForm, Link} from "@inertiajs/vue3";
 import {ref} from "vue";
+import logo from "../../../images/logo.svg";
 
 defineOptions({layout: AuthLayout})
 
@@ -22,9 +23,11 @@ const send = () => {
 <template>
     <Head title="Регистрация"/>
 
-    <form @submit.prevent="send" class="px-5 px-sm-0 h-screen d-flex align-center full-width">
+    <div class="h-screen d-flex flex-column justify-center overflow-y-auto">
+        <img :src="logo" style="width: 200px" class="py-5 mx-auto" alt="logo" />
+        <form @submit.prevent="send" class="px-5 px-sm-0 d-flex align-center full-width">
             <v-card
-                class="mx-auto pa-8 pb-5 pa-sm-12 pb-sm-12"
+                class="mx-auto pa-8 pa-sm-10 pb-5 pb-sm-8"
                 elevation="8"
                 width="450"
                 rounded="lg"
@@ -81,7 +84,7 @@ const send = () => {
 
                 <v-btn
                     type="submit"
-                    class="mb-8"
+                    class="mb-5"
                     color="blue"
                     size="large"
                     variant="tonal"
@@ -90,17 +93,19 @@ const send = () => {
                     Зарегистрироваться
                 </v-btn>
 
-                <v-card-text class="text-center">
+                <v-card-text class="d-flex align-center justify-center">
+                    <div class="me-5">У вас уже есть аккаунт?</div>
                     <Link
                         class="text-blue text-decoration-none"
                         :href="route('login')"
                         rel="noopener noreferrer"
                         target="_blank"
                     >
-                        Авторизироваться
+                        Войти
                         <v-icon icon="mdi-chevron-right"></v-icon>
                     </Link>
                 </v-card-text>
             </v-card>
         </form>
+    </div>
 </template>
