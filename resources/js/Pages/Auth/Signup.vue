@@ -94,7 +94,7 @@ const send = () => {
                 </v-btn>
 
                 <v-card-text class="d-flex align-center justify-center">
-                    <div class="me-5">У вас уже есть аккаунт?</div>
+                    <div class="me-5">Уже есть аккаунт?</div>
                     <Link
                         class="text-blue text-decoration-none"
                         :href="route('login')"
