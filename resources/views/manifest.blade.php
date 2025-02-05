@@ -1,6 +1,7 @@
 {
     "name": "AviGrow",
-    "start_url": "/?source=pwa",
+    "start_url": "/",
+    "scope": "/",
     "display": "standalone",
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
