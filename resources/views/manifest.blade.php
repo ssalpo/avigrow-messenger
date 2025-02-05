@@ -2,6 +2,7 @@
     "name": "AviGrow",
     "start_url": "/?source=pwa",
     "display": "standalone",
+    "theme_color": "#ffffff",
     "background_color": "#ffffff",
     "id": "avigrow",
     "orientation": "portrait",
