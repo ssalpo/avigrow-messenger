@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Notifications\SendResetPasswordOtp;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
-use function Laravel\Prompts\form;
+use Illuminate\Validation\ValidationException;
+use Random\RandomException;
 
 class UserService
 {
@@ -42,5 +44,41 @@ class UserService
     public static function relatedCompanyIds(User $user): array
     {
         return Arr::pluck(self::relatedCompanies($user), 'id');
+    }
+
+    /**
+     * @throws RandomException
+     */
+    public function sendResetPasswordOtp(string $email): void
+    {
+        $number = random_int(10000, 99999);
+
+        $user = User::whereEmail($email)->firstOrFail();
+
+        $user->forceFill(['reset_password_otp' => $number])->save();
+
+        $user->notify(new SendResetPasswordOtp($number));
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function resetPassword(array $data): void
+    {
+        $user = User::where([
+            'email' => $data['email'],
+            'reset_password_otp' => $data['reset_password_otp'],
+        ])->first();
+
+        if(!$user) {
+            throw ValidationException::withMessages([
+                'reset_password_otp' => 'Некорректный код подтверждения!'
+            ]);
+        }
+
+        $user->forceFill([
+            'password' => bcrypt($data['password']),
+            'reset_password_otp' => null
+        ])->save();
     }
 }

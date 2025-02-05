@@ -45,14 +45,13 @@ function auth() {
                 <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
                     Пароль
 
-                    <a
-                        class="text-caption text-decoration-none text-blue"
-                        href="#"
-                        rel="noopener noreferrer"
-                        target="_blank"
-                    >
-                        Забыли пароль?
-                    </a>
+
+                        <Link
+                            :href="route('reset-password')"
+                            class="text-caption text-decoration-none text-blue"
+                        >
+                            Забыли пароль?
+                        </Link>
                 </div>
 
                 <v-text-field
