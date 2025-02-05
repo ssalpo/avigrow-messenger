@@ -75,7 +75,8 @@ class ChatBot
 
         $messageToSend = PlaceholderService::replace(
             $greeting->template,
-            $placeholders
+            $placeholders,
+            $account->timezone
         );
 
         if ($messageToSend) {
@@ -104,7 +105,8 @@ class ChatBot
         if ($trigger) {
             $messageToSend = PlaceholderService::replace(
                 $trigger->response,
-                $placeholders
+                $placeholders,
+                $account->timezone
             );
 
             if ($trigger->delay > 0) {

@@ -73,7 +73,8 @@ class QuizService
         if (!is_null($contentToSend)) {
             return PlaceholderService::replace(
                 $contentToSend,
-                $placeholders
+                $placeholders,
+                $account->timezone
             );
         }
 
