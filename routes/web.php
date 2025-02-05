@@ -100,7 +100,7 @@ Route::middleware(['auth', 'check.accounts'])->group(function () {
 
     Route::get('employees', [EmployeeController::class, 'index'])->name('employees.index');
     Route::post('/employees', [EmployeeController::class, 'sync'])->name('employees.sync');
-    Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+    Route::delete('/employees/{emloyee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
     Route::get('redirect', AvitoOAuthConnectController::class);
 });

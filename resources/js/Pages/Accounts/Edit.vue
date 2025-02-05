@@ -3,14 +3,15 @@ import {useForm} from "@inertiajs/vue3";
 import PageTitle from "@/Components/PageTitle.vue";
 import {ACCOUNT_TYPE_FREE, ACCOUNT_TYPE_PRO} from "@/Constants/AccountType.js";
 
-const props = defineProps(['account', 'errors'])
+const props = defineProps(['account', 'errors', 'timezones'])
 
 const form = useForm({
     id: props.account?.id,
     name: props.account?.name,
     type: props.account?.type ?? 1,
     external_client_id: props.account?.external_client_id,
-    external_client_secret: props.account?.external_client_secret
+    external_client_secret: props.account?.external_client_secret,
+    timezone: props.account?.timezone || 'Europe/Moscow'
 })
 
 function send() {
@@ -32,6 +33,7 @@ function send() {
     <v-sheet class="mx-auto"
              max-width="600">
         <v-form @submit.prevent="send">
+
             <v-radio-group label="Тип аккаунта"
                            v-model="form.type">
 
@@ -42,6 +44,17 @@ function send() {
                          :value="1"></v-radio>
             </v-radio-group>
 
+            <v-autocomplete
+                v-model="form.timezone"
+                :error-messages="errors?.timezone"
+                class="mb-4"
+                variant="outlined"
+                label="Часовой пояс"
+                item-title="value"
+                item-value="key"
+                density="compact"
+                :items="timezones"
+            ></v-autocomplete>
 
             <v-text-field
                 label="Название"

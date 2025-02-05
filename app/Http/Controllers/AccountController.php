@@ -7,6 +7,7 @@ use App\Http\Requests\AccountSettingsRequest;
 use App\Models\Account;
 use App\Services\AccountService;
 use App\Services\Avito;
+use App\Services\TimeZoneHelper;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +29,7 @@ class AccountController extends Controller
 
     public function create(): \Inertia\Response|\Inertia\ResponseFactory
     {
-        return inertia('Accounts/Edit');
+        return inertia('Accounts/Edit', ['timezones' => TimeZoneHelper::russian(forAutocomplete: true)]);
     }
 
     public function store(AccountRequest $request): RedirectResponse|Response
@@ -56,7 +57,8 @@ class AccountController extends Controller
     public function edit(int $accountId): \Inertia\Response|\Inertia\ResponseFactory
     {
         return inertia('Accounts/Edit', [
-            'account' => Account::isOwner()->findOrFail($accountId)
+            'account' => Account::isOwner()->findOrFail($accountId),
+            'timezones' => TimeZoneHelper::russian(forAutocomplete: true)
         ]);
     }
 

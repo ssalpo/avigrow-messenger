@@ -35,7 +35,8 @@ class Account extends Model
         'can_answer_to_review',
         'type',
         'oauth_check_key',
-        'is_active'
+        'is_active',
+        'timezone'
     ];
 
     protected $hidden = [

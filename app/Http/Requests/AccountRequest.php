@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\AccountType;
+use App\Services\TimeZoneHelper;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AccountRequest extends FormRequest
@@ -31,6 +32,7 @@ class AccountRequest extends FormRequest
             'name' => 'required|string|max:255',
             'external_client_id' => ($isEdit ? 'nullable' : $required) . '|string|max:255',
             'external_client_secret' => ($isEdit ? 'nullable' : $required) . '|string|max:255',
+            'timezone' => 'required|string|max:255|in:' . implode(',', array_keys(TimeZoneHelper::russian())),
         ];
     }
 }
