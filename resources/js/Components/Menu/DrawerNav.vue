@@ -6,7 +6,7 @@ const model = defineModel();
 
 const page = usePage()
 const activeAccount = ref(page.props.activeAccount)
-console.log(activeAccount.value?.id)
+
 let navs = ref([
     {
         title: 'Сообщения',

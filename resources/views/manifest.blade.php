@@ -1,12 +1,9 @@
 {
     "name": "AviGrow",
-    "start_url": "/",
+    "start_url": "/?source=pwa",
     "display": "standalone",
-    "theme_color": "#ffffff",
     "background_color": "#ffffff",
-    "lang": "ru-RU",
-    "scope": "/",
-    "id": "/",
+    "id": "avigrow",
     "orientation": "portrait",
     "icons": [
         {
@@ -20,6 +17,20 @@
             "sizes": "512x512",
             "src": "/icons/icon512_rounded.png",
             "type": "image/png"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/icons/screenshot-wide.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "/icons/screenshot-mobile.png",
+            "sizes": "720x1280",
+            "type": "image/png",
+            "form_factor": "narrow"
         }
     ]
 }
