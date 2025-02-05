@@ -6,9 +6,9 @@ use App\Models\BotSchedule;
 
 class BotScheduleService
 {
-    public static function isInSchedule(int $botId): bool
+    public static function isInSchedule(int $botId, string $timezone): bool
     {
-        $currentTime = now()->format('H:i:s');
+        $currentTime = now($timezone)->format('H:i:s');
 
         $schedule = BotSchedule::where('bot_id', $botId)
             ->currentWeekDay()
@@ -21,7 +21,10 @@ class BotScheduleService
         }
 
         foreach ($schedule->slots as $slot) {
-            if ($slot->start_time <= $currentTime && $slot->end_time >= $currentTime) {
+            if (
+                $slot->start_time->setTimezone($timezone) <= $currentTime &&
+                $slot->end_time->setTimezone($timezone) >= $currentTime
+            ) {
                 return true;
             }
         }

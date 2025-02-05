@@ -27,7 +27,7 @@ class ChatBot
         if (
             !$bot ||
             !$bot->is_active ||
-            !BotScheduleService::isInSchedule($bot->id)
+            !BotScheduleService::isInSchedule($bot->id, $account->timezone)
         ) {
             return;
         }
