@@ -4,10 +4,11 @@ import PageTitle from "@/Components/PageTitle.vue";
 import BotShowSchedules from "@/Pages/Bots/Show/BotShowSchedules.vue";
 import {ref} from "vue";
 import EditSettings from "@/Pages/Accounts/EditSettings.vue";
+import AccountStatusSettings from "@/Pages/Accounts/AccountStatusSettings.vue";
 
 const props = defineProps(['account'])
 
-const panel = ref([])
+const panel = ref(1)
 
 const toggleActivity = () => {
     router.post(route('accounts.toggle-activity', props.account.id))
@@ -42,10 +43,15 @@ const toggleActivity = () => {
 
     <v-expansion-panels v-model="panel"
                         class="mt-7">
-        <v-expansion-panel class="mb-2"
-                           title="Настройки">
+        <v-expansion-panel class="mb-2" title="Настройки">
             <v-expansion-panel-text>
                 <edit-settings :account="account"/>
+            </v-expansion-panel-text>
+        </v-expansion-panel>
+
+        <v-expansion-panel class="mb-2" title="Статус в сети">
+            <v-expansion-panel-text>
+                <account-status-settings :account="account"/>
             </v-expansion-panel-text>
         </v-expansion-panel>
     </v-expansion-panels>

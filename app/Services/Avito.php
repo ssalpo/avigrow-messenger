@@ -7,9 +7,10 @@ use App\Services\DTO\Avito\AvitoAuthUserDto;
 use App\Services\DTO\Avito\AvitoChatDto;
 use App\Services\DTO\Avito\AvitoChatUserDto;
 use App\Services\DTO\Avito\AvitoWebhookPayloadDto;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
-use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Pool;
 use Illuminate\Support\Facades\Http;
 
 class Avito
@@ -39,6 +40,18 @@ class Avito
     {
         return $this->client($asJsonBody)
             ->withToken($this->account->external_access_token);
+    }
+
+    public function httpPoolBase(Pool $pool, string $url, string $method = 'get')
+    {
+        return $pool->baseUrl(self::BASE_API_URL)
+            ->withToken($this->account->external_access_token)
+            ->$method($url);
+    }
+
+    public function poolJsonOrEmpty($response): array
+    {
+        return $response->ok() ? $response->json() : [];
     }
 
     public static function validateTelegramWebAppData(string $queryString, string $botToken): bool
@@ -361,5 +374,17 @@ class Avito
                 'state' => $state,
                 'scope' => implode(',', $permissions),
             ]);
+    }
+
+    public function markAsOnline(Collection $statuses): void
+    {
+        Http::pool(fn(Pool $pool) => $statuses->map(function ($status) use ($pool) {
+            $this->setAccount($status->account);
+
+            return $this->httpPoolBase(
+                $pool,
+                "/messenger/v2/accounts/{$this->account->external_id}/chats?limit=1&offset=1&chat_types=u2i,u2u"
+            );
+        })->toArray());
     }
 }

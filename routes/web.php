@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('accounts/{account}/toggle-activity', [AccountController::class, 'toggleActivity'])->name('accounts.toggle-activity');
     Route::post('accounts/{account}/save-settings', [AccountController::class, 'saveSettings'])->name('accounts.save-settings');
+    Route::patch('accounts/{account}/account-status-settings', [AccountController::class, 'updateStatusSettings'])->name('accounts.update-account-status-settings');
     Route::resource('accounts', AccountController::class)->middleware('auth');
 
     Route::get('active-conversations', [ActiveConversationController::class, 'getLists'])->name('active-conversations.list');

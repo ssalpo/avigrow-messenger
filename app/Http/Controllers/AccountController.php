@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AccountRequest;
 use App\Http\Requests\AccountSettingsRequest;
+use App\Http\Requests\AccountStatusRequest;
 use App\Models\Account;
 use App\Services\AccountService;
 use App\Services\Avito;
@@ -50,7 +51,7 @@ class AccountController extends Controller
     public function show(int $accountId): \Inertia\Response|\Inertia\ResponseFactory
     {
         return inertia('Accounts/Show', [
-            'account' => Account::isOwner()->findOrFail($accountId)
+            'account' => Account::isOwner()->with('status')->findOrFail($accountId)
         ]);
     }
 
@@ -85,5 +86,12 @@ class AccountController extends Controller
     public function toggleActivity(int $accountId): void
     {
         $this->accountService->toggleActivity($accountId);
+    }
+
+    public function updateStatusSettings(int $accountId, AccountStatusRequest $request): void
+    {
+        $account = Account::isOwner()->findOrFail($accountId);
+
+        $account->status()->updateOrCreate([], $request->validated());
     }
 }

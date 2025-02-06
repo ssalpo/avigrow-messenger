@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Account;
+use App\Models\AccountStatus;
 use App\Services\Avito;
 use Illuminate\Console\Command;
 
@@ -27,10 +28,35 @@ class ChangeAccountStatus extends Command
      */
     public function handle(Avito $avito)
     {
-        $accounts = Account::all();
+        $statuses = AccountStatus::with('account')
+            ->active()
+            ->where(function ($q) {
+                $q->where('always_online', true)
+                    ->orWhere(
+                        fn($q) => $q->whereNotNull('available_from')
+                            ->whereNotNull('available_to')
+                    );
+            })
+            ->get();
 
-        $accounts->each(function ($account) use($avito) {
-            $avito->setAccount($account)->getChats(1);
-        });
+        // Always online
+        $statuses
+            ->filter(fn($s) => $s->always_online)
+            ->chunk(10)
+            ->each(fn($statuses) => $avito->markAsOnline($statuses));
+
+        // Scheduled
+        $statuses
+            ->filter(function ($s) {
+                $timezone = $s->account->timezone;
+
+                $now = now($timezone);
+                $start = now($timezone)->setTimeFrom($s->available_from);
+                $end = now($timezone)->setTimeFrom($s->available_to);
+
+                return !$s->always_online && $now->between($start, $end);
+            })
+            ->chunk(10)
+            ->each(fn($statuses) => $avito->markAsOnline($statuses));
     }
 }
