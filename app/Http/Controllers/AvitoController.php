@@ -41,7 +41,7 @@ class AvitoController extends Controller
                 ->map(function ($message) use ($me) {
                     return [
                         'id' => $message['id'],
-                        'is_me' => $message['author_id'] === $me->id,
+                        'is_me' => $message['author_id'] === (int)$me->id,
                         'content_type' => $message['type'],
                         'content' => $message['content'],
                         'is_read' => $message['isRead'],
