@@ -61,7 +61,7 @@ class AvitoController extends Controller
     {
         $request->validate([
             'message' => 'required|array',
-            'message.text' => 'required'
+            'message.text' => 'required|max:1000',
         ]);
 
         $account = Account::relatedToMe()->findOrFail($accountId);

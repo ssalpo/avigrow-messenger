@@ -251,6 +251,9 @@ const onTemplateSelected = (e, isExternal) => {
             <div class="message-send-errors" v-if="imageForm.errors.image">
                 {{imageForm.errors.image}}
             </div>
+            <div class="message-send-errors" v-if="input.length > 1000">
+                Максимально 1000 знаков!
+            </div>
             <div class="message-input">
                 <fast-template-inline
                     :is-external-select="isExternalSelect"
@@ -312,8 +315,9 @@ const onTemplateSelected = (e, isExternal) => {
                             📝
                         </button>
 
-                        <button :disabled="isBusy"
+                        <button :disabled="isBusy || input.length > 1000"
                                 type="button"
+                                :class="{'opacity-50': input.length > 1000}"
                                 @click="sendMessage"> ➤
                         </button>
                     </div>
