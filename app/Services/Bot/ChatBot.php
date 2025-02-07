@@ -71,6 +71,13 @@ class ChatBot
 
         $greeting = $greetingManager->getRandomGreeting();
 
+        $from = now($account->timezone)->setTimeFrom($greeting->schedule_from);
+        $to = now($account->timezone)->setTimeFrom($greeting->schedule_to);
+
+        if(!now($account->timezone)->between($from, $to)) {
+            return;
+        }
+
         $chatState->update(['greeted' => true, 'chat_id' => $chatId]);
 
         $messageToSend = PlaceholderService::replace(

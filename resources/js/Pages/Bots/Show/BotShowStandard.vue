@@ -44,7 +44,12 @@ const onSelectGreeting = (selected) => {
                 class="mb-3 d-flex align-center px-5 py-3 cursor-pointer"
                 @click="() => onSelectGreeting(greeting)"
             >
-                <div class="w-100">{{ greeting.template }}</div>
+                <div class="w-100">
+                    <span class="d-inline-block mr-3">{{ greeting.template }}</span>
+                    <v-chip variant="outlined" size="small" class="border">
+                        {{greeting.schedule_from?.slice(0, -3)}} - {{greeting.schedule_to?.slice(0, -3)}}
+                    </v-chip>
+                </div>
                 <v-icon icon="mdi-square-edit-outline" />
             </v-sheet>
         </v-card-text>

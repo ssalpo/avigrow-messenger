@@ -9,6 +9,8 @@ class BotGreeting extends Model
     protected $fillable = [
         'bot_id',
         'template',
-        'delay'
+        'delay',
+        'schedule_from',
+        'schedule_to',
     ];
 }

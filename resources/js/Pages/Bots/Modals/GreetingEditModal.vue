@@ -21,6 +21,8 @@ const props = defineProps({
 let form = useForm({
     id: null,
     template: null,
+    schedule_from: null,
+    schedule_to: null,
     delay: '0',
 })
 
@@ -59,6 +61,8 @@ watch(() => props.selected, (selected) => {
     form = useForm({
         id: selected?.id,
         template: selected?.template,
+        schedule_from: selected?.schedule_from,
+        schedule_to: selected?.schedule_to,
         delay: selected?.delay?.toString() || '0',
     })
 })
@@ -108,6 +112,7 @@ watch(() => props.selected, (selected) => {
                         variant="outlined"
                         label="Текст шаблона"
                         v-model="form.template"
+                        :class="{'mb-3': form.errors.template}"
                         :error-messages="form.errors.template"
                     ></v-textarea>
 
@@ -117,6 +122,43 @@ watch(() => props.selected, (selected) => {
                             id="macros-activator">
                     </v-icon>
                 </div>
+
+                <div class="text-subtitle-2 mb-4">
+                    Часы работы
+                    <small class="d-block text-medium-emphasis">(по таймзоне прикрепленного аккаунта)</small>
+                </div>
+
+                <v-row class="mb-1">
+                    <v-col cols="6"
+                           lg="4">
+                        <v-text-field
+                            :error="form.errors.template"
+                            label="Начало"
+                            autocomplete="off"
+                            v-mask="'##:##'"
+                            placeholder="ЧЧ:ММ"
+                            variant="outlined"
+                            persistent-hint
+                            density="compact"
+                            v-model="form.schedule_from"
+                        ></v-text-field>
+                    </v-col>
+
+                    <v-col cols="6"
+                           lg="4">
+                        <v-text-field
+                            :error="form.errors.schedule_to"
+                            label="Конец"
+                            autocomplete="off"
+                            v-mask="'##:##'"
+                            placeholder="ЧЧ:ММ"
+                            variant="outlined"
+                            persistent-hint
+                            density="compact"
+                            v-model="form.schedule_to"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
 
                 <duration-select
                     variant="outlined"

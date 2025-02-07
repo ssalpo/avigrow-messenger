@@ -22,8 +22,10 @@ class BotGreetingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'template' => 'required|string|max:255',
+            'template' => 'required|string|max:1000',
             'delay' => 'nullable|numeric|in:0,5,15,30,60,180,300,600,1800',
+            'schedule_from' => 'required|date_format:H:i',
+            'schedule_to' => 'required|date_format:H:i',
         ];
     }
 }
