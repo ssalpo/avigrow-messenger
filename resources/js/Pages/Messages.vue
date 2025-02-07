@@ -19,7 +19,7 @@ const props = defineProps({
     chat: {
         type: Object
     },
-    has_more: {
+    has_more_messages: {
         type: Boolean
     },
     messages: {
@@ -34,7 +34,7 @@ const sendFromOther = ref(false);
 const fastMessagesDialog = ref(false);
 const adListDialog = ref(false);
 const messagesAll = ref(props.messages);
-const hasMoreMessages = ref(props.has_more);
+const hasMoreMessages = ref(props.has_more_messages);
 const currentPage = ref(1);
 const isBusy = ref(false);
 const reloadIsHide = ref(false);
@@ -61,7 +61,7 @@ const showMorePage = () => {
         .then((response) => {
             messagesAll.value = response.data.messages.concat(messagesAll.value)
 
-            hasMoreMessages.value = response.data.messages.length > 0
+            hasMoreMessages.value = response.data.has_more_messages
 
             isBusy.value = false;
         })

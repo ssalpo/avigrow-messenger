@@ -28,15 +28,16 @@ class AvitoController extends Controller
 
     public function getMessages(int $accountId, string $chatId): JsonResponse
     {
+        $limit = 50;
         $account = Account::relatedToMe()->findOrFail($accountId);
         $this->avito->setAccount($account)->markChatAsRead($chatId);
 
-        $response = $this->avito->setAccount($account)->getChatMessages($chatId, 30, request('page', 1));
+        $response = $this->avito->setAccount($account)->getChatMessages($chatId, $limit, request('page', 1));
 
         $me = $this->avito->me();
 
         return response()->json([
-            'has_more' => $response['meta']['has_more'],
+            'has_more_messages' => count($response['messages']) === $limit,
             'messages' => collect($response['messages'])
                 ->map(function ($message) use ($me) {
                     return [

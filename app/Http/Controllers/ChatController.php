@@ -45,6 +45,7 @@ class ChatController extends Controller
 
     public function messages(int $accountId, string $chatId): Response
     {
+        $limit = 50;
         $account = request()->attributes->get('activeAccount');
 
         ActiveConversationService::sync($account, $chatId);
@@ -56,11 +57,11 @@ class ChatController extends Controller
         $this->avito->markChatAsRead($chatId);
         MarkedAsReadChat::dispatch($account->id, $chatId);
 
-        $response = $this->avito->setAccount($account)->getChatMessages($chatId, 30, request('page', 1));
+        $response = $this->avito->setAccount($account)->getChatMessages($chatId, $limit, request('page', 1));
 
         return Inertia::render('Messages', [
             'chat' => Avito::chatResponse($chat, $account),
-            'has_more' => $response['meta']['has_more'],
+            'has_more' => count($response['messages']) === $limit,
             'messages' => collect($response['messages'])
                 ->map(function ($message) use ($account) {
                     return [
