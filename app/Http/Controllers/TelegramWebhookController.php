@@ -40,7 +40,7 @@ class TelegramWebhookController extends Controller
     {
         $message = $this->getMessage($input);
 
-        if (!isset($message['reply_to_message'])) {
+        if (!isset($message['reply_to_message']['text'])) {
             return;
         }
 
