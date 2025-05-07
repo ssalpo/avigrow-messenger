@@ -48,6 +48,10 @@ class ChangeAccountStatus extends Command
         // Scheduled
         $statuses
             ->filter(function ($s) {
+                if($s->always_online) {
+                    return false;
+                }
+
                 $timezone = $s->account->timezone;
 
                 $now = now($timezone);
