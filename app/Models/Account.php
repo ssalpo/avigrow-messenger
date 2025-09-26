@@ -79,6 +79,11 @@ class Account extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function scopeActive(Builder $builder): void
+    {
+        $builder->where('is_active', true);
+    }
+
     public function status(): HasOne
     {
         return $this->hasOne(AccountStatus::class);
